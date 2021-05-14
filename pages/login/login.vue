@@ -7,11 +7,19 @@
 			<view class='logo'>
 				<view class="cicl-1">
 					<view class="cicle-2">
-						<image src="../../static/logo/yinyue.png" class="img"></image>
+						<image src="@/static/logo/yinyue.png" class="img"></image>
 					</view>
 				</view>
 			</view>
-			<view class="phone-log"></view>
+			<view class="user-log">
+				<view class="inp-1">
+					<input type="text" placeholder="手机号/用户名" v-model="userName" class='inp-2'>
+				</view>
+				<view class="inp-1">
+					<input type="text" placeholder="密码" v-model="userPwd" class='inp-2'>
+				</view>
+				
+			</view>
 		</view>
 	</view>
 </template>
@@ -20,7 +28,8 @@
 	export default {
 		data() {
 			return {
-
+				userName: null,
+				userPwd: null
 			}
 		},
 		methods: {
@@ -52,10 +61,11 @@
 			height: 87%;
 			display: flex;
 			flex-direction: column;
+			align-items: center;
 
 			.logo {
-				height: 200px;
-				width: 200px;
+				height: 230px;
+				width: 230px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -88,9 +98,14 @@
 
 			}
 
-			.phone-log {
+			.user-log {
+				width: 100%;
 				flex: 1;
 				background-color: #666666;
+				.inp-1{
+					width: 70%;
+					height: 20%;
+				}
 			}
 		}
 	}

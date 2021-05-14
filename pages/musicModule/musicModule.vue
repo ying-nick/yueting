@@ -3,7 +3,7 @@
 		<view>
 			<swiper :indicator-dots="true" :circular="true" :autoplay="true" :interval="2000" :duration="1000">
 				<swiper-item v-for="item in swiperImgUrls" :key="item.url">
-					<image class="img" :src="item.url" mode="widthFix"></image>
+					<image class="img" :src="item.pic" mode="widthFix"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -21,17 +21,18 @@
 		myRequestGet
 	} from '../../utils/req.js'
 	export default {
+
 		created() {
 			this.getBanner()
+			
+
 		},
 
 
 		data() {
 			return {
 				swiperImgUrls: [
-                     { url:"res.data[0].pic",},
-					 { url:"res.data[1].pic",},
-					 { url:"res.data[2].pic",},
+                     
 				]
 
 			}
@@ -39,7 +40,9 @@
 		methods: {
 			async getBanner() {
 				const res = await myRequestGet('/dj/banner')
-				console.log(res.data[0].pic)
+				this.swiperImgUrls=res.data
+				
+				console.log(this.swiperImgUrls)
 			}
 		}
 	}
@@ -47,4 +50,16 @@
 
 <style>
 
+.img{
+  width: 100%;
+  height: 100%;
+}
+
+.playlist-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 10rpx;
+  flex-direction: row;
+}
 </style>

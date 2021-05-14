@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <view class="playlist-container">
   <image>
 	 <!-- 这里放歌单图片 -->
@@ -9,7 +9,55 @@
 </template>
 
 <script>
+	Component({
+	  /**
+	   * 组件的属性列表
+	   */
+	  properties: {
+	  playlist:{
+	    type:Object
+	  }
+	  },
+	  observers:{//属性监听器
+	   ['playlist.playCount'](count){//对象下面的某个属性
+	      this._tranNumber(count,2)
+	      this.setData({
+	        _count :this._tranNumber(count,2) //不能对监听的对象再赋值 生成的数字赋值给自己的声明的数字
+	      })
+	   }
+	  },
 	
+	  /**
+	   * 组件的初始数据
+	   */
+	  data: {
+	    _count:0 //声明一个自己的数字
+	  },
+	
+	  /**
+	   * 组件的方法列表
+	   */
+	  methods: {
+	    goToMusiclist(){
+	      wx.navigateTo({
+	        url: `../../pages/musiclist/musiclist?playlistId=${this.properties.playlist.id}`,
+	      })
+	    },
+	   _tranNumber(num,point){
+	       let numStr= num.toString().split ('.')[0]
+	       if(numStr.length<6){
+	 return numStr
+	       }else if(numStr.length >=6 && numStr.length <=8 ){
+	         let decimal = numStr.substring(numStr.length - 4,numStr.length-4+point)
+	         return parseFloat(parseInt(num/10000)+"."+decimal)+"万"
+	       }else if(numStr.length >8){
+	        let decimal = numStr.substring(numStr.length - 8,numStr.length-8+point)
+	        return parseFloat(parseInt(num/100000000)+"."+decimal)+"亿"
+	       }
+	      }
+	  }
+	})
+
 	
 </script>
 
@@ -44,3 +92,4 @@
 	  text-overflow: ellipsis;
 	}
 </style>
+ -->

@@ -1,4 +1,4 @@
-const baseUrl = "http://1.15.157.130";
+const baseUrl = "https://netease-cloud-music-api-lilac-three.vercel.app";
 
 export function myRequestGet(url, data) {
 	return new Promise((resolve, reject) => {

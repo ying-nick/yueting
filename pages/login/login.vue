@@ -62,8 +62,13 @@
 				} else {
 					this.nameFlg = true
 					this.pwdFlg = true
+					const regE=/^[A-Za-z]\w{5,17}@(vip\.(126|163|188)\.com|163\.com|126\.com|yeach\.net)/
+					const regP=/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
 // console.log(this.loginStatus)
 				}
+			},
+			async loginMusic(){
+				const res=await myRequestGet('')
 			}
 		}
 	}

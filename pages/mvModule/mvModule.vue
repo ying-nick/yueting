@@ -2,18 +2,18 @@
 	<view class="mv-container">
 		<!-- 导航区 -->
 		<view class="mv-nav">
-			<view class="mv-recommend">推荐MV</view>
-			<view class="mv-ranking">MV排行榜</view>
+			<view >推荐MV</view>
+			<view >MV排行榜</view>
 		</view>
 		<!-- 视频区 -->
 		<view class="mv-items">
-
+		
 		</view>
 	</view>
 </template>
 
 <script>
-	import req from '../../utils/req.js'
+	import {req} from '../../utils/req.js'
 	export default {
 		data() {
 			return {
@@ -41,10 +41,10 @@
 		line-height: 40rpx;
 		color: #666666;
 	}
-
-	.mv-recommend {
+	.mv-nav view{
 		flex: 1;
 	}
+	
 	.mv-active{
 		height: 50rpx;
 		font-size: 18px;

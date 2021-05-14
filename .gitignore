@@ -346,6 +346,6 @@ playground.xcworkspace
 # Build files
 build/
 unpackage
-uni_modules
+
 
 # End of https://www.gitignore.io/api/dart,swift,xcode,android,intellij,cocoapods,objective-c,androidstudio

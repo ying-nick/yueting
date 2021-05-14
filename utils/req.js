@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 const baseUrl = "http://localhost:3000";
-=======
-const baseUrl = "https://netease-cloud-music-api-lilac-three.vercel.app";
->>>>>>> 5fd85b606b5acafbfbe60361e3cdcb9a6bd1a22c
+
+// const baseUrl = "https://netease-cloud-music-api-lilac-three.vercel.app";
+
 
 export function myRequestGet(url, data) {
 	return new Promise((resolve, reject) => {

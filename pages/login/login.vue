@@ -12,28 +12,59 @@
 				</view>
 			</view>
 			<view class="user-log">
-				<view class="inp-1">
-					<input type="text" placeholder="手机号/用户名" v-model="userName" class='inp-2'>
+				<view class="lgn">
+					<view class="inp-1" :class="[nameFlg?'active':'unactive']">
+						<input type="text" style="height: 100%;" :placeholder="namePh" v-model="userName" class='inp-2'>
+					</view>
+					<view class="inp-1" :class="[pwdFlg?'active':'unactive']">
+						<input type="text" style="height: 100%;" :placeholder="pwdPh" v-model="userPwd" class='inp-2'>
+					</view>
+					<button type="default" class="sub" @click="smit">登录</button>
 				</view>
-				<view class="inp-1">
-					<input type="text" placeholder="密码" v-model="userPwd" class='inp-2'>
-				</view>
-				
+
+
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
+	import {myRequestGet} from '../../utils/req.js'
 	export default {
 		data() {
 			return {
-				userName: null,
-				userPwd: null
+				userName: '',
+				userPwd: '',
+				namePh: '请输入手机号/用户名',
+				pwdPh: "请输入密码",
+				nameFlg: true,
+				pwdFlg: true
 			}
 		},
+		computed: {
+			...mapState(['loginStatus'])
+		},
 		methods: {
-
+			...mapMutations(['login']),
+			smit() {
+				if (this.userName == '') {
+					this.nameFlg = false
+					this.namePh = '账号不能为空'
+					return
+				} else if (this.userPwd == '') {
+					this.pwdFlg = false
+					this.pwdPh = '密码不能为空'
+					return
+				} else {
+					this.nameFlg = true
+					this.pwdFlg = true
+// console.log(this.loginStatus)
+				}
+			}
 		}
 	}
 </script>
@@ -54,6 +85,9 @@
 			justify-content: center;
 			align-items: center;
 			text-align: center;
+			font-size: 20px;
+			color: #666666;
+			font-weight: 700;
 
 		}
 
@@ -64,7 +98,7 @@
 			align-items: center;
 
 			.logo {
-				height: 230px;
+				height: 300px;
 				width: 230px;
 				display: flex;
 				justify-content: center;
@@ -101,11 +135,52 @@
 			.user-log {
 				width: 100%;
 				flex: 1;
-				background-color: #666666;
-				.inp-1{
-					width: 70%;
-					height: 20%;
+
+				display: flex;
+
+				align-items: flex-start;
+
+				.lgn {
+					width: 100%;
+					height: 180px;
+
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-around;
+
+					.inp-1 {
+						width: 60%;
+						height: 20%;
+						display: flex;
+						justify-content: center;
+						background-color: #FFFEFE;
+						outline: none;
+
+					}
+
+					.active {
+						border: 1px solid #666666;
+						border-radius: 25px;
+					}
+
+					.unactive {
+						border: 1px solid #d43c43;
+						border-radius: 25px;
+					}
+
+					.sub {
+						width: 45%;
+						height: 20%;
+						border-radius: 10px;
+						background: #FFFEFE;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+
+					}
 				}
+
 			}
 		}
 	}

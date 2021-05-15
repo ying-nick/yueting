@@ -17,7 +17,8 @@
 						<input type="text" style="height: 100%;" :placeholder="namePh" v-model="userName" class='inp-2'>
 					</view>
 					<view class="inp-1" :class="[pwdFlg?'active':'unactive']">
-						<input type="text" style="height: 100%;" :placeholder="pwdPh" v-model="userPwd" class='inp-2'>
+						<input type="text" style="height: 100%;" :placeholder="pwdPh" v-model="userPwd" class='inp-2' :password="pwdLoc">
+					<icon :class="['iconfont',pwdLoc?'icon-jurassic_loseeyes':'icon-jurassic_openeyes']" @click="()=>pwdLoc=!pwdLoc" style="font-size: 25px;"></icon>
 					</view>
 					<button type="default" class="sub" @click="smit">登录</button>
 				</view>
@@ -42,15 +43,25 @@
 				namePh: '请输入手机号/用户名',
 				pwdPh: "请输入密码",
 				nameFlg: true,
-				pwdFlg: true
+				pwdFlg: true,
+				pwdLoc:true
 			}
 		},
-		computed: {
-			...mapState(['loginStatus'])
+		created() {
+			// console.log(this.loginStatus)
+			// console.log(uni.getStorageSync('user').length)
+			// console.log(this.loginStatus)
+			if(uni.getStorageSync('user').length>0){
+				uni.switchTab({
+				    url: '/pages/musicModule/musicModule'
+				})
+			}
 		},
 		methods: {
 			...mapMutations(['login']),
+			
 			smit() {
+				
 				if (this.userName == '') {
 					this.nameFlg = false
 					this.namePh = '账号不能为空'
@@ -62,13 +73,65 @@
 				} else {
 					this.nameFlg = true
 					this.pwdFlg = true
-					const regE=/^[A-Za-z]\w{5,17}@(vip\.(126|163|188)\.com|163\.com|126\.com|yeach\.net)/
-					const regP=/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+					this.checkSubm()
 // console.log(this.loginStatus)
-				}
+}
+				
 			},
-			async loginMusic(){
-				const res=await myRequestGet('')
+			checkSubm(){
+				const regE=/^[A-Za-z1]\w{5,17}@(vip\.(126|163|188)\.com|163\.com|126\.com|yeach\.net)/
+				const regP=/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+			if(regE.test(this.userName)){
+				// this.loginMusic('')
+				// console.log('email')
+				this.loginMusic('/login',{
+					email:this.userName,
+					password:this.userPwd
+				})
+			}else if(regP.test(this.userName)){
+				// console.log('phone')
+				this.loginMusic('/login/cellphone',{
+					phone:this.userName,
+					password:this.userPwd
+				})
+			}else{
+				this.nameFlg = false
+				this.userName=''
+				this.namePh = '账号格式错误'
+				return
+			}
+			
+			},
+			async loginMusic(url,data){
+				const res=await myRequestGet(url,data)
+				console.log(res)
+				if(res.code==501){
+					this.nameFlg = false
+					this.userName=''
+					this.namePh = '该账号不存在'
+				}else if(res.code==502){
+					this.pwdFlg = false
+					this.userPwd=''
+					this.pwdPh = '密码错误'
+				}else if(res.code==200){
+					this.login(res)
+					uni.showToast({
+					    title: '登陆成功',
+						icon:'success',
+						mask:true,
+					    duration: 1000,
+						complete() {
+							setTimeout(()=>{
+								uni.switchTab({
+								    url: '/pages/musicModule/musicModule'
+								})
+							},1200)
+						}
+					});
+					
+					
+					// console.log(uni.getStorageSync())
+				}
 			}
 		}
 	}
@@ -159,8 +222,10 @@
 						height: 20%;
 						display: flex;
 						justify-content: center;
+						align-items: center;
 						background-color: #FFFEFE;
 						outline: none;
+						padding: 2px 10px;
 
 					}
 

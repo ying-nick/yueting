@@ -5,7 +5,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
 		loginStatus: false,
-		user: {}
+		user: {},
+		cookie:''
 	},
 	mutations: {
 		login(state, user) {
@@ -16,6 +17,7 @@ const store = new Vuex.Store({
 		setUser(state,user){
 			state.loginStatus = true
 			state.user = user
+			state.cookie=encodeURIComponent(user.cookie)
 		}
 		
 	}

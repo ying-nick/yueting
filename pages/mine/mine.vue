@@ -1,7 +1,14 @@
 <template>
 	<view class="mine">
 		<view class="userNam">
+			<view class="userIMG">
+				<image :src="user.profile.avatarUrl" mode="" class="userImg"></image>
+			</view>
 
+		<view class="userPrf">
+			<text class="userNk">{{user.profile.nickname}}</text>
+			<text class="userUid">悦听号：{{user.profile.userId}}</text>
+		</view>
 		</view>
 		<view class="userInf">
 
@@ -28,11 +35,12 @@
 			}
 		},
 		computed: {
-			...mapState(['user']),
+			...mapState(['user','cookie']),
 		},
 		methods: {
 			lgnOut() {
-
+// console.log(this.cookie)
+console.log(this.user)
 				uni.showModal({
 					title: '确定要退出？',
 					success: (res) => {
@@ -59,10 +67,10 @@
 			},
 			async outReq() {
 				// console.log(this.user)
-				const cookie = encodeURIComponent(this.user.cookie)
+				
 				// console.log(cookie)
 				const res = await myRequestGet('/logout', {
-					cookie
+					cookie:this.cookie
 				})
 				// console.log(res)
 				if (res.code == 200) {
@@ -78,6 +86,7 @@
 <style>
 	page {
 		height: 100%;
+		background: #E6E6E6;
 	}
 </style>
 
@@ -91,7 +100,43 @@
 		.userNam {
 			width: 100%;
 			height: 20%;
-			background-color: red;
+			background-color: #FFFFFF;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.userIMG{
+				width: 35%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				.userImg{
+					width: 80px;
+					height: 80px;
+				}
+			}
+			.userPrf{
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				.userNk{
+					font-size: 18px;
+					font-family: PingFang SC;
+					font-weight: bold;
+					line-height: 25px;
+					color: #333333;
+				}
+				.userUid{
+					margin-top: 5px;
+					font-size: 14px;
+					font-family: PingFang SC;
+					font-weight: 500;
+					line-height: 20px;
+					color: #666666;
+				}
+			}
+			
 		}
 
 		.userInf {

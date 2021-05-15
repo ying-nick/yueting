@@ -48,7 +48,7 @@
 			}
 		},
 		
-		created() {
+		onLoad() {
 			// console.log(this.loginStatus)
 			// console.log(uni.getStorageSync('user').length)
 			// console.log(this.loginStatus)

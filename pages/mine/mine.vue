@@ -5,13 +5,23 @@
 				<image :src="user.profile.avatarUrl" mode="" class="userImg"></image>
 			</view>
 
-		<view class="userPrf">
-			<text class="userNk">{{user.profile.nickname}}</text>
-			<text class="userUid">悦听号：{{user.profile.userId}}</text>
-		</view>
+			<view class="userPrf">
+				<text class="userNk">{{user.profile.nickname}}</text>
+				<text class="userUid">悦听号：{{user.profile.userId}}</text>
+			</view>
 		</view>
 		<view class="userInf">
-
+			<view class="inf">
+				<Mine :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap"></Mine>
+				<view class="uni-tab-bar">
+					<swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex" @change="tabChange">
+						<swiper-item v-for="(items,index) in newslist" :key="index">
+							<Minelist :items='items'></Minelist>
+						</swiper-item>
+					</swiper>
+				</view>
+			</view>
+			
 		</view>
 		<view class="unlgn">
 			<button class="unlogin" @click="lgnOut">退出登录</button>
@@ -21,6 +31,8 @@
 </template>
 
 <script>
+	import Mine from "../../component/Mine.vue";
+	import Minelist from "../../component/MineList.vue";
 	import {
 		mapState,
 		mapMutations
@@ -31,16 +43,71 @@
 	export default {
 		data() {
 			return {
+				tabIndex: 0, // 选中的
+				tabBars: [{
+						name: "猜你喜欢",
+						id: "like"
+					},
+					{
+						name: "播放历史",
+						id: "history"
+					},
+					{
+						name: "创建的歌单",
+						id: "mineList"
+					},
 
+				],
+				swiperheight:0,//高度
+				newslist:[
+				   {
+				     list:[
+				       1
+				       ]
+				   },
+				   {list:[
+				      2
+				       ]},
+				   {list:[
+				      3
+				       ]},
+				
+				]
 			}
 		},
+		onLoad() {
+			uni.getSystemInfo({
+				success: (res) => {
+					let height = res.windowHeight - uni.upx2px(100)
+					this.swiperheight = height-150;
+				}
+			})
+		},
 		computed: {
-			...mapState(['user','cookie']),
+			...mapState(['user', 'cookie']),
+		},
+		components: {
+			Mine,
+			Minelist
 		},
 		methods: {
+			tabtap(index) {
+				this.tabIndex = index;
+			},
+			tabChange(e) {
+				this.tabIndex = e.detail.current;
+			},
 			lgnOut() {
-// console.log(this.cookie)
-console.log(this.user)
+				// console.log(this.cookie)
+				// console.log(this.user)
+				// this.getInf('/user/record',{
+				// 	cookie:this.cookie,
+				// 	uid:285385008,
+				// 	type:1
+				// }).then(res=>{
+				// 	console.log(res)
+				// })
+
 				uni.showModal({
 					title: '确定要退出？',
 					success: (res) => {
@@ -67,10 +134,10 @@ console.log(this.user)
 			},
 			async outReq() {
 				// console.log(this.user)
-				
+
 				// console.log(cookie)
 				const res = await myRequestGet('/logout', {
-					cookie:this.cookie
+					cookie: this.cookie
 				})
 				// console.log(res)
 				if (res.code == 200) {
@@ -79,6 +146,10 @@ console.log(this.user)
 						url: '/pages/login/login'
 					});
 				}
+			},
+			async getInf(url, data) {
+				const res = await myRequestGet(url, data)
+				return res
 			}
 		}
 	}
@@ -104,30 +175,35 @@ console.log(this.user)
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			.userIMG{
+
+			.userIMG {
 				width: 35%;
 				height: 100%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				.userImg{
+
+				.userImg {
 					width: 80px;
 					height: 80px;
 				}
 			}
-			.userPrf{
+
+			.userPrf {
 				flex: 1;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				.userNk{
+
+				.userNk {
 					font-size: 18px;
 					font-family: PingFang SC;
 					font-weight: bold;
 					line-height: 25px;
 					color: #333333;
 				}
-				.userUid{
+
+				.userUid {
 					margin-top: 5px;
 					font-size: 14px;
 					font-family: PingFang SC;
@@ -136,11 +212,20 @@ console.log(this.user)
 					color: #666666;
 				}
 			}
-			
+
 		}
 
 		.userInf {
 			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.inf{
+				height: 92%;
+				padding: 10px 0;
+				width: 100%;
+				background-color: #FFFFFF;
+			}
 		}
 
 		.unlgn {

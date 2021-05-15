@@ -40,25 +40,32 @@
 			return {
 				userName: '',
 				userPwd: '',
-				namePh: '请输入手机号/用户名',
+				namePh: '请输入手机号/邮箱账号',
 				pwdPh: "请输入密码",
 				nameFlg: true,
 				pwdFlg: true,
 				pwdLoc:true
 			}
 		},
+		
 		created() {
 			// console.log(this.loginStatus)
 			// console.log(uni.getStorageSync('user').length)
 			// console.log(this.loginStatus)
 			if(uni.getStorageSync('user').length>0){
+				// console.log(this.user)
+				this.setUser(JSON.parse(uni.getStorageSync('user')))
+				// console.log(this.user)
 				uni.switchTab({
 				    url: '/pages/musicModule/musicModule'
 				})
 			}
 		},
+		computed:{
+			...mapState(['user']),
+		},
 		methods: {
-			...mapMutations(['login']),
+			...mapMutations(['login','setUser']),
 			
 			smit() {
 				

@@ -12,6 +12,10 @@ const store = new Vuex.Store({
 			state.loginStatus = true
 			state.user = user
 			uni.setStorageSync('user', JSON.stringify(user));
+		},
+		setUser(state,user){
+			state.loginStatus = true
+			state.user = user
 		}
 		
 	}

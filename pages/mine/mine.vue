@@ -56,27 +56,9 @@
 						name: "我的歌单",
 						id: "myList"
 					},
-				
-
 				],
 				swiperheight:0,//高度
-				newslist:[
-				   {
-				     list:[
-				       1
-				       ]
-				   },
-				   {list:[
-				      2
-				       ]},
-				   {list:[
-				      3
-				       ]},
-					   {list:[
-					      4
-					       ]},
-				
-				]
+				newslist:[]
 			}
 		},
 		onLoad() {

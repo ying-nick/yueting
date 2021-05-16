@@ -53,8 +53,12 @@
 						id: "history"
 					},
 					{
+						name: "收藏的歌单",
+						id: "likeList"
+					},
+					{
 						name: "创建的歌单",
-						id: "mineList"
+						id: "myList"
 					},
 
 				],
@@ -71,6 +75,9 @@
 				   {list:[
 				      3
 				       ]},
+					   {list:[
+					      4
+					       ]},
 				
 				]
 			}
@@ -97,6 +104,19 @@
 			tabChange(e) {
 				this.tabIndex = e.detail.current;
 			},
+			async list(){
+				// const history=await this.getInf('/user/record',{
+				// 	cookie:this.cookie,
+				// 	uid:285385008,
+				// 	type:1
+				// })
+				// const likes=await this.getInf('/recommend/songs',{
+				// 	cookie:this.cookie
+				// })
+				// let like={id:'like',list:likes.data.dailySongs}
+				// const likeList=
+				console.log(like)
+			},
 			lgnOut() {
 				// console.log(this.cookie)
 				// console.log(this.user)
@@ -107,7 +127,8 @@
 				// }).then(res=>{
 				// 	console.log(res)
 				// })
-
+				
+this.list()
 				uni.showModal({
 					title: '确定要退出？',
 					success: (res) => {

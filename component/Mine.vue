@@ -53,16 +53,21 @@
 			.swiper-tab-list {
 				color: #969696;
 				font-weight: bold;
+				font-size: 13px;
 
 
 			}
 
 			.active {
 				color: #d43c43;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 
 				.swiper-tab-line {
 					border-bottom: 2px solid #FEDE33;
-					width: 70px;
+					width: 66px;
 					margin: auto;
 					border-top: 2px solid #FEDE33;
 					border-radius: 20px;

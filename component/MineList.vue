@@ -8,7 +8,7 @@
 		</template>
 	</scroll-view>
 </template>
-
+//scroll-view是竖向，再做组件，不用for，用if，swiper是横向轮播
 <script>
 	export default {
 		props:['items'],

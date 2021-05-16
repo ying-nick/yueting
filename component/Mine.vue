@@ -53,7 +53,7 @@
 			.swiper-tab-list {
 				color: #969696;
 				font-weight: bold;
-				font-size: 13px;
+				font-size: 35upx;
 
 
 			}

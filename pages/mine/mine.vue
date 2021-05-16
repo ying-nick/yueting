@@ -53,13 +53,10 @@
 						id: "history"
 					},
 					{
-						name: "收藏的歌单",
-						id: "likeList"
-					},
-					{
-						name: "创建的歌单",
+						name: "我的歌单",
 						id: "myList"
 					},
+				
 
 				],
 				swiperheight:0,//高度
@@ -89,6 +86,16 @@
 					this.swiperheight = height-150;
 				}
 			})
+			uni.showLoading({
+			    title: '努力加载中',
+				mask:true
+			});
+			this.list().then(res=>{
+				// console.log(res)
+				this.newslist=res
+				 uni.hideLoading()
+			})
+			
 		},
 		computed: {
 			...mapState(['user', 'cookie']),
@@ -105,30 +112,50 @@
 				this.tabIndex = e.detail.current;
 			},
 			async list(){
-				// const history=await this.getInf('/user/record',{
-				// 	cookie:this.cookie,
-				// 	uid:285385008,
-				// 	type:1
-				// })
-				// const likes=await this.getInf('/recommend/songs',{
-				// 	cookie:this.cookie
-				// })
-				// let like={id:'like',list:likes.data.dailySongs}
-				// const likeList=
-				console.log(like)
+				let list=[]
+				const likes=await this.getInf('/recommend/songs',{
+					cookie:this.cookie
+				})
+				if(likes.code==200){
+					let like={id:'like',list:likes.data.dailySongs}
+				list.push(like)
+				}
+				const historys=await this.getInf('/user/record',{
+					cookie:this.cookie,
+					uid:this.user.profile.userId,
+					type:1
+				})
+				if(historys.code==200){
+					let history={id:'history',list:historys.weekData}
+				list.push(history)
+				}
+				
+				
+				const myLists=await this.getInf('/user/playlist',{
+				uid:this.user.profile.userId,
+					cookie:this.cookie,
+					
+				})
+				if(myLists.code=200){
+					if(myLists.playlist.length==0){
+						list.push({
+							id:'myList',
+							list:[]
+						})
+					}else{
+						list.push({
+							id:'myList',
+							list:myLists.playlist
+						})
+					}
+				}
+				// console.log(list)
+				return list
 			},
 			lgnOut() {
 				// console.log(this.cookie)
 				// console.log(this.user)
-				// this.getInf('/user/record',{
-				// 	cookie:this.cookie,
-				// 	uid:285385008,
-				// 	type:1
-				// }).then(res=>{
-				// 	console.log(res)
-				// })
-				
-this.list()
+				console.log(this.newslist)
 				uni.showModal({
 					title: '确定要退出？',
 					success: (res) => {
@@ -144,7 +171,7 @@ this.list()
 							});
 						} else if (res.cancel) {
 							uni.showToast({
-								title: 'Bye',
+								title: '谢谢支持',
 								mask: true,
 								image: '../../static/icon/happy.png',
 								duration: 1000
@@ -205,8 +232,8 @@ this.list()
 				align-items: center;
 
 				.userImg {
-					width: 80px;
-					height: 80px;
+					width: 180upx;
+					height: 180upx;
 				}
 			}
 
@@ -217,19 +244,19 @@ this.list()
 				justify-content: center;
 
 				.userNk {
-					font-size: 18px;
+					font-size: 35upx;
 					font-family: PingFang SC;
 					font-weight: bold;
-					line-height: 25px;
+				
 					color: #333333;
 				}
 
 				.userUid {
-					margin-top: 5px;
-					font-size: 14px;
+					margin-top: 15upx;
+					font-size: 30upx;
 					font-family: PingFang SC;
 					font-weight: 500;
-					line-height: 20px;
+					
 					color: #666666;
 				}
 			}
@@ -258,10 +285,10 @@ this.list()
 
 			.unlogin {
 				width: 70%;
-				height: 35px;
+				height: 80upx;
 				background: #d43c43;
-				border: 1px solid #d43c43;
-				border-radius: 25px;
+				border: 2upx solid #d43c43;
+				border-radius: 50upx;
 				outline: none;
 				display: flex;
 				color: #FFFFFF;

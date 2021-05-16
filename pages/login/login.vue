@@ -160,7 +160,7 @@
 			justify-content: center;
 			align-items: center;
 			text-align: center;
-			font-size: 20px;
+			font-size: 50upx;
 			color: #666666;
 			font-weight: 700;
 
@@ -173,15 +173,15 @@
 			align-items: center;
 
 			.logo {
-				height: 300px;
-				width: 230px;
+				height: 500upx;
+				width:500upx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 
 				.cicl-1 {
-					height: 190px;
-					width: 190px;
+					height: 400upx;
+					width: 400upx;
 					border: 1px solid #666666;
 					border-radius: 50%;
 					display: flex;
@@ -189,8 +189,8 @@
 					align-items: center;
 
 					.cicle-2 {
-						height: 150px;
-						width: 150px;
+						height: 300upx;
+						width: 300upx;
 						border: 1px solid #666666;
 						border-radius: 50%;
 						display: flex;
@@ -198,8 +198,8 @@
 						align-items: center;
 
 						.img {
-							width: 110px;
-							height: 110px;
+							width: 200upx;
+							height: 200upx;
 						}
 					}
 
@@ -217,7 +217,7 @@
 
 				.lgn {
 					width: 100%;
-					height: 180px;
+					height: 350upx;
 
 					display: flex;
 					flex-direction: column;
@@ -228,28 +228,28 @@
 						width: 60%;
 						height: 20%;
 						display: flex;
-						justify-content: center;
+						justify-content: space-between;
 						align-items: center;
 						background-color: #FFFEFE;
 						outline: none;
-						padding: 2px 10px;
+						padding: 2px 30px;
 
 					}
 
 					.active {
-						border: 1px solid #666666;
-						border-radius: 25px;
+						border: 2upx solid #666666;
+						border-radius: 50upx;
 					}
 
 					.unactive {
-						border: 1px solid #d43c43;
-						border-radius: 25px;
+						border: 2upx solid #d43c43;
+						border-radius: 50upx;
 					}
 
 					.sub {
 						width: 45%;
 						height: 20%;
-						border-radius: 10px;
+						border-radius: 30upx;
 						background: #FFFEFE;
 						display: flex;
 						justify-content: center;

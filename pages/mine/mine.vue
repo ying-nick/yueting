@@ -44,10 +44,7 @@
 		data() {
 			return {
 				tabIndex: 0, // 选中的
-				tabBars: [{
-						name: "猜你喜欢",
-						id: "like"
-					},
+				tabBars: [
 					{
 						name: "播放历史",
 						id: "history"
@@ -58,7 +55,9 @@
 					},
 				],
 				swiperheight:500,//高度
-				newslist:[]
+				newslist:[],
+			
+				
 			}
 		},
 		onLoad() {
@@ -76,13 +75,15 @@
 			//进入页面判断是否有数据缓存
 			if(uni.getStorageSync('list').length>0){
 				this.newslist=JSON.parse(uni.getStorageSync('list'))
-				 uni.hideLoading()
+				 uni.hideLoading(this.newslist)
 			}else{
 				this.list().then(res=>{
 					// console.log(res)
-					uni.setStorageSync('list', JSON.stringify(res));
+						uni.setStorageSync('list', JSON.stringify(res));
 					this.newslist=res
 					 uni.hideLoading()
+					 
+					
 				})
 			}
 			
@@ -96,6 +97,8 @@
 		      	// console.log(res)
 		      	uni.setStorageSync('list', JSON.stringify(res));
 		      	this.newslist=res
+				// console.log(this.newslist)
+				// console.log(this.news)
 		      	 uni.stopPullDownRefresh();
 		      })
 		    },
@@ -116,17 +119,21 @@
 			//获取列表
 			async list(){
 				let list=[]
-				const likes=await this.getInf('/recommend/songs',{
-					cookie:this.cookie
+				//猜你喜欢
+				/* const likes=await this.getInf('/recommend/songs',{
+					cookie:this.cookie,
 				})
+				console.log(likes)
 				if(likes.code==200){
+					console.log(likes)
 					let like={id:'like',list:likes.data.dailySongs}
 				list.push(like)
-				}
+				} */
 				const historys=await this.getInf('/user/record',{
 					cookie:this.cookie,
 					uid:this.user.profile.userId,
-					type:1
+					type:1,
+					
 				})
 				if(historys.code==200){
 					let history={id:'history',list:historys.weekData}
@@ -137,7 +144,6 @@
 				const myLists=await this.getInf('/user/playlist',{
 				uid:this.user.profile.userId,
 					cookie:this.cookie,
-					
 				})
 				if(myLists.code=200){
 					if(myLists.playlist.length==0){

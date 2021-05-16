@@ -62,7 +62,7 @@
 			}
 		},
 		computed:{
-			...mapState(['user']),
+			...mapState(['user','cookie']),
 		},
 		methods: {
 			...mapMutations(['login','setUser']),
@@ -139,7 +139,7 @@
 					
 					// console.log(uni.getStorageSync())
 				}
-			}
+			},
 		}
 	}
 </script>

@@ -1,21 +1,34 @@
 <template>
-	<scroll-view scroll-y class="list">
+	<scroll-view scroll-y class="list" style="height: 100%;" >
 		<template v-if="items.list.length > 0">
 			<!-- 图文列表 -->
-			<block v-for="(item,index1) in items.list" :key="index1">
-				<view>{{item}}</view>
-			</block>
+			<Like v-if="items.id=='like'" :item='item'></Like>
+			<History v-if="items.id=='history'" :item='item'></History>
+			<Mylist v-if="items.id=='myList'" :item='item'></Mylist>
+		</template>
+		<template v-if="items.list.length == 0">
+			
+				<view>暂无数据，快去听歌和收藏</view>
+			
 		</template>
 	</scroll-view>
 </template>
-//scroll-view是竖向，再做组件，不用for，用if，swiper是横向轮播
+
 <script>
+	import Like from "./minelist/like.vue";
+	import History from "./minelist/history.vue";
+	import Mylist from "./minelist/myList.vue";
 	export default {
 		props:['items'],
 		data(){
 			return{
-				
+				item:this.items
 			}
+		},
+		components:{
+			Like,
+			History,
+			Mylist
 		}
 	}
 </script>

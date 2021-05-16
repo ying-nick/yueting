@@ -111,7 +111,7 @@
 			},
 			async loginMusic(url,data){
 				const res=await myRequestGet(url,data)
-				console.log(res)
+				// console.log(res)
 				if(res.code==501){
 					this.nameFlg = false
 					this.userName=''
@@ -242,7 +242,7 @@
 					}
 
 					.unactive {
-						border: 2upx solid #d43c43;
+						border: 4upx solid #d43c43;
 						border-radius: 50upx;
 					}
 

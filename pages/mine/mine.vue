@@ -57,7 +57,7 @@
 						id: "myList"
 					},
 				],
-				swiperheight:0,//高度
+				swiperheight:500,//高度
 				newslist:[]
 			}
 		},

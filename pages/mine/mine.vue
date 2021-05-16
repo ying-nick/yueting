@@ -16,7 +16,7 @@
 				<view class="uni-tab-bar">
 					<swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex" @change="tabChange">
 						<swiper-item v-for="(items,index) in newslist" :key="index">
-							<Minelist :items='items'></Minelist>
+							<Minelist :items='items' ></Minelist>
 						</swiper-item>
 					</swiper>
 				</view>
@@ -62,6 +62,7 @@
 			}
 		},
 		onLoad() {
+			//适应屏幕高度滚动框
 			uni.getSystemInfo({
 				success: (res) => {
 					let height = res.windowHeight - uni.upx2px(100)
@@ -72,13 +73,32 @@
 			    title: '努力加载中',
 				mask:true
 			});
-			this.list().then(res=>{
-				// console.log(res)
-				this.newslist=res
+			//进入页面判断是否有数据缓存
+			if(uni.getStorageSync('list').length>0){
+				this.newslist=JSON.parse(uni.getStorageSync('list'))
 				 uni.hideLoading()
-			})
+			}else{
+				this.list().then(res=>{
+					// console.log(res)
+					uni.setStorageSync('list', JSON.stringify(res));
+					this.newslist=res
+					 uni.hideLoading()
+				})
+			}
+			
+			
+			
 			
 		},
+		//下拉刷新，更新数据
+		 onPullDownRefresh() {
+		     this.list().then(res=>{
+		      	// console.log(res)
+		      	uni.setStorageSync('list', JSON.stringify(res));
+		      	this.newslist=res
+		      	 uni.stopPullDownRefresh();
+		      })
+		    },
 		computed: {
 			...mapState(['user', 'cookie']),
 		},
@@ -93,6 +113,7 @@
 			tabChange(e) {
 				this.tabIndex = e.detail.current;
 			},
+			//获取列表
 			async list(){
 				let list=[]
 				const likes=await this.getInf('/recommend/songs',{
@@ -134,6 +155,7 @@
 				// console.log(list)
 				return list
 			},
+			//登出
 			lgnOut() {
 				// console.log(this.cookie)
 				// console.log(this.user)

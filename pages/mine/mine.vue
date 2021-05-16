@@ -281,15 +281,14 @@
 		}
 
 		.unlgn {
-			height: 50px;
+			height: 120upx;
 			width: 100%;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-
 			.unlogin {
 				width: 70%;
-				height: 80upx;
+				height: 70%;
 				background: #d43c43;
 				border: 2upx solid #d43c43;
 				border-radius: 50upx;

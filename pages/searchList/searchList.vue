@@ -1,0 +1,71 @@
+<template>
+	<view class="container">
+		<view class="listHead">
+			<text>搜索结果</text>
+		</view>
+		<s-music-list :list ="searchList"/>
+	</view>
+</template>
+
+<script>
+	import sMusicList from '../../component/sMusicList.vue'
+	import {
+		myRequestGet
+	} from '../../utils/req.js'
+	export default {
+		data() {
+			return {
+				// musicIdList:[],
+				searchList:[],
+			}
+		},
+		components:{
+			sMusicList
+		},
+		//接受传递的参数 通过参数 获取数据
+		async onLoad(options){
+			// console.log(options.key)
+			if(options.key!=undefined){
+				await this._getSearch(options.key)
+				try {
+					const value = uni.getStorageSync('songsList');
+					if (value) {
+						// console.log(value)
+						this.searchList = value
+					}
+				} catch (e) {
+					// error
+					console.log(e)
+				}
+			}
+		},
+
+		methods: {
+			//封装搜索请求
+			async _getSearch(data) {
+				let re = await myRequestGet('/search', {
+					keywords: data
+				})
+				let songs = re.result.songs
+				try {
+					uni.setStorageSync('songsList', songs);
+				} catch (e) {
+					// error
+					console.log(e)
+				}
+			},
+		}
+	}
+</script>
+
+<style lang="less">
+	.container{
+		.listHead{
+			padding: 20rpx 30rpx;
+			font-size: 36rpx;
+			font-family: PingFang SC;
+			font-weight: 600;
+			color: #333333;
+		}
+	}
+</style>

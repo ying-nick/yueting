@@ -33,11 +33,22 @@
 		{
 			"path": "pages/search/search",
 			"style": {
-				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor":"#22BDE9",
+				"navigationBarTitleText": "悦听音乐",
 				"enablePullDownRefresh": false
 			}
 		
 		} 
+        ,{
+            "path" : "pages/searchList/searchList",
+            "style" :                                                                                    
+            {
+							"navigationBarBackgroundColor":"#22BDE9",
+                "navigationBarTitleText": "悦听音乐",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

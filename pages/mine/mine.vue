@@ -234,7 +234,7 @@
 				})
 				// console.log(res)
 				if (res.code == 200) {
-					uni.removeStorageSync('user')
+					uni.clearStorageSync();
 					uni.redirectTo({
 						url: '/pages/login/login'
 					});

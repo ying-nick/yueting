@@ -14,20 +14,24 @@
 			<view class="user-log">
 				<view class="reg">
 					<view class="inp-1" :class="[nameFlg?'active':'unactive']">
-						<input type="text" style="height: 100%;" :placeholder="namePh" v-model="userName"  @blur="phoneChk" @focus="focp">
+						<input type="text" style="height: 100%;" :placeholder="namePh" v-model="userName"
+							@blur="phoneChk" @focus="focp">
 					</view>
 					<view class="inp-1" :class="[pwdFlg?'active':'unactive']">
-						<input type="text" style="height: 100%;" :placeholder="pwdPh" v-model="userPwd"  :password="pwdLoc" @blur="pwdChk" @focus="focw">
-					<icon :class="['iconfont',pwdLoc?'icon-jurassic_loseeyes':'icon-jurassic_openeyes']" @click="()=>pwdLoc=!pwdLoc" style="font-size: 25px;"></icon>
+						<input type="text" style="height: 100%;" :placeholder="pwdPh" v-model="userPwd"
+							:password="pwdLoc" @blur="pwdChk" @focus="focw">
+						<icon :class="['iconfont',pwdLoc?'icon-jurassic_loseeyes':'icon-jurassic_openeyes']"
+							@click="()=>pwdLoc=!pwdLoc" style="font-size: 25px;"></icon>
 					</view>
 					<view class="cap">
 						<view class="inp-cap" :class="[captchaFlg?'active':'unactive']">
-							<input type="text" style="height: 100%;" :placeholder="captchaPh" v-model="captcha" class='inp-2' @blur="captchaChk" @focus="focc">
+							<input type="text" style="height: 100%;" :placeholder="captchaPh" v-model="captcha"
+								class='inp-2' @blur="captchaChk" @focus="focc">
 						</view>
 						<view class="getcap" @click="getcaps">获取验证码</view>
 					</view>
-					
-					<button type="default" class="sub" @click="smit">注册</button>
+
+					<button type="default" class="sub" @click="subreg">注册</button>
 				</view>
 				<view class="regs"><text @click="golg">去登录~~</text></view>
 			</view>
@@ -40,72 +44,108 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	import {myRequestGet} from '../../utils/req.js'
+	import {
+		myRequestGet
+	} from '../../utils/req.js'
 	export default {
 		data() {
 			return {
 				userName: '',
 				userPwd: '',
-				captcha:'',
+				captcha: '',
 				namePh: '请输入手机号',
 				pwdPh: "密码至少8位,字母和数字",
-				captchaPh:'请输入验证码',
+				captchaPh: '请输入验证码',
 				nameFlg: true,
 				pwdFlg: true,
 				captchaFlg: true,
-				pwdLoc:true
+				pwdLoc: true
 			}
 		},
-		
-		onLoad() {
-		
-		},
-		computed:{
-			...mapState(['user','cookie']),
+		computed: {
+			...mapState(['user', 'cookie']),
 		},
 		methods: {
-			...mapMutations(['login','setUser']),
-async phoneChk(){
-	const regP = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
-	if(regP.test(this.userName)){
-		const res = await myRequestGet('/cellphone/existence/check',{
+			...mapMutations(['login', 'setUser']),
+			async phoneChk() {
+				const regP = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+				if (regP.test(this.userName)) {
+					const res = await myRequestGet('/cellphone/existence/check', {
+						phone: this.userName
+					})
+					// console.log(res)
+					if (res.code == 200 && res.exist > 0) {
+						this.nameFlg = false
+						this.namePh = '账号已注册，请直接登录'
+						this.userName = ''
+
+					}
+				} else {
+					this.nameFlg = false
+					this.namePh = '请输入正确的手机号'
+					this.userName = ''
+
+				}
+
+			},
+			pwdChk() {
+				const regW = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/
+				if (!regW.test(this.userPwd)) {
+					this.pwdPh = '至少8位,字母+数字'
+					this.pwdFlg = false
+					this.userPwd = ''
+					return
+				}
+			},
+			async captchaChk() {
+				if (this.captcha != '') {
+					const res=await myRequestGet('/captcha/verify',{
+						phone:this.userName,
+						captcha:this.captcha
+					})
+					console.log(res)
+					if(!res.data){
+						this.captchaFlg = false
+						this.captchaPh = '输入有误或超时'
+						this.captcha = ''
+						return
+					}
+				}else{
+					this.captchaFlg = false
+					this.captchaPh = '请输入正确的验证码'
+					this.captcha = ''
+					return
+				}
+			},
+async getcaps(){
+	if(this.userName!=''&&this.nameFlg){
+		const res=await myRequestGet('/captcha/sent',{
 			phone:this.userName
 		})
 		// console.log(res)
-		if(res.code==200&&res.exist>0){
-			this.nameFlg=false
-			this.namePh='账号已注册，请直接登录'
-			this.userName=''
-		}
 	}else{
-		this.nameFlg=false
-		this.namePh='请输入正确的手机号'
-		this.userName=''
+		this.phoneChk()
 	}
 	
 },
-	async getInf(url, data) {
-				const res = await myRequestGet(url, data)
-				return res
+			focp() {
+				this.namePh = '请输入手机号'
+				this.nameFlg = true
 			},
-			focp(){
-				this.namePh='请输入手机号'
-				this.nameFlg=true
+			focw() {
+				this.pwdPh = '密码至少8位,字母和数字'
+				this.pwdFlg = true
 			},
-			focw(){
-				this.pwdPh='密码至少8位,字母和数字'
-				this.pwdFlg=true
+			focc() {
+				this.captchaPh = '请输入验证码'
+				this.captchaFlg = true
 			},
-			focc(){
-				this.captchaPh='请输入验证码'
-				this.captchaFlg=true
-			},
-			golg(){
+			golg() {
 				uni.navigateTo({
 					url: '/pages/login/login',
 				})
 			}
-			
+
 
 		}
 	}
@@ -141,7 +181,7 @@ async phoneChk(){
 
 			.logo {
 				height: 500upx;
-				width:500upx;
+				width: 500upx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -163,6 +203,7 @@ async phoneChk(){
 						display: flex;
 						justify-content: center;
 						align-items: center;
+
 						.img {
 							width: 200upx;
 							height: 200upx;
@@ -172,10 +213,11 @@ async phoneChk(){
 				}
 
 			}
+
 			.user-log {
 				width: 100%;
 				flex: 1;
-				
+
 				display: flex;
 				flex-direction: column;
 				justify-content: start;
@@ -199,14 +241,16 @@ async phoneChk(){
 						padding: 0px 15px;
 
 					}
-					.cap{
+
+					.cap {
 						width: 60%;
 						height: 20%;
 						display: flex;
 						justify-content: space-between;
 						align-items: center;
 						padding: 2px 15px;
-						.inp-cap{
+
+						.inp-cap {
 							width: 60%;
 							height: 100%;
 							display: flex;
@@ -214,19 +258,21 @@ async phoneChk(){
 							align-items: center;
 							background-color: #FFFEFE;
 							outline: none;
-						padding: 2px 10px;
-							
+							padding: 2px 10px;
+
 						}
-						.getcap{
+
+						.getcap {
 							width: 50%;
-							    height: 100%;
-							    display: flex;
-							    justify-content: flex-end;
-								align-items: center;
-								text-decoration: underline;
+							height: 100%;
+							display: flex;
+							justify-content: flex-end;
+							align-items: center;
+							text-decoration: underline;
+							font-size: 35upx;
 						}
 					}
-					
+
 
 					.active {
 						border: 2upx solid #666666;
@@ -249,7 +295,8 @@ async phoneChk(){
 
 					}
 				}
-.regs {
+
+				.regs {
 					color: #d43c43;
 					font-size: 35upx;
 					text-decoration: underline;

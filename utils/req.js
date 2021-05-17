@@ -1,4 +1,9 @@
+
 const baseUrl = "http://localhost:3000";
+
+
+
+
 
 export function myRequestGet(url, data) {
 	return new Promise((resolve, reject) => {

@@ -123,10 +123,40 @@ async getcaps(){
 			phone:this.userName
 		})
 		// console.log(res)
+		if(res.code==200&&res.data){
+			uni.showToast({
+			    title: '验证码已发送',
+			    duration: 2000
+			});
+		}
 	}else{
 		this.phoneChk()
 	}
 	
+},
+async subreg(){
+	if(this.userName==''||this.userPwd ==''||this.captcha ==''){
+		uni.showToast({
+		    title: '请将信息填写完整',
+			icon:'none',
+		    duration: 3000
+		});
+	}else{
+		let nickNm=this.userName+'_'+parseInt(Math.random()*100000)
+		const res=await  myRequestGet('/register/cellphone',{
+			captcha:this.captcha,
+			phone:this.userName,
+			password:this.userPwd,
+			nickname:nickNm
+		})
+		// console.log(res)
+		if(res.code==200){
+			uni.redirectTo({
+				url: '/pages/login/login'
+			});
+		}
+	}
+	// console.log(Date.now())
 },
 			focp() {
 				this.namePh = '请输入手机号'

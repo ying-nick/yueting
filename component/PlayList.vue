@@ -1,95 +1,104 @@
-<!-- <template>
-<view class="playlist-container">
-  <image>
-	 <!-- 这里放歌单图片 -->
-  </image>
-  <text class="playlist-playcount"></text>
-  <view class="playlist-name"></view>
-</view>
+<template>
+	<view class="playlist-container">
+		<view class="playlist-img" v-for="item in playList" :key="item.id">
+			
+				<image :src="item.picUrl" style="height: 210rpx; width: 100%;" >
+		
+				<text class="playlist-playcount iconfont icon-bofang">{{item.playCount}}</text>
+				<view class="playlist-name">{{item.name}}</view>
+		</view>
+	</view>
 </template>
 
 <script>
-	Component({
-	  /**
-	   * 组件的属性列表
-	   */
-	  properties: {
-	  playlist:{
-	    type:Object
-	  }
-	  },
-	  observers:{//属性监听器
-	   ['playlist.playCount'](count){//对象下面的某个属性
-	      this._tranNumber(count,2)
-	      this.setData({
-	        _count :this._tranNumber(count,2) //不能对监听的对象再赋值 生成的数字赋值给自己的声明的数字
-	      })
-	   }
-	  },
-	
-	  /**
-	   * 组件的初始数据
-	   */
-	  data: {
-	    _count:0 //声明一个自己的数字
-	  },
-	
-	  /**
-	   * 组件的方法列表
-	   */
-	  methods: {
-	    goToMusiclist(){
-	      wx.navigateTo({
-	        url: `../../pages/musiclist/musiclist?playlistId=${this.properties.playlist.id}`,
-	      })
-	    },
-	   _tranNumber(num,point){
-	       let numStr= num.toString().split ('.')[0]
-	       if(numStr.length<6){
-	 return numStr
-	       }else if(numStr.length >=6 && numStr.length <=8 ){
-	         let decimal = numStr.substring(numStr.length - 4,numStr.length-4+point)
-	         return parseFloat(parseInt(num/10000)+"."+decimal)+"万"
-	       }else if(numStr.length >8){
-	        let decimal = numStr.substring(numStr.length - 8,numStr.length-8+point)
-	        return parseFloat(parseInt(num/100000000)+"."+decimal)+"亿"
-	       }
-	      }
-	  }
-	})
+	import {
+		myRequestGet
+	} from '../utils/req.js'
+	export default {
 
-	
+		created() {
+			this.getPersonalized()
+
+		},
+		data() {
+			return {
+				playList: [
+
+				]
+
+
+			}
+		},
+		methods: {
+			async getPersonalized() {
+				const res = await myRequestGet('/personalized')
+				this.playList = res.result
+
+				console.log(this.playList)
+			}
+		},
+	}
 </script>
 
 <style>
-	.playlist-container{
-	  width: 220rpx;
-	  position: relative;
-	  padding-bottom: 20rpx;
+	@font-face {
+	  font-family: "iconfont"; /* Project id 2552167 */
+	  src: url('//at.alicdn.com/t/font_2552167_viff2ue0sj.woff2?t=1621219620868') format('woff2'),
+	       url('//at.alicdn.com/t/font_2552167_viff2ue0sj.woff?t=1621219620868') format('woff'),
+	       url('//at.alicdn.com/t/font_2552167_viff2ue0sj.ttf?t=1621219620868') format('truetype');
 	}
-	.playlist-img{
-	  width: 100%;
-	  height: 220rpx;
-	  border-radius: 6rpx;
+	
+	.iconfont {
+	
+	  font-family: "iconfont" !important;
+	  font-size: 16px;
+	  font-style: normal;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
 	}
-	.playlist-playcount{
-	  font-size: 24rpx;
-	  color:#fff;
-	  text-shadow:1px 0 0 rgba(0,0,0,0.15);
-	  position: absolute;
-	  right: 10rpx;
-	  top:4rxp;
-	  padding-left: 26rpx;
-}
-	.playlist-name{
-	  font-size: 26rpx;
-	  line-height: 1.2;
-	  padding: 2px 0 0 6px;
-	  display: -webkit-box;
-	  -webkit-box-orient: vertical;
-	  -webkit-line-clamp: 2;
-	  overflow: hidden;
-	  text-overflow: ellipsis;
+	
+	.icon-bofang:before {
+	  content: "\e77e";
 	}
+
+	
+	
+ 	.playlist-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		margin-top: 10rpx;
+		flex-direction: row;
+
+	}
+
+	.playlist-img {
+		width:200rpx;
+		
+		border-radius: 10rpx;
+		position: relative;
+	}
+
+	.playlist-playcount {
+		background-color: #808080;
+		border-radius: 56rpx;
+		font-size: 24rpx;
+		color: #fff;
+		text-shadow: 1px 0 0 rgba(0, 0, 0, 0.15);
+        position: absolute;
+		top:10rpx;
+		right:10rpx
+
+	}
+
+	.playlist-name {
+		font-size: 26rpx;
+		line-height: 1.2;
+		padding: 2px 0 0 6px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	} 
 </style>
- -->

@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import App from './App'
 
+import PlayList from "@/component/PlayList.vue"
+
+Vue.component('PlayList',PlayList)
+
 Vue.config.productionTip = false
 
 App.mpType = 'app'

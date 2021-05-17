@@ -8,7 +8,7 @@
 			</view>
 		</view>
 		<!-- 视频区 -->
-		<scroll-view class="videoScroll" scroll-y enable-flex="true" enable-back-to-top="true">
+		<scroll-view class="videoScroll" scroll-y enable-flex="true" enable-back-to-top="true" v-if="seen">
 			<view class="videoItem" v-for="item in newMV">
 				<video class="mvvideo" :poster="item.cover" controls muted="true" object-fit="fill"
 					:src="item.url"></video>
@@ -16,6 +16,16 @@
 				<view class="playCount">
 					<text class="iconfont icon-z"></text>
 					{{item.playCount}}
+				</view>
+			</view>
+		</scroll-view>
+		<scroll-view class="mvScroll" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
+			<view class="mvItem" v-for="(item,index) in newMV">
+				<view class="mv-center"><text class="mv-no">{{index+1}}.</text></view>
+				<video class="video2" :poster="item.cover" object-fit="fill"></video>
+				<view class="mv-txt">
+					<text class="mv-name">{{item.name}}</text>
+					<text class="mv-artist">{{item.artistName}}</text>
 				</view>
 			</view>
 		</scroll-view>
@@ -41,7 +51,8 @@
 				active: 0,
 				newMV: [],
 				// rankMV:[],
-				videoTime: []
+				videoTime: [],
+				seen: true
 			}
 		},
 		onLoad() {
@@ -53,7 +64,9 @@
 				this.active = index
 				if (this.active == 1) {
 					this.getRankingMV()
+					this.seen = false
 				} else {
+					this.seen = true
 					this.getNewMvList()
 				}
 			},
@@ -142,12 +155,13 @@
 		font-weight: 500;
 		line-height: 50rpx;
 		color: #666666;
-		z-index: 1;
 	}
 
 	.mv-navitems {
-		margin: 0 80rpx 0 0;
-		width: 180rpx;
+		flex: 1;
+		text-align: center;
+		height: 50rpx;
+		line-height: 50rpx;
 	}
 
 	.mv-active {
@@ -161,7 +175,8 @@
 	}
 
 	/* 视频区 */
-	.videoScroll {
+	.videoScroll,
+	.mvScroll {
 		height: calc(100vh - 110rpx);
 	}
 
@@ -186,5 +201,52 @@
 	.playCount {
 		font-size: 22rpx;
 		color: #666666;
+	}
+
+	.mvItem {
+		display: flex;
+		height: 140rpx;
+		margin-top: 16rpx;
+	}
+
+	.mv-no {
+		width: 24rpx;
+		height: 40rpx;
+		font-size: 28rpx;
+		font-family: PingFang SC;
+		font-weight: bold;
+		line-height: 40rpx;
+		color: #E42E17;
+	}
+
+	.mv-center{
+		height: 140rpx;
+		line-height: 140rpx;
+		width: 60rpx;
+		text-align: center;
+	}
+	.mv-txt {
+		display: flex;
+		flex-direction: column;
+		margin-top: 40rpx;
+	}
+
+	.mv-name {
+		font-size: 24rpx;
+		color: #333333;
+		font-family: PingFang SC;
+		margin-bottom: 8rpx;
+	}
+	.mv-artist{
+		font-size: 16rpx;
+		font-family: PingFang SC;
+		color: #999999;
+	}
+
+	.video2 {
+		height: 140rpx;
+		width: 140rpx;
+		border-radius: 10rpx;
+		margin: 0 20rpx;
 	}
 </style>

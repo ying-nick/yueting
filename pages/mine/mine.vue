@@ -53,6 +53,10 @@
 						name: "我的歌单",
 						id: "myList"
 					},
+					{
+						name: "个人信息",
+						id: "myInfo"
+					},
 				],
 				swiperheight:500,//高度
 				newslist:[],
@@ -129,6 +133,7 @@
 					let like={id:'like',list:likes.data.dailySongs}
 				list.push(like)
 				} */
+				//播放历史
 				const historys=await this.getInf('/user/record',{
 					cookie:this.cookie,
 					uid:this.user.profile.userId,
@@ -138,9 +143,13 @@
 				if(historys.code==200){
 					let history={id:'history',list:historys.weekData}
 				list.push(history)
+				}else{
+					list.push({
+						id:'history',
+						list:[]
+					})
 				}
-				
-				
+				//我的歌单
 				const myLists=await this.getInf('/user/playlist',{
 				uid:this.user.profile.userId,
 					cookie:this.cookie,
@@ -157,6 +166,32 @@
 							list:myLists.playlist
 						})
 					}
+				}
+				//个人信息
+				const levl=await this.getInf('/user/level',{
+				uid:this.user.profile.userId,
+					cookie:this.cookie,
+				})
+				if(levl.code==200){
+					const count=await this.getInf('/user/subcount',{
+					uid:this.user.profile.userId,
+						cookie:this.cookie,
+					})
+					if(count.code==200){
+						let info={...count,...levl.data}
+						let usinfo=[]
+						usinfo.push(info)
+						list.push({
+							id:'myInfo',
+							list:usinfo
+						})
+					}
+					
+				}else{
+					list.push({
+						id:'myInfo',
+						list:[]
+					})
 				}
 				// console.log(list)
 				return list

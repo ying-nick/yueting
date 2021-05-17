@@ -5,18 +5,18 @@
 		</view>
 		<view class="bodyText">
 			<view class="">
-				
+
 			</view>
 			<view class="stationName">
-				<text>当前电台{{}}</text>
-				<text>下一个电台{{}}</text>
+				<text>当前电台:{{}}</text>
+				<text>下个电台:{{}}</text>
 			</view>
 		</view>
 		<view class="bottomImage">
-			<image src="./recicon/pre.png" mode="" title="上一首"></image>
-			<image src="./recicon/start.png" mode="" title="开始"></image>
-			<image src="./recicon/next.png" mode="" title="下一首"></image>
-			<image src="./recicon/reclist.png" mode="" title="热门电台"></image>
+			<text class="iconfont icon-shangyishoushangyige"></text>
+			<text class="iconfont icon-kaishi"></text>
+			<text class="iconfont icon-xiayigexiayishou"></text>
+			<text class="iconfont icon-music"></text>
 		</view>
 	</view>
 </template>
@@ -25,29 +25,59 @@
 </script>
 
 <style lang="less" scoped>
-	.hotStation{
+	@import '../../static/icon/iconfontZlq.css';
+	
+	page{
 		
-		.topText{
-			.hotTitle{
+	}
+	.hotStation {
+		height: 100%;
+		width: 100%;
+		position: relative;
+		
+		.topText {
+			.hotTitle {
 				width: 83px;
 				height: 28px;
-				font-size: 20px;
+				font-size: 40rpx;
 				font-family: PingFang SC;
 				font-weight: 500;
 				line-height: 28px;
-				color: #ccc;
-				letter-spacing: 50px;
+				float: left;
+				margin-left: 150px;
+				color: #333;
 				opacity: 1;
-			}
-		}
-		.bodyText{
-			.stationName{
 				
 			}
 		}
-		.bottomImage{
-			
+
+		.bodyText {
+			.stationName {
+				padding-left: 50rpx;
+				position: absolute;
+				position: fixed;
+				bottom:150rpx;
+				font-size: 30rpx;
+				text{
+					display: block;
+					
+				}
+			}
 		}
-		
+
+		.bottomImage {
+			display: flex;
+			padding-left: 150rpx;
+			padding-right: 100rpx;
+			position: absolute;
+			position: fixed;
+			bottom:25rpx;
+			text{
+				font-size: 40px;
+				padding-left: 50rpx;
+				flex: 1;
+			}
+		}
+
 	}
 </style>

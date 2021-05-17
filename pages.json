@@ -47,6 +47,15 @@
 			}
 		
 		} 
+        ,{
+            "path" : "pages/register/register",
+            "style" :                                                                                    
+            {
+               "enablePullDownRefresh": false,
+               "navigationStyle":"custom"
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -1,6 +1,6 @@
 <template>
 	<view class="myinfoView">
-		<view class="myinfos">
+		<view class="myinfos" v-if='item.list.length>0'>
 			<block v-for="(it,index) in item.list" :key="index">
 				<view class="myinfoMsg">
 					<view class="myinfos">等级：{{it.level}}级</view>
@@ -24,7 +24,9 @@
 				</view>
 			</block>
 		</view>
-
+<view class="" v-else>
+	服务器繁忙，请稍候下拉刷新
+</view>
 	</view>
 </template>
 

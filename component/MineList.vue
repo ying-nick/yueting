@@ -7,6 +7,7 @@
 			<Mylist v-if="items.id=='myList'" :item='mylists'></Mylist>
 			<Myinfo v-if="items.id=='myInfo'" :item='myinfos'></Myinfo>
 		</template>
+		<template v-else>服务器繁忙，请稍候下拉刷新</template>
 	</scroll-view>
 </template>
 

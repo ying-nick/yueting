@@ -40,11 +40,22 @@
 		{
 			"path": "pages/search/search",
 			"style": {
-				"navigationBarTitleText": "搜索",
+				"navigationBarBackgroundColor":"#22BDE9",
+				"navigationBarTitleText": "悦听音乐",
 				"enablePullDownRefresh": false
 			}
 		
 		} 
+        ,{
+            "path" : "pages/searchList/searchList",
+            "style" :                                                                                    
+            {
+							"navigationBarBackgroundColor":"#22BDE9",
+                "navigationBarTitleText": "悦听音乐",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -56,8 +67,13 @@
 		}
 	},
 	"tabBar": {
+		"Color":"#CCCCCC",
+		"selectedColor" : "#3A97DB",
+		"iconWidth":"17px",
+		"fontSize":"10px",
+		"height":"82px",
 			"list": [{
-					"text": "音乐",
+					"text": "音乐",	
 					"pagePath": "pages/musicModule/musicModule",
 					"iconPath": "static/icon/music.png",
 					"selectedIconPath": "static/icon/music-active.png"
@@ -66,25 +82,25 @@
 					"text": "MV",
 					"pagePath": "pages/mvModule/mvModule",
 					"iconPath": "static/icon/MV.png",
-					"selectedIconPath": "static/icon/MV-active.png"
+					"selectedIconPath": "static/icon/MVV.png"
 				},
 				{
 					"text": "电台",
 					"pagePath": "pages/receiver/receiver",
-					"iconPath": "static/icon/receiver.png",
-					"selectedIconPath": "static/icon/receiver-active.png"
+					"iconPath": "static/icon/station.png",
+					"selectedIconPath": "static/icon/station-active.png"
 				},
 				{
 					"text": "搜索",
 					"pagePath": "pages/search/search",
 					"iconPath": "static/icon/search.png",
-					"selectedIconPath": "static/icon/search-active.png"
+					"selectedIconPath": "static/icon/serch-active.png"
 				},
 				{
 					"text": "我的",
 					"pagePath": "pages/mine/mine",
-					"iconPath": "static/icon/mine.png",
-					"selectedIconPath": "static/icon/mine-active.png"
+					"iconPath": "static/icon/main.png",
+					"selectedIconPath": "static/icon/main-active.png"
 				}
 				
 			]

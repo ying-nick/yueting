@@ -2,7 +2,6 @@
 	<scroll-view scroll-y class="list" style="height: 92%;">
 		<template v-if="items.list.length > 0">
 			<!-- 图文列表 -->
-			<!-- <Like v-if="items.id=='like'" :item='likes'></Like> -->
 			<History v-if="items.id=='history'" :item='historys'></History>
 			<Mylist v-if="items.id=='myList'" :item='mylists'></Mylist>
 			<Myinfo v-if="items.id=='myInfo'" :item='myinfos'></Myinfo>
@@ -12,7 +11,6 @@
 </template>
 
 <script>
-	import Like from "./minelist/like.vue";
 	import Myinfo from "./minelist/myInfo.vue";
 	import History from "./minelist/history.vue";
 	import Mylist from "./minelist/myList.vue";
@@ -54,7 +52,6 @@
 			}
 		},
 		components:{
-			Like,
 			History,
 			Mylist,
 			Myinfo

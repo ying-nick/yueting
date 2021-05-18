@@ -31,8 +31,7 @@
 		methods: {
 			//点击切换导航
 			tabtap(index) {
-				// this.tabIndex = index;
-				this.$emit('tabtap', index)
+				// this.$emit('tabtap', index)
 			}
 		}
 	}

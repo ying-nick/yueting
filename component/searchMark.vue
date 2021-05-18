@@ -1,8 +1,8 @@
 <template>
 	<view class="container">
 		<block v-for="item in list" :key="item.keyword">
-			<view class="list">
-				<text class="iconfont icon-sousuo ic"></text>
+			<view class="list" @click="goToList(item.keyword)">
+				<text class="iconfont icon-sousou ic"></text>
 				<text class="text">{{item.keyword}}</text>
 			</view>
 		</block>
@@ -31,14 +31,22 @@
 								this.list = arr
 								// console.log(this.list)
 							}
-						}).catch((err)=>{console.log(err)})
+						}).catch((err) => {
+							console.log(err)
+						})
 				} else {
 					this.list = []
 				}
 			},
 		},
 		methods: {
-
+			goToList(e) {
+				// console.log(e)
+				 this.$emit("func",e);
+				uni.navigateTo({
+					url: `/pages/searchList/searchList?key=${e}`
+				})
+			}
 		}
 	}
 </script>
@@ -50,17 +58,20 @@
 		position: absolute;
 		background-color: #F8FAF9;
 		z-index: 100;
-		.list{
+
+		.list {
 			width: 100%;
 			height: 100rpx;
 			line-height: 100rpx;
-			border-bottom: solid 1px rgba(212, 212, 222, 0.4) ;
-			.text{
+			border-bottom: solid 1px rgba(212, 212, 222, 0.4);
+
+			.text {
 				padding-left: 20rpx;
-				font-size: 35rpx;
+				font-size: 28rpx;
 			}
-			.ic{
-				padding-left: 10rpx;
+
+			.ic {
+				padding-left: 20rpx;
 			}
 		}
 	}

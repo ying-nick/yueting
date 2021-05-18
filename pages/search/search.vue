@@ -3,14 +3,15 @@
 		<view class="head">
 			<view class="searchView">
 				<text class="iconfont icon-sousuo ic"></text>
+				<text class="iconfont icon-shanchu ic2" v-if="markFlag" @click="mark"></text>
 				<input type="text" value="" placeholder="请输入" maxlength="15" class="bar" confirm-type="search"
-					@input="onKeyInput" v-model="inputValue"   @confirm="getSongList" @focus="mark" @blur="mark"/>
+					@input="onKeyInput" v-model="inputValue" @confirm="getSongList" />
 				<button type="default" size="mini" class="searchBtn" @click="getSongList">搜索</button>
 			</view>
 		</view>
 		<view class="main">
 			<view v-if="listFlag">
-				<search-mark  v-show="markFlag" :value = "inputValue"/>
+				<search-mark v-show="markFlag" :value="inputValue" @func="getmarkList" />
 				<view class="historyBot">
 					<text>搜索历史</text>
 					<text class="iconfont icon-shanchu1 iconDelete" @click="deleteHistory"></text>
@@ -30,7 +31,7 @@
 						@click="goToList(item.first)">
 						<text :class="index<=num?'rednum':'num'">{{index+1}}</text>
 						<text class="hottext">{{item.first}}</text>
-						<text class="iconfont icon-huo" v-if="index<=num"></text>
+						<text class="iconfont icon-huo " v-if="index<=num" style="color: red;"></text>
 					</view>
 				</view>
 			</view>
@@ -55,7 +56,7 @@
 				historyList: [],
 				hotList: [],
 				num: 2,
-				markFlag:false,
+				markFlag: false,
 			}
 		},
 		components: {
@@ -65,19 +66,34 @@
 		created() {
 			this._getHotList()
 		},
-		// watch:{
-		// 	inputValue(re){
-		// 		if(re != null){
-		// 			this.markFlag = !this.markFlag
-		// 		}
-		// 	}
-		// },
+		watch: {
+			inputValue(re) {
+				if (re != '') {
+					this.markFlag = true
+				} else {
+					this.markFlag = false
+				}
+			}
+		},
 		methods: {
-			mark(){
-				this.markFlag = !this.markFlag
+			//自定义数组去重方法
+			SetList(list, value) {
+				// //数据添加
+				list.push(value)
+				// //数据去重			
+				return new Set(list)
+			},
+			//子组件传递的值
+			getmarkList(value) {
+				this.inputValue = ''
+				this.SetList(this.historyList, value)
+			},
+			mark() {
+				this.markFlag = false
 			},
 			goToList(name) {
 				// console.log(name)
+				this.SetList(this.historyList, name)
 				uni.navigateTo({
 					//通过传参的将需要搜索歌曲的key穿给搜索列表
 					url: `/pages/searchList/searchList?key=${name}`
@@ -86,7 +102,7 @@
 			//数据绑定 获取用户输入的内容
 			onKeyInput(event) {
 				this.inputValue = event.target.value
-				
+
 			},
 			deleteHistory() {
 				uni.showModal({
@@ -102,12 +118,7 @@
 			//搜索效果获取数据
 			async getSongList() {
 				if (this.inputValue) {
-					//数据添加
-					this.historyList.push(this.inputValue)
-					//数据去重
-					const arr = new Set(this.historyList)
-					this.historyList = Array.from(arr)
-
+					this.SetList(this.historyList, this.inputValue)
 					//清除input中的内容
 					let value = this.inputValue
 					this.inputValue = ''
@@ -130,8 +141,8 @@
 
 <style lang="less">
 	.container {
-		
-		
+
+
 		.head {
 			.searchView {
 				display: flex;
@@ -145,6 +156,16 @@
 					top: 57%;
 					transform: translate(16rpx, -50%);
 					color: #9f9f9f;
+				}
+
+				.ic2 {
+					position: absolute;
+					top: 57%;
+					right: 25%;
+					font-size: 10rpx;
+					transform: translate(16rpx, -50%);
+					color: #9f9f9f;
+					z-index: 10;
 				}
 
 				.bar {

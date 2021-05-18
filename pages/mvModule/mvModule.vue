@@ -8,12 +8,14 @@
 			</view>
 		</view>
 		<!-- 视频区 -->
-		
+
 		<!-- 推荐区 -->
 		<scroll-view class="videoScroll" scroll-y enable-flex="true" enable-back-to-top="true" v-if="seen">
 			<view class="videoItem" v-for="item in newMV" :key="item.id">
-				<video class="mvvideo" :poster="item.cover" controls muted="true" object-fit="fill"
-					:src="item.url" @click="toPlay" :data-id="item.id"></video>
+				<video class="mvvideo" :poster="item.cover" controls muted="true" object-fit="fill" :src="item.url"
+					v-if="videoId === item.id" @click="toPlay(item.id)" :data-id="item.id"></video>
+				<image :src="item.cover" class="mvvideo" @click="toPlay(item.id)" :data-id="item.id" :ref='item.id'
+					v-else></image>
 				<view class="title"><text>{{item.name}} - {{item.artistName}}</text></view>
 				<view class="playCount">
 					<text class="iconfont icon-z"></text>
@@ -22,10 +24,12 @@
 			</view>
 		</scroll-view>
 		<!-- 排行榜 -->
-		<scroll-view class="mvScroll" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
+		<scroll-view class="mvScroll" refresher-enabled="true" 
+		@refresherrefresh="toRefresh" refresher-triggered="isTriggered" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
 			<view class="mvItem" v-for="(item,index) in newMV">
 				<view class="mv-center"><text class="mv-no">{{index+1}}.</text></view>
-				<video class="video2" :poster="item.cover" object-fit="fill" muted="true" :src="item.url" @click="toPlay"></video>
+				<video class="video2" :poster="item.cover" object-fit="fill" muted="true" :src="item.url"
+					@click="toPlay"></video>
 				<view class="mv-txt">
 					<text class="mv-name">{{item.name}}</text>
 					<text class="mv-artist">{{item.artistName}}</text>
@@ -54,7 +58,9 @@
 				active: 0,
 				newMV: [],
 				videoTime: [],
-				seen: true
+				seen: true,
+				videoId: "",
+				isTriggered:false
 			}
 		},
 		onLoad() {
@@ -105,12 +111,29 @@
 				}
 			},
 			// 点击全屏播放视频，关闭其他视频
-			toPlay(e){
-				let vid = e.target.dataset.id
+			toPlay(e) {
+				// 关闭其他视频
+				let vid = e
+				this.videoId = vid
+				// let trailer = this.newMV;
+				// for (let i = 0; i < trailer.length; i++) {
+				// 	// console.log(trailer)
+				// 	let temp = trailer[i].id
+				// 	if (temp !== vid) {
+				// 		this.$refs[temp][0].pause();
+				// 	}
+				// }
 				// 关闭上一个播放的视频
-				this.videoContext && this.videoContext.pause();
-				this.videoContext = uni.createVideoContext(vid.toString());
-				// this.videoContext.play();
+				this.vid !== vid && this.videoContext && this.videoContext.stop();
+				this.vid = vid
+				this.videoContext = uni.createVideoContext();
+				// this.videoContext.requestFullScreen()
+			},
+			// 自定义下拉刷新
+			toRefresh(){
+				// console.log(123456)
+				this.getRankingMV()
+				this.isTriggered=false
 			}
 		}
 	}
@@ -178,6 +201,8 @@
 
 	.videoItem {
 		margin: 20rpx 0;
+		width: 100%;
+		border-bottom: solid 1px #EAEAEA;
 	}
 
 	.mvvideo {
@@ -198,7 +223,7 @@
 		font-size: 22rpx;
 		color: #666666;
 		float: right;
-		margin-top: -40rpx;
+		margin-top: -50rpx;
 	}
 
 	.mvItem {
@@ -206,7 +231,7 @@
 		height: 140rpx;
 		margin-top: 16rpx;
 		/* justify-content:center; */
-		width:100%;
+		width: 100%;
 		/* flex-direction: column; */
 	}
 
@@ -220,12 +245,13 @@
 		color: #E42E17;
 	}
 
-	.mv-center{
+	.mv-center {
 		height: 140rpx;
 		line-height: 140rpx;
 		width: 60rpx;
 		text-align: center;
 	}
+
 	.mv-txt {
 		display: flex;
 		flex-direction: column;
@@ -238,7 +264,8 @@
 		font-family: PingFang SC;
 		margin-bottom: 8rpx;
 	}
-	.mv-artist{
+
+	.mv-artist {
 		font-size: 16rpx;
 		font-family: PingFang SC;
 		color: #999999;

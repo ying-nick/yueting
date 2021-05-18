@@ -1,25 +1,25 @@
 <template>
 	<view class="container">
-
 		<swiper :indicator-dots="true" :circular="true" :autoplay="true" :interval="2000" :duration="1000">
 			<swiper-item v-for="item in swiperImgUrls" :key="item.url">
 				<image class="img" :src="item.pic" mode="widthFix"></image>
 			</swiper-item>
 		</swiper>
-
 		<view class="recomSonglist-container">
 			<view class="recomSonglist">推荐歌单</view>
 		</view>
-		 <view>
-			<block  >
-				<PlayList></PlayList>
-			</block>
-		</view> 
+		<view>
+			<PlayList></PlayList>
+		</view>
+		<view class="recomSonglist">推荐歌曲</view> <!-- 样式与推荐歌单一样 -->
+	<MusicList></MusicList>
 	</view>
 </template>
 
 <script>
-	import {myRequestGet} from '../../utils/req.js'
+	import {
+		myRequestGet
+	} from '../../utils/req.js'
 	export default {
 
 		created() {
@@ -31,7 +31,7 @@
 				swiperImgUrls: [
 
 				],
-			
+
 
 			}
 		},
@@ -69,5 +69,7 @@
 		font-weight: 500;
 		flex-direction: row;
 		padding-left: 30rpx;
+		margin-top: 30rpx;
+		margin-bottom: 30rpx;
 	}
 </style>

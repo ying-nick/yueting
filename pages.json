@@ -15,6 +15,13 @@
 		}
 		},
 		{
+			"path": "pages/musicList/musicList",
+			"style": {
+				"navigationBarTitleText": "音乐",
+				"enablePullDownRefresh": false
+			}
+			},
+		{
 			"path": "pages/mvModule/mvModule",
 			"style": {
 				"navigationBarTitleText": "MV",

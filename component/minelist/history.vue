@@ -2,7 +2,7 @@
 	<view class="historyView">
 		<view class="historys">
 			<block v-for="(it,index) in item.list" :key="index">
-				<view class="historySong">
+				<view class="historySong" @click="goplay" :data-id='it.id'>
 					<view>{{index+1}}</view>
 					<image :src='it.song.al.picUrl' class="img"></image>
 					<view class="historylists">{{it.song.name}}</view>
@@ -18,7 +18,7 @@
 	export default {
 	props:['item'],
 	created() {
-		// console.log(this.item)
+		console.log(this.item)
 	},
 		data(){
 			return{

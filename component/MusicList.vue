@@ -1,12 +1,12 @@
 <template>
-	<scroll-view scroll-y="true" class="scroll-Y" >
+	<view>
 		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id">
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
-				  <text class="songTitle">{{item.name}} </text>
-				  <text  class="singer">{{item.artists[0].name}}</text>
+				<text class="songTitle">{{item.name}} </text>
+				<text  class="singer">{{item.artists[0].name}}</text>
 		</view>
-	</scroll-view>
+	</view>
 </template>
 
 <script>

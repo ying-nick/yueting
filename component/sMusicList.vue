@@ -8,7 +8,7 @@
 						{{item.name}}
 					</view>
 					<view class="list-singer">
-						{{item.artists[0].name}}
+						{{item.artists[0].name}}-{{item.album.name}}
 					</view>
 				</view>
 			</view>

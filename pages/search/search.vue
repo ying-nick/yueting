@@ -4,12 +4,13 @@
 			<view class="searchView">
 				<text class="iconfont icon-sousuo ic"></text>
 				<input type="text" value="" placeholder="请输入" maxlength="15" class="bar" confirm-type="search"
-					@input="onKeyInput" v-model="inputValue"   @confirm="getSongList" />
+					@input="onKeyInput" v-model="inputValue"   @confirm="getSongList" @focus="mark" @blur="mark"/>
 				<button type="default" size="mini" class="searchBtn" @click="getSongList">搜索</button>
 			</view>
 		</view>
 		<view class="main">
 			<view v-if="listFlag">
+				<search-mark  v-show="markFlag" :value = "inputValue"/>
 				<view class="historyBot">
 					<text>搜索历史</text>
 					<text class="iconfont icon-shanchu1 iconDelete" @click="deleteHistory"></text>
@@ -41,8 +42,9 @@
 	import '../../iconfont_xc.css'
 	import {
 		myRequestGet
-	} from '../..//utils/req.js'
+	} from '../../utils/req.js'
 	import historyList from '../../component/historyList.vue'
+	import searchMark from '../../component/searchMark.vue'
 	// const baseUrl = 'http://localhost:3000/search?keywords='
 	export default {
 		data() {
@@ -53,16 +55,27 @@
 				historyList: [],
 				hotList: [],
 				num: 2,
-				da: ['1', '2', '3'],
+				markFlag:false,
 			}
 		},
 		components: {
 			historyList,
+			searchMark,
 		},
 		created() {
 			this._getHotList()
 		},
+		// watch:{
+		// 	inputValue(re){
+		// 		if(re != null){
+		// 			this.markFlag = !this.markFlag
+		// 		}
+		// 	}
+		// },
 		methods: {
+			mark(){
+				this.markFlag = !this.markFlag
+			},
 			goToList(name) {
 				// console.log(name)
 				uni.navigateTo({
@@ -73,6 +86,7 @@
 			//数据绑定 获取用户输入的内容
 			onKeyInput(event) {
 				this.inputValue = event.target.value
+				
 			},
 			deleteHistory() {
 				uni.showModal({
@@ -106,7 +120,7 @@
 			},
 			async _getHotList() {
 				let re = await myRequestGet('/search/hot')
-				console.log(re.result.hots)
+				// console.log(re.result.hots)
 				this.hotList = re.result.hots
 			},
 
@@ -116,6 +130,8 @@
 
 <style lang="less">
 	.container {
+		
+		
 		.head {
 			.searchView {
 				display: flex;

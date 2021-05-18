@@ -15,7 +15,7 @@
 				<Mine :tabBars="tabBars" :tabIndex="tabIndex" @tabtap.stop="tabtap"></Mine>
 				<view class="uni-tab-bar">
 					<!-- 设置不自动播放 阻止事件冒泡-->
-					<swiper class="swiper-box" :autoplay="false" :style="{height:swiperheight+'px'}" :current="tabIndex" @change.stop="tabChange">
+					<swiper class="swiper-box"  :style="{height:swiperheight+'px'}" :current="tabIndex" @change="tabChange">
 						<swiper-item v-for="(items,index) in newslist" :key="index">
 							<Minelist :items='items' ></Minelist>
 						</swiper-item>
@@ -45,7 +45,7 @@
 		data() {
 			return {
 				tabIndex: 0, // 选中的
-				false:'',
+				preIndex:0,
 				tabBars: [
 					{
 						name: "播放历史",
@@ -110,7 +110,6 @@
 		      	this.newslist=res
 				// console.log(this.newslist)
 				// console.log(this.news)
-				this.false=''
 		      	 uni.stopPullDownRefresh();
 		      })
 		    },
@@ -123,13 +122,20 @@
 		},
 		methods: {
 			...mapMutations(['login', 'setUser','getUserInfo']),
-			//点击导航栏
+			//点击导航
 			tabtap(index) {
 				// this.tabIndex = index;
+				
 			},
 			tabChange(e) {
-				console.log(e.detail.current)
-				this.tabIndex = e.detail.current;
+				if(e.detail.source=='touch'){
+						this.preIndex=e.detail.current;
+				}
+					this.tabIndex=this.preIndex
+				
+				// console.log(e.detail)
+				// console.log(e.detail.current)
+				
 			},
 			//获取列表
 			async list(){

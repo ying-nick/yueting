@@ -3,7 +3,7 @@
 		<view class="listHead">
 			<text>搜索结果</text>
 		</view>
-		<s-music-list :list ="searchList"/>
+		<s-music-list :list="searchList" />
 	</view>
 </template>
 
@@ -16,27 +16,29 @@
 		data() {
 			return {
 				// musicIdList:[],
-				searchList:[],
+				searchList: [],
 			}
 		},
-		components:{
+		components: {
 			sMusicList
 		},
 		//接受传递的参数 通过参数 获取数据
-		async onLoad(options){
+		onLoad(options) {
 			// console.log(options.key)
-			if(options.key!=undefined){
-				await this._getSearch(options.key)
-				try {
+			uni.showLoading({
+				title:"加载中",
+				mask:true,
+			})
+			if (options.key != undefined) {
+				this._getSearch(options.key).then((res) => {
 					const value = uni.getStorageSync('songsList');
-					if (value) {
-						// console.log(value)
+					if (value) { 
 						this.searchList = value
+						uni.hideLoading()
 					}
-				} catch (e) {
-					// error
-					console.log(e)
-				}
+				}).catch((err)=>{
+					console.log(err)
+				})
 			}
 		},
 
@@ -59,8 +61,8 @@
 </script>
 
 <style lang="less">
-	.container{
-		.listHead{
+	.container {
+		.listHead {
 			padding: 20rpx 30rpx;
 			font-size: 36rpx;
 			font-family: PingFang SC;

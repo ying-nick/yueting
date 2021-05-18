@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2549987 */
-  src: url('https://at.alicdn.com/t/font_2549987_5u014vrqwcg.woff2?t=1621057047099') format('woff2'),
-       url('https://at.alicdn.com/t/font_2549987_5u014vrqwcg.woff?t=1621057047099') format('woff'),
-       url('https://at.alicdn.com/t/font_2549987_5u014vrqwcg.ttf?t=1621057047099') format('truetype');
+  src: url('https://at.alicdn.com/t/font_2549987_td7jb3nm28.woff2?t=1621337368109') format('woff2'),
+       url('https://at.alicdn.com/t/font_2549987_td7jb3nm28.woff?t=1621337368109') format('woff'),
+       url('https://at.alicdn.com/t/font_2549987_td7jb3nm28.ttf?t=1621337368109') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +13,42 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-fabu:before {
+  content: "\e60f";
+}
+
+.icon-pinglun:before {
+  content: "\e607";
+}
+
+.icon-yixianshi-:before {
+  content: "\e612";
+}
+
+.icon-bofang:before {
+  content: "\e60a";
+}
+
+.icon-qianjin:before {
+  content: "\e693";
+}
+
+.icon-houtui:before {
+  content: "\e694";
+}
+
+.icon-backward:before {
+  content: "\e662";
+}
+
+.icon-forward:before {
+  content: "\e665";
+}
+
+.icon-ku:before {
+  content: "\e617";
+}
+
 .icon-jurassic_loseeyes:before {
   content: "\e69d";
 }
@@ -20,4 +56,3 @@
 .icon-jurassic_openeyes:before {
   content: "\e6a0";
 }
-

@@ -1,21 +1,49 @@
 <template>
 	<view class="body">
-		<view class="contain" :style="{background:'url('+src+') no-repeat'}"></view>
+		<view class="title">
+			<text>{{name}}</text>
+		</view>
+		<view class="contain"
+			:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
+		</view>
 		<view class="contains">
 			<view class="play">
 				<view class="load">
-		
+
 				</view>
 				<view class="playCtrl">
 					<view class="ctrls">
-		
+
 					</view>
 				</view>
 			</view>
-		
+
+		</view>
+		<view class="players">
+			<view class="progress">
+				<view class="prg-pst">
+					
+				</view>
+			</view>
+			<view class="players-position">
+<view class="posion-1">
+	
+</view>
+<view class="posion-2">
+	<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
+	<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
+		style="font-size:160upx;color: #d43c43;"></icon>
+	<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
+</view>
+<view class="posion-1">
+	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"></icon>
+</view>
+				
+
+			</view>
 		</view>
 	</view>
-	
+
 
 </template>
 
@@ -26,18 +54,21 @@
 	export default {
 		data() {
 			return {
-src:''
+				src: '',
+				name:'',
+				isPause:true
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
-			 this.src = JSON.parse(decodeURIComponent(options.src))
-			let id=options.id
-			 // console.log(src)
-			uni.setNavigationBarTitle({
-							title:options.name
-						})
-						
+			this.src = JSON.parse(decodeURIComponent(options.src))
+			let id = options.id
+			// console.log(src)
+			/* uni.setNavigationBarTitle({
+				title: options.name
+			})
+ */
+this.name=options.name
 		},
 		methods: {
 			load() {
@@ -54,28 +85,69 @@ src:''
 		height: 100%;
 	}
 </style>
-<style lang="less">
-	.body{
+<style lang="less" scoped>
+	.body {
 		height: 100%;
+.title{
+	height: 20%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 25px;
+	font-family: PingFang SC;
+	color: #F0F0F0;
+	font-weight: 700;
+}
+		.players {
+			width: 100%;
+			height: 30%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			.players-position {
+				width: 100%;
+				height: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				.posion-1{
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 100%;
+					flex: 1;
+				}
+				.posion-2{
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					flex: 3;
+				}
+
+			}
+		}
 	}
-	.contain{
-			position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				filter: blur(20upx);
-				opacity: 0.6;
-				z-index: -10;
-				height: 100%;
-				background-size: 100% 100%;
+
+	.contain {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		filter: blur(10rpx) contrast(60%) brightness(60%);
+		z-index: -10;
+		height: 100%;
+
 	}
+
 	.contains {
-		height: 100%;
+		height: 50%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
+
 		.play {
 			width: 650upx;
 			height: 650upx;

@@ -18,6 +18,11 @@ const store = new Vuex.Store({
 			state.loginStatus = true
 			state.user = user
 			state.cookie=encodeURIComponent(user.cookie)
+		},
+		getUserInfo(state){
+			state.loginStatus = true
+			state.user = JSON.parse(uni.getStorageSync('user'))
+			state.cookie=encodeURIComponent(state.user.cookie)
 		}
 		
 	}

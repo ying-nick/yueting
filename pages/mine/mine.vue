@@ -78,9 +78,12 @@
 			});
 			//进入页面判断是否有数据缓存
 			if(uni.getStorageSync('list').length>0){
+				//获取本地user缓存
+				this.getUserInfo()
 				this.newslist=JSON.parse(uni.getStorageSync('list'))
 				 uni.hideLoading(this.newslist)
 			}else{
+				// console.log(111)
 				this.list().then(res=>{
 					// console.log(res)
 						uni.setStorageSync('list', JSON.stringify(res));
@@ -88,6 +91,8 @@
 					 uni.hideLoading()
 					 
 					
+				}).catch(err=>{
+					console.log(err)
 				})
 			}
 			
@@ -114,6 +119,7 @@
 			Minelist
 		},
 		methods: {
+			...mapMutations(['login', 'setUser','getUserInfo']),
 			tabtap(index) {
 				this.tabIndex = index;
 			},

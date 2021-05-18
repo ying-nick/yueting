@@ -2,16 +2,18 @@
 	<view class="mv-container">
 		<!-- 导航区 -->
 		<view class="mv-nav">
-			<view class="mv-navitems" v-for="(item,index) in nav" :class="active===index?'mv-active':''"
+			<view class="mv-navitems" v-for="(item,index) in nav" :key="item.id" :class="active===index?'mv-active':''"
 				@click="toClick(index)" :data-id="item.id">
 				{{item.name}}
 			</view>
 		</view>
 		<!-- 视频区 -->
+		
+		<!-- 推荐区 -->
 		<scroll-view class="videoScroll" scroll-y enable-flex="true" enable-back-to-top="true" v-if="seen">
-			<view class="videoItem" v-for="item in newMV">
+			<view class="videoItem" v-for="item in newMV" :key="item.id">
 				<video class="mvvideo" :poster="item.cover" controls muted="true" object-fit="fill"
-					:src="item.url"></video>
+					:src="item.url" @click="toPlay" :data-id="item.id"></video>
 				<view class="title"><text>{{item.name}} - {{item.artistName}}</text></view>
 				<view class="playCount">
 					<text class="iconfont icon-z"></text>
@@ -19,10 +21,11 @@
 				</view>
 			</view>
 		</scroll-view>
+		<!-- 排行榜 -->
 		<scroll-view class="mvScroll" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
 			<view class="mvItem" v-for="(item,index) in newMV">
 				<view class="mv-center"><text class="mv-no">{{index+1}}.</text></view>
-				<video class="video2" :poster="item.cover" object-fit="fill"></video>
+				<video class="video2" :poster="item.cover" object-fit="fill" muted="true" :src="item.url" @click="toPlay"></video>
 				<view class="mv-txt">
 					<text class="mv-name">{{item.name}}</text>
 					<text class="mv-artist">{{item.artistName}}</text>
@@ -50,7 +53,6 @@
 				],
 				active: 0,
 				newMV: [],
-				// rankMV:[],
 				videoTime: [],
 				seen: true
 			}
@@ -59,7 +61,7 @@
 			this.getNewMvList()
 		},
 		methods: {
-			// 实习导航栏点击效果及获取相对应的视频列表
+			// 实现导航栏点击效果及获取相对应的视频列表
 			toClick(index) {
 				this.active = index
 				if (this.active == 1) {
@@ -70,17 +72,18 @@
 					this.getNewMvList()
 				}
 			},
-			// 获取排行榜mv
+			// 获取排行榜mv视频列表
 			async getRankingMV() {
 				let result = await myRequestGet('/top/mv', {
 					limit: 10
 				})
 				// console.log(result)
 				if (result.code == 200) {
-					this.newMV = result.data
+					this.addMvUrl(result.data)
 				}
 			},
-			// 封装一个获取mv地址的方法
+			// 封装一个获取mv地址的方法（用循环遍历的方法，将根据id获取来的视频地址和渲染到页面上的video标签的src一一对应上。
+			// 只能用普通for循环，在获取视频列表的函数中用forEach或者map会报错。）
 			async addMvUrl(mvs) {
 				for (var i = 0; i < mvs.length; i++) {
 					let {
@@ -92,7 +95,7 @@
 				}
 				this.newMV = mvs
 			},
-			// 获取推荐mv
+			// 获取推荐mv列表
 			async getNewMvList() {
 				let result = await myRequestGet('/mv/first', {
 					limit: 10
@@ -101,21 +104,14 @@
 					this.addMvUrl(result.data)
 				}
 			},
-			// 根据id获取相对应的视频并播放
-			// async toPlay(e) {
-			// 	// console.log(e)
-			// 	// console.log(e.currentTarget.dataset.id)
-			// 	let videoId = e.currentTarget.dataset.id
-			// 	// console.log(videoId)
-			// 	let result = await myRequestGet('/mv/url', {
-			// 		id: videoId
-			// 	})
-			// 	// console.log(result)
-			// 	if (result.code == 200) {
-			// 		this.src = result.data.url
-			// 	}
-			// 	console.log(this.src)
-			//  },
+			// 点击全屏播放视频，关闭其他视频
+			toPlay(e){
+				let vid = e.target.dataset.id
+				// 关闭上一个播放的视频
+				this.videoContext && this.videoContext.pause();
+				this.videoContext = uni.createVideoContext(vid.toString());
+				// this.videoContext.play();
+			}
 		}
 	}
 </script>
@@ -201,12 +197,17 @@
 	.playCount {
 		font-size: 22rpx;
 		color: #666666;
+		float: right;
+		margin-top: -40rpx;
 	}
 
 	.mvItem {
 		display: flex;
 		height: 140rpx;
 		margin-top: 16rpx;
+		/* justify-content:center; */
+		width:100%;
+		/* flex-direction: column; */
 	}
 
 	.mv-no {

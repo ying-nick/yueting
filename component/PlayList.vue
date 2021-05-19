@@ -13,6 +13,7 @@
 <script>
 	import {myRequestGet} from '../utils/req.js'
 	export default {
+		
 
 		created() {
 			this.getPersonalized()
@@ -50,7 +51,6 @@
 		},
 		methods: {
 			    goToMusiclist(e) {
-				
 			      uni.navigateTo({
 			        url: `/pages/musicList/musicList?playListId=${e.currentTarget.dataset.id}`
 					

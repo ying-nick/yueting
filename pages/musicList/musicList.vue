@@ -3,7 +3,7 @@
 		<view class="songListHead">
 			<text>歌曲列表</text>
 		</view>
-		<SongList :listSongs='listSongs' />
+		<SongList :listSongs="listSongs" />
 	</view>
 </template>
 
@@ -13,31 +13,33 @@
 	} from '../../utils/req.js'
 	export default {
 
-		onLoad(options) {
+		 onLoad(options) {
 			// console.log(options)
-			this.getListSongs(options.playListId) 
+		 this.getListSongs(options.playListId)
+			// .then((res)=>{
+			// 	// console.log(this.listSongs)
+				
+			// 	// this.listSongs=res
+			// })
+			// // console.log(re)
 		},
-		
 		data() {
 			return {
-				listSongs: [
-
-				]
-
+				listSongs:0
 			}
 		},
 		methods: {
 			async getListSongs(id) {
-				//console.log(id)
-				const res = await myRequestGet('/playlist/detail',{id:id,})
-				// console.log(res)
-				// 暂时写死
-				  this.listSongs = res.privileges[0].id 
-               console.log(this.listSongs)
+				console.log(id)
+				const res = await myRequestGet('/playlist/detail',{id:id})
+				// console.log(res.privileges)
+				this.listSongs=res.privileges
+				// console.log(this.listSongs)
+			
+			// return res.privileges[0].id 
+             
 			},
-
 		}
-
 	}
 </script>
 

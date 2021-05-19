@@ -12,11 +12,11 @@
 			<view class="commentcount">
 				<view class="countHead">
 					<text>精彩评论</text>
-					<view class="commentList" v-for="item in commentList" :key="item.time">
+					<view class="commentList" v-for="(item,index) in commentList" :key="index">
 						<image :src="item.user.avatarUrl" class="commentImage"></image>
 						<view class="commentlistT">
 							<view class="listname">{{item.user.nickname}}</view>
-							<view class="listTime">{{item.time}}</view>
+							<view class="listTime">{{item.time | time(item.time)}}</view>
 							<view class="listcomm">{{item.content}}</view>
 						</view>
 					</view>
@@ -34,13 +34,49 @@
 		data() {
 			return {
 				countList: {},
-				commentList:[],
+				commentList: [],
+				total:'',
+				time:'',
+				id:'',
 			}
 		},
 		onLoad(options) {
 			console.log(options)
-			this._getcount(options.id)
-			this._getcomment(options.key)
+
+			if (options) {
+				this.id = options.key
+				this._getcount(options.id)
+				this._getcomment(options.key)
+			} else {
+				uni.showModal({
+					title: '提示',
+					content: '暂无评论',
+					success: function(res) {
+						if (res.confirm) {
+							uni.navigateBack()
+						} else if (res.cancel) {
+							uni.navigateBack()
+						}
+					}
+				})
+			}
+		},
+		//触底刷新加载
+		onReachBottom(){
+			uni.showLoading({
+				title:"加载中",
+				mask:true,
+			})
+			myRequestGet('/comment/music', {
+				id: this.id,
+				before:this.time
+			}).then((res)=>{
+				// console.log(res)
+				// console.log(res.comments)
+				let list = res.hotComments ? res.hotComments : res.comments
+				this.commentList = this.commentList.concat(list)
+				uni.hideLoading()
+			})
 		},
 		methods: {
 			backMusic() {
@@ -63,10 +99,15 @@
 				let result = await myRequestGet('/comment/music', {
 					id: id,
 				})
-				console.log(result)
+				let len = result.hotComments.length? result.hotComments.length-1 : result.comments.length-1
+				// console.log(len)
+				// console.log(result.comments)
 				if (result.code == 200) {
-					this.commentList = result.hotComments
-					console.log(this.commentList)
+					this.commentList = result.hotComments.length ? result.hotComments : result.comments
+					this.total = result.total
+					this.time = this.commentList[len].time
+					// console.log(this.time)
+					// console.log(this.commentList)
 				}
 			},
 		}
@@ -131,6 +172,7 @@
 					// align-items: center;
 					flex-wrap: wrap;
 					border-bottom: solid 1px rgba(212, 212, 222, 0.4);
+
 					.commentImage {
 						width: 100rpx;
 						height: 100rpx;
@@ -159,7 +201,7 @@
 
 						.listcomm {
 							font-size: 36rpx;
-							word-break: break-all;//允许换行
+							word-break: break-all; //允许换行
 						}
 					}
 				}

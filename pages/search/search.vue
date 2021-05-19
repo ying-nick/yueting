@@ -4,7 +4,7 @@
 			<view class="searchView">
 				<text class="iconfont icon-sousuo ic"></text>
 				<text class="iconfont icon-shanchu ic2" v-if="markFlag" @click="mark"></text>
-				<input type="text" value="" placeholder="请输入" maxlength="15" class="bar" confirm-type="search"
+				<input type="text" value="" placeholder="请输入" maxlength="40" class="bar" confirm-type="search"
 					@input="onKeyInput" v-model="inputValue" @confirm="getSongList" />
 				<button type="default" size="mini" class="searchBtn" @click="getSongList">搜索</button>
 			</view>

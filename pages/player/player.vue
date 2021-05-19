@@ -26,7 +26,21 @@
 		<view class="players">
 			<view class="progress">
 				<view class="prg-pst">
-					<progressbar></progressbar>
+					<view class="container">
+						<text class="time">{{showTime.currentTime}}</text>
+						<view class="control">
+							<!-- 可移动区域 -->
+							<movable-area class="area">
+								<!-- 可移动视图容器 两个必须父子关系 -->
+								<movable-view class="mova-view" direction="horizontal" damping="1000" :x="movableDis"
+									@change="Tchange" @touchend="Tend"></movable-view>
+							</movable-area>
+							<!-- 进度条 -->
+							<progress stroke-width="4" background-color="#969696" active-color="#FFD700"
+								:percent="go" />
+						</view>
+						<text class="time">{{showTime.totalTime}}</text>
+					</view>
 				</view>
 			</view>
 			<view class="players-position">
@@ -34,11 +48,12 @@
 
 				</view>
 				<view class="posion-2">
-					<icon class="iconfont icon-backward icQ"
-						style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;" @click="goPev"></icon>
+					<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"
+						@click="goPev"></icon>
 					<icon :class="['iconfont',isPlay?'icon-yixianshi-':'icon-bofang','icZ']"
 						style="font-size:160upx;color: #d43c43;" @click="togglePlay"></icon>
-					<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;">
+					<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"
+						@click="goNext">
 					</icon>
 				</view>
 				<view class="posion-1">
@@ -61,6 +76,13 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
+	let nowIndex=0
+	let list=[]
+	let movableAreaWidth = 0
+	let movableViewWidth = 0
+	const innerAudioContext = uni.createInnerAudioContext();
+	let currentSec = -1 //当前秒数
+	let dur = 0 //当前音乐总时长
 	export default {
 		data() {
 			return {
@@ -69,19 +91,27 @@
 				alname: '',
 				arname: '',
 				isPlay: true,
-				innerAudioContext:{},
-				nowIndex:''
+				innerAudioContext: {},
 				
+				showTime: {
+					currentTime: '00:00',
+					totalTime: '00:00',
+				},
+				innerAudioContext: {},
+				movableDis: 0,
+				go: 0,
+				
+
 			};
 		},
 		computed: {
-			...mapState(['user', 'cookie','list']),
+			...mapState(['user', 'cookie', 'lists']),
 		},
 		onLoad(options) {
 			// console.log(options)
 			uni.hideTabBar()
 			this.src = JSON.parse(decodeURIComponent(options.src))
-
+			this.getMovableDis()
 			let id = options.id
 			// console.log(src)
 			/* uni.setNavigationBarTitle({
@@ -89,43 +119,130 @@
 			})
  */
 			this.name = options.name
-			this.nowIndex=options.index
-			// console.log(this.nowIndex)
+			nowIndex = options.index
+			// console.log(nowIndex)
 			this.alname = options.alname
 			this.arname = options.arname
+			list=this.lists
+			// console.log(list)
 			this.getMusic(id)
 		},
 		methods: {
-			//上一首
-			goPev(){
-				// console.log(this.list)
-				if(this.nowIndex==0){
-					this.nowIndex=this.list.length-1
+			//滑动结束
+			Tend() {
+				dur = innerAudioContext.duration
+				//设置背景音乐播放调整
+				innerAudioContext.seek((dur * this.go) / 100)
+				//设置进度条
+				const curTimeFmt = this.timeFormat(
+					Math.floor(innerAudioContext.currentTime)
+				)
+				this.showTime.currentTime = `${curTimeFmt.min}:${curTimeFmt.sec}`,
+					this.isPlay = false
+				innerAudioContext.play()
+			},
+			setTime(duration) {
+				//获取歌曲时间，以s为单位
+
+				// console.log(innerAudioContext.duration)
+				//格式化时间
+				const durationFmt = this.timeFormat(duration)
+				// console.log(durationFmt)
+				//单独更改对象内属性
+				this.showTime.totalTime = `${durationFmt.min}:${durationFmt.sec}`
+
+				// console.log(`${durationFmt.min}:${durationFmt.sec}`)
+			},
+			timeFormat(sec) {
+				const min = Math.floor(sec / 60)
+				sec = Math.floor(sec % 60)
+				return {
+					min: this.parse0(min),
+					sec: this.parse0(sec),
 				}
-				this.nowIndex=this.nowIndex-1
-				this.innerAudioContext.stop()
-				this.innerAudioContext.destroy()
-				let item=this.list[this.nowIndex]
-				this.src=item.src
+			},
+			//补0
+			parse0(sec) {
+				return sec < 10 ? '0' + sec : sec
+			},
+			//滑动圆点
+			Tchange(e) {
+				// console.log(e)
+				if (e.detail.source == 'touch') {
+					//触发拖动歌曲停止
+					innerAudioContext.pause()
+					//给进度条赋值，不会同步到界面
+					this.isPlay = true
+					this.go =
+						(e.detail.x / (movableAreaWidth - movableViewWidth)) * 100
+					this.movableDis = e.detail.x
+
+				}
+
+			},
+			//初始化圆点位置
+			getMovableDis() {
+				//创建一个查询器实例
+				const query = uni.createSelectorQuery().in(this)
+				//指定节点,获取元素信息
+				query.select('.area').boundingClientRect()
+				query.select('.mova-view').boundingClientRect()
+				//执行上面操作
+				query.exec((res) => {
+					// console.log(res)
+					movableAreaWidth = res[0].width
+					movableViewWidth = res[1].width
+				})
+			},
+			//下一首
+			goNext() {
+				// this.isPlay=false
+			nowIndex++
+				if (nowIndex == list.length) {
+					nowIndex = 0
+				}
+			// console.log(list)
+				innerAudioContext.stop()
+				let item = list[nowIndex]
+				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname
 				this.arname = item.arname
 				this.goplay(item.id)
 			},
-			togglePlay(){
-				if (this.innerAudioContext.paused) {
+			//上一首
+			goPev() {
+				// this.isPlay=false
+				nowIndex--
+				// console.log(list)
+				if (nowIndex < 0) {
+					nowIndex = list.length - 1
+				}
+				
+				innerAudioContext.stop()
+				
+				// console.log(innerAudioContext)
+				let item = list[nowIndex]
+				this.src = item.src
+				this.name = item.name
+				this.alname = item.alname
+				this.arname = item.arname
+				this.goplay(item.id)
+			},
+			togglePlay() {
+				if (innerAudioContext.paused) {
 					//背景音乐重启
-					this.innerAudioContext.play()
-						} else {
-						//暂停背景音乐
-						this.innerAudioContext.pause()
-						}
-						this.isPlay=!this.isPlay
+					innerAudioContext.play()
+				} else {
+					//暂停背景音乐
+					innerAudioContext.pause()
+				}
+				this.isPlay = !this.isPlay
 			},
 			async getMusic(id) {
-				// console.log(this.innerAudioContext)
-				if(!this.isPlay){
-					this.isPlay=!this.isPlay
+				// console.log(innerAudioContext)
+				if (!this.isPlay) {
+					this.isPlay = !this.isPlay
 				}
 				const res = await myRequestGet('/song/url', {
 					id: id,
@@ -133,43 +250,66 @@
 				})
 				// console.log(res)
 				if (res.code == 200) {
-					const innerAudioContext=this.innerAudioContext = uni.createInnerAudioContext();
-					innerAudioContext.autoplay = true;
+				
 					innerAudioContext.src = res.data[0].url;
-						// console.log(innerAudioContext)
-					innerAudioContext.onPlay(() => {
-					  console.log('开始播放');
-					});
-					innerAudioContext.onError((res) => {
-					  console.log(res.errMsg);
-					  console.log(res.errCode);
-					});
-					
+					innerAudioContext.autoplay=true
+					// console.log(innerAudioContext)
+
+					this.bindBgmEvent()
+
+
 					// console.log(this.url)
 				}
-				
+
 			},
-			async goplay(id){
-					// console.log(e)
-					const result=await myRequestGet('/check/music',{
-						id:id
-					})
-					// console.log(result)
-					if(result.success){
-						this.getMusic(id)
-					}else{
-						uni.showToast({
-						    title: '亲爱的,暂无版权,请换歌',
-							icon:'none',
-						    duration: 3000
-						});
-						if(this.isPlay){
-							this.isPlay=!this.isPlay
-						}
+			async goplay(id) {
+				// console.log(e)
+				const result = await myRequestGet('/check/music', {
+					id: id
+				})
+				// console.log(result)
+				if (result.success) {
+					this.getMusic(id)
+				} else {
+					uni.showToast({
+						title: '亲爱的,暂无版权,请换歌',
+						icon: 'none',
+						duration: 3000
+					});
+					if (this.isPlay) {
+						this.isPlay = !this.isPlay
 					}
-					// console.log(res)
-					
 				}
+				// console.log(res)
+
+			},
+			bindBgmEvent() {
+				innerAudioContext.onCanplay(() => {
+					let duration = 0
+					let time = setInterval(() => {
+						duration = innerAudioContext.duration
+						// console.log(duration)
+						if (duration > 0) {
+							this.setTime(duration)
+							clearInterval(time)
+						}
+					}, 50)
+
+					// console.log(11111)
+				});
+				innerAudioContext.onPlay(() => {
+
+					console.log('开始播放');
+					// setInterval(()=>{
+					// 	let {duration} = innerAudioContext
+					// 	console.log(duration)
+					// },1000)
+				});
+				innerAudioContext.onError((res) => {
+					console.log(res.errMsg);
+					console.log(res.errCode);
+				});
+			}
 		},
 		components: {
 			Progressbar,
@@ -260,6 +400,45 @@
 				}
 
 			}
+		}
+	}
+
+	.container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.control {
+			position: relative;
+			flex: 3;
+
+			.area {
+				width: 100%;
+				height: 50upx;
+				position: absolute;
+				bottom: -25upx;
+				left: 0;
+
+				.mova-view {
+					width: 40upx;
+					height: 40upx;
+					background-color: #ff8c00;
+					border-radius: 50%;
+				}
+			}
+		}
+
+		.time {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 30upx;
+			font-family: NotoSansHans-Regular, 'Franklin Gothic Medium', 'Arial Narrow',
+				Arial, sans-serif;
+			font-weight: 500;
+			color: #d43c43;
+			line-height: 60upx;
 		}
 	}
 

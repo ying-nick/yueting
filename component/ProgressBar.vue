@@ -9,6 +9,8 @@
 				 class="mova-view"
 				 direction="horizontal"
 				 damping="1000"
+				 x="movableDis"
+				 @change="Tchange"
 				></movable-view>
 			</movable-area>
 			<!-- 进度条 -->
@@ -32,24 +34,16 @@
 							totalTime: '00:00',
 						},
 						innerAudioContext:{},
+					movableDis:0,
 					
 			};
 		},
-		created(){
-			// console.log(this.id)
-		
+		Tchange(){
+			
+			
 		},
-		watch:{
-			url(val){
-				// console.log(val)
-				if(val==''){
-					console.log(111)
-				}else{
-					this.src=val
-				}
-		}
 		
-		}
+		
 	}
 </script>
 

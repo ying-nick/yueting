@@ -26,7 +26,7 @@
 		<view class="players">
 			<view class="progress">
 				<view class="prg-pst">
-					
+					<progressbar></progressbar>
 				</view>
 			</view>
 			<view class="players-position">
@@ -55,6 +55,7 @@
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
+	import Progressbar from "../../component/ProgressBar.vue"
 	export default {
 		data() {
 			return {
@@ -67,6 +68,7 @@
 		},
 		onLoad(options) {
 			// console.log(options)
+			uni.hideTabBar()
 			this.src = JSON.parse(decodeURIComponent(options.src))
 			
 			let id = options.id
@@ -86,6 +88,9 @@ this.arname=options.arname
 			ctrl() {
 				console.log('ctrl')
 			}
+		},
+		components:{
+			Progressbar,
 		}
 	}
 </script>
@@ -128,8 +133,20 @@ this.arname=options.arname
 			height: 30%;
 			display: flex;
 			justify-content: center;
+			flex-direction: column;
 			align-items: center;
+.progress{
+	width: 100%;
+	height: 50%;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+		.prg-pst{
+			width: 100%;
+			height: 68upx;
+		}
 
+}
 			.players-position {
 				width: 100%;
 				height: 50%;
@@ -162,12 +179,12 @@ this.arname=options.arname
 		right: 0;
 		filter: blur(10rpx) contrast(60%) brightness(60%);
 		z-index: -10;
-		height: 100%;
+		height: 120%;
 
 	}
 
 	.contains {
-		height: 50%;
+		height: 650upx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -202,7 +219,7 @@ this.arname=options.arname
 				height: 650upx;
 				box-sizing: border-box;
 				border-radius: 50%;
-				border-top: 10px solid #E74C3C;
+				border-top: 10px solid #fda085;
 				
 				position: absolute;
 				animation: a1 2s linear infinite;
@@ -222,12 +239,12 @@ this.arname=options.arname
 			}
 
 			.load::before {
-				border-top: 10px solid #E6B741;
+				border-top: 10px solid #a6c1ee;
 				transform: rotate(120deg);
 			}
 
 			.load::after {
-				border-top: 10px solid #3498DB;
+				border-top: 10px solid #F08080;
 				transform: rotate(240deg);
 			}
 

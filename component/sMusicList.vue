@@ -8,7 +8,7 @@
 						{{item.name}}
 					</view>
 					<view class="list-singer">
-						{{item.artists[0].name}}-{{item.album.name}}
+						{{item.ar[0].name}}-{{item.al.name?item.al.name:'暂无'}}
 					</view>
 				</view>
 			</view>
@@ -30,7 +30,7 @@
 		methods: {
 			get(item){
 				console.log(item)
-				console.log(item.artists[0].img1v1Url)
+				
 			}
 		}
 	}

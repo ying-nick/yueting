@@ -38,7 +38,7 @@
 				// console.log(result)
 				if(result.success){
 					uni.navigateTo({
-					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}`
+					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}`
 					});
 				}else{
 					uni.showToast({

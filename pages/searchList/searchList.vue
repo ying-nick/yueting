@@ -32,6 +32,7 @@
 			if (options.key != undefined) {
 				this._getSearch(options.key).then((res) => {
 					const value = uni.getStorageSync('songsList');
+					// console.log(value[0].ar[0].alias[0])
 					if (value) { 
 						this.searchList = value
 						uni.hideLoading()
@@ -45,10 +46,11 @@
 		methods: {
 			//封装搜索请求
 			async _getSearch(data) {
-				let re = await myRequestGet('/search', {
+				let re = await myRequestGet('/cloudsearch', {
 					keywords: data
 				})
 				let songs = re.result.songs
+				console.log(re)
 				try {
 					uni.setStorageSync('songsList', songs);
 				} catch (e) {

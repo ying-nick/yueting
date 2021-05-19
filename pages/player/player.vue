@@ -1,7 +1,11 @@
 <template>
 	<view class="body">
 		<view class="title">
-			<text>{{name}}</text>
+			<text class="musicName">{{name}}</text>
+			<view class="musicInfo">
+				<text class="info">专辑：{{alname}}</text>
+				<text class="info">歌手：{{arname}}</text>
+			</view>
 		</view>
 		<view class="contain"
 			:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
@@ -56,12 +60,15 @@
 			return {
 				src: '',
 				name:'',
+				alname:'',
+				arname:'',
 				isPause:true
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
 			this.src = JSON.parse(decodeURIComponent(options.src))
+			
 			let id = options.id
 			// console.log(src)
 			/* uni.setNavigationBarTitle({
@@ -69,6 +76,8 @@
 			})
  */
 this.name=options.name
+this.alname=options.alname
+this.arname=options.arname
 		},
 		methods: {
 			load() {
@@ -89,15 +98,30 @@ this.name=options.name
 	.body {
 		height: 100%;
 .title{
-	height: 20%;
+	height: 25%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	font-size: 25px;
 	font-family: PingFang SC;
 	color: #F0F0F0;
-	font-weight: 700;
+	padding: 10px 0;
+	.musicName{
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.musicInfo{
+	
+		width: 100%;
+		font-size: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.info{
+			padding: 10px 10px;
+		}
+	}
 }
 		.players {
 			width: 100%;
@@ -179,6 +203,7 @@ this.name=options.name
 				box-sizing: border-box;
 				border-radius: 50%;
 				border-top: 10px solid #E74C3C;
+				
 				position: absolute;
 				animation: a1 2s linear infinite;
 

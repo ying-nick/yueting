@@ -2,7 +2,7 @@
 	<view class="historyView">
 		<view class="historys">
 			<block v-for="(it,index) in item.list" :key="index">
-				<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name">
+				<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name" :data-alname="it.song.al.name" :data-arname="it.song.ar[0].name">
 					<view>{{index+1}}</view>
 					<image :src='it.song.al.picUrl' class="img"></image>
 					<view class="historylists">{{it.song.name}}</view>
@@ -37,7 +37,7 @@
 				// console.log(result)
 				if(result.success){
 					uni.navigateTo({
-					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}`
+					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}`
 					});
 				}else{
 					uni.showToast({

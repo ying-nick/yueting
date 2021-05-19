@@ -1,10 +1,19 @@
 {
-	"pages": [ 
+	"pages": [ {
+            "path" : "pages/login/login",
+            "style" :                                                                                    
+            {
+             
+                "enablePullDownRefresh": false,
+				"navigationStyle":"custom"
+            }
+            
+        },
 		{
 		"path": "pages/mine/mine",
 		"style": {
 			"navigationBarTitleText": "我的",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": true
 		}
 
 	}, {
@@ -33,18 +42,25 @@
 		{
 			"path": "pages/search/search",
 			"style": {
-				"navigationBarBackgroundColor":"#22BDE9",
-				"navigationBarTitleText": "悦听音乐",
+				"navigationBarTitleText": "搜索",
 				"enablePullDownRefresh": false
 			}
 		
 		} 
         ,{
-            "path" : "pages/searchList/searchList",
+            "path" : "pages/register/register",
             "style" :                                                                                    
             {
-							"navigationBarBackgroundColor":"#22BDE9",
-                "navigationBarTitleText": "悦听音乐",
+               "enablePullDownRefresh": false,
+               "navigationStyle":"custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/player/player",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             
@@ -52,8 +68,8 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarTitleText": "悦听音乐",
+		"navigationBarBackgroundColor": "#22BDE9",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
 			"background": "#efeff4"

@@ -17,7 +17,14 @@
 				</view>
 				<view class="playCtrl">
 					<view class="ctrls">
-
+						<scroll-view class="lrc-scroll" scroll-y="true" :scroll-top="scrollTop"
+							scroll-with-animation="true">
+							<view class="lrc-panel">
+								<block v-for="" :key="item">
+									<view :class="['lyric',index==nowLrc?'highLight':'']">{{item.lrc}}</view>
+								</block>
+							</view>
+						</scroll-view>
 					</view>
 				</view>
 			</view>
@@ -71,13 +78,14 @@
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
-	import Progressbar from "../../component/ProgressBar.vue"
+
 	import {
 		mapState,
 		mapMutations
 	} from 'vuex'
-	let nowIndex=0
-	let list=[]
+	let lyricHeight = 0
+	let nowIndex = 0
+	let list = []
 	let movableAreaWidth = 0
 	let movableViewWidth = 0
 	const innerAudioContext = uni.createInnerAudioContext();
@@ -92,7 +100,7 @@
 				arname: '',
 				isPlay: true,
 				innerAudioContext: {},
-				
+
 				showTime: {
 					currentTime: '00:00',
 					totalTime: '00:00',
@@ -100,7 +108,9 @@
 				innerAudioContext: {},
 				movableDis: 0,
 				go: 0,
-				
+				lrcList: [],
+				nowLrc: 0, //当前歌词索引
+				scrollTop: 0, //滚动条滚动高度
 
 			};
 		},
@@ -123,7 +133,7 @@
 			// console.log(nowIndex)
 			this.alname = options.alname
 			this.arname = options.arname
-			list=this.lists
+			list = this.lists
 			// console.log(list)
 			this.getMusic(id)
 		},
@@ -138,7 +148,7 @@
 					Math.floor(innerAudioContext.currentTime)
 				)
 				this.showTime.currentTime = `${curTimeFmt.min}:${curTimeFmt.sec}`,
-					this.isPlay = false
+					this.isPlay = true
 				innerAudioContext.play()
 			},
 			setTime(duration) {
@@ -153,6 +163,7 @@
 
 				// console.log(`${durationFmt.min}:${durationFmt.sec}`)
 			},
+			//格式化时间
 			timeFormat(sec) {
 				const min = Math.floor(sec / 60)
 				sec = Math.floor(sec % 60)
@@ -172,7 +183,7 @@
 					//触发拖动歌曲停止
 					innerAudioContext.pause()
 					//给进度条赋值，不会同步到界面
-					this.isPlay = true
+					this.isPlay = false
 					this.go =
 						(e.detail.x / (movableAreaWidth - movableViewWidth)) * 100
 					this.movableDis = e.detail.x
@@ -197,11 +208,11 @@
 			//下一首
 			goNext() {
 				// this.isPlay=false
-			nowIndex++
+				nowIndex++
 				if (nowIndex == list.length) {
 					nowIndex = 0
 				}
-			// console.log(list)
+				// console.log(list)
 				innerAudioContext.stop()
 				let item = list[nowIndex]
 				this.src = item.src
@@ -218,9 +229,9 @@
 				if (nowIndex < 0) {
 					nowIndex = list.length - 1
 				}
-				
+
 				innerAudioContext.stop()
-				
+
 				// console.log(innerAudioContext)
 				let item = list[nowIndex]
 				this.src = item.src
@@ -239,6 +250,35 @@
 				}
 				this.isPlay = !this.isPlay
 			},
+			//歌词格式变化
+				parseLrc(sLrc) {
+						let line = sLrc.split('\n')
+						let lrcList = []
+						// console.log(line)
+						line.forEach((item) => {
+							//match() 方法可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配
+							let time = item.match(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g)
+							// console.log(item)
+							if (time != null) {
+								console.log(time)
+								// console.log(item.split(time))
+								let lrc = item.split(time)[1]
+								let timeReg = time[0].match(/(\d{2,}):(\d{2})(?:\.(\d{2,3}))?/)
+								// console.log(timeReg)
+								//把时间转成秒
+								let timeSec =
+									parseInt(timeReg[1]) * 60 +
+									parseInt(timeReg[2]) +
+									parseInt(timeReg[3]) / 1000
+								lrcList.push({
+									lrc,
+									time: timeSec,
+								})
+							}
+						})
+						this.lrcList=lrcList
+						// console.log(this.lrcList)
+					},
 			async getMusic(id) {
 				// console.log(innerAudioContext)
 				if (!this.isPlay) {
@@ -250,9 +290,9 @@
 				})
 				// console.log(res)
 				if (res.code == 200) {
-				
+this.getlyric(id)
 					innerAudioContext.src = res.data[0].url;
-					innerAudioContext.autoplay=true
+					innerAudioContext.autoplay = true
 					// console.log(innerAudioContext)
 
 					this.bindBgmEvent()
@@ -283,6 +323,26 @@
 				// console.log(res)
 
 			},
+			async getlyric(id){
+				const result=await myRequestGet('/lyric',{
+					id:id
+				})
+				let lyric=result.lrc.lyric
+				// console.log(result)
+				// console.log(lyric)
+				if(lyric){
+					this.parseLrc(lyric)
+				}else{
+					this.lrcList=[
+						{
+							lrc:'暂无歌词',
+							time: 0
+						},
+					]
+					this.nowLrc=-1
+				}
+				
+			},
 			bindBgmEvent() {
 				innerAudioContext.onCanplay(() => {
 					let duration = 0
@@ -297,6 +357,27 @@
 
 					// console.log(11111)
 				});
+				innerAudioContext.onTimeUpdate(() => {
+					//获取当前已经播放时间
+					const curTime = innerAudioContext.currentTime
+					// console.log(curTime)
+					//获取总时长
+					const duration = innerAudioContext.duration
+					//优化setdata刷新频率
+					if (curTime.toString().split('.')[0] != currentSec) {
+						const curTimeFmt = this.timeFormat(curTime)
+
+						//进度圆点进度
+						this.movableDis = ((movableAreaWidth - movableViewWidth) * curTime) / duration,
+							//进度条颜色进度
+							this.go = (curTime / duration) * 100,
+							this.showTime.currentTime = `${curTimeFmt.min}:${curTimeFmt.sec}`,
+
+							currentSec = curTime.toString().split('.')[0]
+
+					}
+				});
+
 				innerAudioContext.onPlay(() => {
 
 					console.log('开始播放');
@@ -305,15 +386,15 @@
 					// 	console.log(duration)
 					// },1000)
 				});
+				innerAudioContext.onEnded(() => {
+					this.goNext()
+				});
 				innerAudioContext.onError((res) => {
 					console.log(res.errMsg);
 					console.log(res.errCode);
 				});
 			}
 		},
-		components: {
-			Progressbar,
-		}
 	}
 </script>
 <style>
@@ -481,7 +562,30 @@
 					background-position: bottom;
 					background-size: 100% 50%;
 					border-radius: 50%;
-					background-color: #007AFF;
+					
+
+					.lrc-scroll {
+						width: 100%;
+						height: 70%;
+						color: #ccc;
+						font-size: 32rpx;
+
+						.lrc-panel {
+							position: relative;
+							top: 50%;
+							text-align: center;
+
+							.lyric {
+								min-height: 64rpx;
+								background-color: #007AFF;
+							}
+
+							.highLight {
+								color: #d43c43;
+							}
+						}
+					}
+
 				}
 			}
 

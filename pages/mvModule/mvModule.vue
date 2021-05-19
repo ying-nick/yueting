@@ -10,10 +10,13 @@
 		<!-- 视频区 -->
 
 		<!-- 推荐区 -->
-		<scroll-view class="videoScroll" scroll-y enable-flex="true" enable-back-to-top="true" v-if="seen">
+		<scroll-view class="videoScroll" scroll-y refresher-enabled="true" @refresherrefresh="toRefresh"
+			:refresher-triggered="isTriggered" enable-flex="true" enable-back-to-top="true" v-if="seen"
+			@scrolltolower="toGetMore">
 			<view class="videoItem" v-for="item in newMV" :key="item.id">
-				<video class="mvvideo" :poster="item.cover" controls muted="true" object-fit="fill" :src="item.url"
-					v-if="videoId === item.id" @click="toPlay(item.id)" :data-id="item.id"></video>
+				<video class="mvvideo" :poster="item.cover" controls muted="true" direction=0 object-fit="fill"
+					:src="item.url" v-if="videoId === item.id" @ended="toEndPlay" @timeupdate="toUpdateTime"
+					@click="toPlay(item.id)" :data-id="item.id"></video>
 				<image :src="item.cover" class="mvvideo" @click="toPlay(item.id)" :data-id="item.id" :ref='item.id'
 					v-else></image>
 				<view class="title"><text>{{item.name}} - {{item.artistName}}</text></view>
@@ -24,9 +27,9 @@
 			</view>
 		</scroll-view>
 		<!-- 排行榜 -->
-		<scroll-view class="mvScroll" refresher-enabled="true" 
-		@refresherrefresh="toRefresh" refresher-triggered="isTriggered" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
-			<view class="mvItem" v-for="(item,index) in newMV">
+		<scroll-view class="mvScroll" refresher-enabled="true" @refresherrefresh="toRefresh"
+			:refresher-triggered="isTriggered" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
+			<view class="mvItem" v-for="(item,index) in rankingMV">
 				<view class="mv-center"><text class="mv-no">{{index+1}}.</text></view>
 				<video class="video2" :poster="item.cover" object-fit="fill" muted="true" :src="item.url"
 					@click="toPlay"></video>
@@ -57,10 +60,12 @@
 				],
 				active: 0,
 				newMV: [],
+				rankingMV: [],
 				videoTime: [],
 				seen: true,
 				videoId: "",
-				isTriggered:false
+				isTriggered: false,
+				videoUpdataTime: []
 			}
 		},
 		onLoad() {
@@ -85,7 +90,9 @@
 				})
 				// console.log(result)
 				if (result.code == 200) {
-					this.addMvUrl(result.data)
+					this.addMvUrl(result.data).then((res) => {
+						this.rankingMV = res
+					})
 				}
 			},
 			// 封装一个获取mv地址的方法（用循环遍历的方法，将根据id获取来的视频地址和渲染到页面上的video标签的src一一对应上。
@@ -99,7 +106,7 @@
 					})
 					mvs[i].url = data.url
 				}
-				this.newMV = mvs
+				return mvs
 			},
 			// 获取推荐mv列表
 			async getNewMvList() {
@@ -107,33 +114,78 @@
 					limit: 10
 				})
 				if (result.code == 200) {
-					this.addMvUrl(result.data)
+					this.addMvUrl(result.data).then((res) => {
+						this.newMV = res
+					})
 				}
 			},
-			// 点击全屏播放视频，关闭其他视频
+			// 点击播放，关闭其他视频
 			toPlay(e) {
-				// 关闭其他视频
-				let vid = e
-				this.videoId = vid
-				// let trailer = this.newMV;
-				// for (let i = 0; i < trailer.length; i++) {
-				// 	// console.log(trailer)
-				// 	let temp = trailer[i].id
-				// 	if (temp !== vid) {
-				// 		this.$refs[temp][0].pause();
-				// 	}
-				// }
+				// console.log(e)
 				// 关闭上一个播放的视频
-				this.vid !== vid && this.videoContext && this.videoContext.stop();
-				this.vid = vid
-				this.videoContext = uni.createVideoContext();
-				// this.videoContext.requestFullScreen()
+				// this.videoId !== e && this.videoContext && this.videoContext.stop();
+				this.videoId = e
+				this.videoContext = uni.createVideoContext(e.toString());
+				// console.log(this.videoUpdataTime)
+				let videoUpdataTime = this.videoUpdataTime
+				// console.log(videoUpdataTime)
+				let videoItem = videoUpdataTime.find(item => item.id === e)
+				// console.log(videoItem)
+				if (videoItem !== undefined) {
+					// console.log('45',videoItem.currentTime)
+					this.videoContext.seek(videoItem.currentTime)
+				}
+				this.videoContext.play() //有这步就不用关闭上一个播放的视频了
+				this.videoContext.requestFullScreen()
 			},
 			// 自定义下拉刷新
-			toRefresh(){
-				// console.log(123456)
+			toRefresh() {
+				this._freshing = false;
+				setTimeout(() => {
+					this.isTriggered = true;
+				}, 1000)
 				this.getRankingMV()
-				this.isTriggered=false
+				if (this._freshing) return;
+				this._freshing = true;
+				setTimeout(() => {
+					this.isTriggered = false;
+					this._freshing = false;
+				}, 2000)
+			},
+			// 自定义上拉加载
+			async toGetMore() {
+				// console.log("getmore")
+				let newMV = this.newMV
+				let result = await myRequestGet('/mv/first')
+				// console.log(result)
+				let videoList = result.data.slice(10, 20)
+				newMV.push(...videoList)
+				
+				// console.log(videoList)
+			},
+			// 监听事件播放进度
+			toUpdateTime(e) {
+				// console.log(e)
+				let videoTimeObj = {
+					id: e.currentTarget.dataset.id,
+					currentTime: e.detail.currentTime
+				}
+				let videoUpdataTime = this.videoUpdataTime
+				let videoItem = videoUpdataTime.find(item =>
+					item.id === videoTimeObj.id
+				)
+				if (videoItem) {
+					videoItem.currentTime = e.detail.currentTime
+				} else {
+					videoUpdataTime.push(videoTimeObj)
+				}
+			},
+			// 视频播放结束时的回调(把播放记录移除)
+			toEndPlay(e) {
+				// console.log("end")
+				let videoUpdataTime = this.videoUpdataTime
+				let index = videoUpdataTime.findIndex(item => item.id === e.currentTarget.dataset.id)
+				videoUpdataTime = videoUpdataTime.splice(index, 1);
 			}
 		}
 	}
@@ -168,27 +220,28 @@
 	.mv-nav {
 		width: 100%;
 		display: flex;
-		height: 50rpx;
+		height: 70rpx;
 		font-size: 28rpx;
 		font-family: PingFang SC;
 		font-weight: 500;
-		line-height: 50rpx;
+		line-height: 70rpx;
 		color: #666666;
+		position: fixed;
+		top: var(--window-top);
+		left: 0;
+		z-index: 9;
+		background: #fff;
 	}
 
 	.mv-navitems {
 		flex: 1;
 		text-align: center;
-		height: 50rpx;
-		line-height: 50rpx;
 	}
 
 	.mv-active {
-		height: 50rpx;
 		font-size: 18px;
 		font-family: PingFang SC;
 		font-weight: bold;
-		line-height: 50rpx;
 		color: #333333;
 		border-bottom: solid 4rpx #22BDE9;
 	}
@@ -196,11 +249,13 @@
 	/* 视频区 */
 	.videoScroll,
 	.mvScroll {
-		height: calc(100vh - 110rpx);
+		margin-top: 50rpx;
+		height: 100vh;
+		/* 不设置这个高度 触发不了@scrolltolower事件 */
 	}
 
 	.videoItem {
-		margin: 20rpx 0;
+		margin: 20rpx 0 20rpx 0;
 		width: 100%;
 		border-bottom: solid 1px #EAEAEA;
 	}

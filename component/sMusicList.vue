@@ -29,8 +29,9 @@
 		},
 		methods: {
 			get(item){
-				console.log(item)
-				
+				uni.navigateTo({
+				    url: `/pages/player/player?id=${item.id}&name=${item.name}&src=${encodeURIComponent(JSON.stringify(item.al.picUrl))}&alname=${item.al.name}&arname=${item.ar[0].name}`
+				});
 			}
 		}
 	}

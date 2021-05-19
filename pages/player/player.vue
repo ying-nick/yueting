@@ -30,20 +30,21 @@
 				</view>
 			</view>
 			<view class="players-position">
-<view class="posion-1">
-	
-</view>
-<view class="posion-2">
-	<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
-	<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
-		style="font-size:160upx;color: #d43c43;"></icon>
-	<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
-</view>
-<view class="posion-1">
-	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"></icon>
-</view>
-				
+				<view class="posion-1">
 
+				</view>
+				<view class="posion-2">
+					<icon class="iconfont icon-backward icQ"
+						style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;" @click="goPev"></icon>
+					<icon :class="['iconfont',isPlay?'icon-yixianshi-':'icon-bofang','icZ']"
+						style="font-size:160upx;color: #d43c43;" @click="togglePlay"></icon>
+					<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;">
+					</icon>
+				</view>
+				<view class="posion-1">
+					<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;">
+					</icon>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -56,40 +57,98 @@
 		myRequestGet
 	} from '../../utils/req.js'
 	import Progressbar from "../../component/ProgressBar.vue"
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
 		data() {
 			return {
 				src: '',
-				name:'',
-				alname:'',
-				arname:'',
-				isPause:true
+				name: '',
+				alname: '',
+				arname: '',
+				isPlay: true,
+				innerAudioContext:{},
+				nowIndex:''
+				
 			};
+		},
+		computed: {
+			...mapState(['user', 'cookie','list']),
 		},
 		onLoad(options) {
 			// console.log(options)
 			uni.hideTabBar()
 			this.src = JSON.parse(decodeURIComponent(options.src))
-			
+
 			let id = options.id
 			// console.log(src)
 			/* uni.setNavigationBarTitle({
 				title: options.name
 			})
  */
-this.name=options.name
-this.alname=options.alname
-this.arname=options.arname
+			this.name = options.name
+			this.nowIndex=options.index
+			// console.log(this.nowIndex)
+			this.alname = options.alname
+			this.arname = options.arname
+			this.getMusic(id)
 		},
 		methods: {
-			load() {
-				console.log('load')
+			//上一首
+			goPev(){
+				// console.log(this.list)
+				if(this.nowIndex==0){
+					this.nowIndex=this.list.length-1
+				}
+				this.nowIndex=this.nowIndex-1
+				this.innerAudioContext.stop()
+				this.innerAudioContext.destroy()
+				let item=this.list[this.nowIndex]
+				this.name = item.name
+				this.alname = item.alname
+				this.arname = item.arname
+				this.getMusic(item.id)
 			},
-			ctrl() {
-				console.log('ctrl')
+			togglePlay(){
+				if (this.innerAudioContext.paused) {
+					//背景音乐重启
+					this.innerAudioContext.play()
+						} else {
+						//暂停背景音乐
+						this.innerAudioContext.pause()
+						}
+						this.isPlay=!this.isPlay
+			},
+			async getMusic(id) {
+				// console.log(this.innerAudioContext)
+				if(!this.isPlay){
+					this.isPlay=!this.isPlay
+				}
+				const res = await myRequestGet('/song/url', {
+					id: id,
+					cookie: this.cookie,
+				})
+				// console.log(res)
+				if (res.code == 200) {
+					const innerAudioContext=this.innerAudioContext = uni.createInnerAudioContext();
+					innerAudioContext.autoplay = true;
+					innerAudioContext.src = res.data[0].url;
+						// console.log(innerAudioContext)
+					innerAudioContext.onPlay(() => {
+					  console.log('开始播放');
+					});
+					innerAudioContext.onError((res) => {
+					  console.log(res.errMsg);
+					  console.log(res.errCode);
+					});
+					
+					// console.log(this.url)
+				}
 			}
 		},
-		components:{
+		components: {
 			Progressbar,
 		}
 	}
@@ -102,32 +161,37 @@ this.arname=options.arname
 <style lang="less" scoped>
 	.body {
 		height: 100%;
-.title{
-	height: 25%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	font-family: PingFang SC;
-	color: #F0F0F0;
-	padding: 10px 0;
-	.musicName{
-		font-size: 20px;
-		font-weight: 700;
-	}
-	.musicInfo{
-	
-		width: 100%;
-		font-size: 10px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		.info{
-			padding: 10px 10px;
+
+		.title {
+			height: 25%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			font-family: PingFang SC;
+			color: #F0F0F0;
+			padding: 10px 0;
+
+			.musicName {
+				font-size: 20px;
+				font-weight: 700;
+			}
+
+			.musicInfo {
+
+				width: 100%;
+				font-size: 10px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.info {
+					padding: 10px 10px;
+				}
+			}
 		}
-	}
-}
+
 		.players {
 			width: 100%;
 			height: 30%;
@@ -135,32 +199,37 @@ this.arname=options.arname
 			justify-content: center;
 			flex-direction: column;
 			align-items: center;
-.progress{
-	width: 100%;
-	height: 50%;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-		.prg-pst{
-			width: 100%;
-			height: 68upx;
-		}
 
-}
+			.progress {
+				width: 100%;
+				height: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.prg-pst {
+					width: 100%;
+					height: 68upx;
+				}
+
+			}
+
 			.players-position {
 				width: 100%;
 				height: 50%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				.posion-1{
+
+				.posion-1 {
 					display: flex;
 					justify-content: center;
 					align-items: center;
 					height: 100%;
 					flex: 1;
 				}
-				.posion-2{
+
+				.posion-2 {
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
@@ -220,7 +289,7 @@ this.arname=options.arname
 				box-sizing: border-box;
 				border-radius: 50%;
 				border-top: 10px solid #fda085;
-				
+
 				position: absolute;
 				animation: a1 2s linear infinite;
 

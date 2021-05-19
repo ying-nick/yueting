@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<text class="time">00:00</text>
+		<text class="time">{{showTime.currentTime}}</text>
 		<view class="control">
 			<!-- 可移动区域 -->
 			<movable-area class="area">
@@ -18,11 +18,39 @@
 			 active-color="#FFD700"
 			/>
 		</view>
-		<text class="time">4:00</text>
+		<text class="time">{{showTime.totalTime}}</text>
 	</view>
 </template>
 
 <script>
+	export default {
+		props:['url','id'],
+		data() {
+			return {
+					showTime: {
+							currentTime: '00:00',
+							totalTime: '00:00',
+						},
+						innerAudioContext:{},
+					
+			};
+		},
+		created(){
+			// console.log(this.id)
+		
+		},
+		watch:{
+			url(val){
+				// console.log(val)
+				if(val==''){
+					console.log(111)
+				}else{
+					this.src=val
+				}
+		}
+		
+		}
+	}
 </script>
 
 <style lang="less" scoped>

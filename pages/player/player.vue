@@ -106,10 +106,11 @@
 				this.innerAudioContext.stop()
 				this.innerAudioContext.destroy()
 				let item=this.list[this.nowIndex]
+				this.src=item.src
 				this.name = item.name
 				this.alname = item.alname
 				this.arname = item.arname
-				this.getMusic(item.id)
+				this.goplay(item.id)
 			},
 			togglePlay(){
 				if (this.innerAudioContext.paused) {
@@ -146,7 +147,29 @@
 					
 					// console.log(this.url)
 				}
-			}
+				
+			},
+			async goplay(id){
+					// console.log(e)
+					const result=await myRequestGet('/check/music',{
+						id:id
+					})
+					// console.log(result)
+					if(result.success){
+						this.getMusic(id)
+					}else{
+						uni.showToast({
+						    title: '亲爱的,暂无版权,请换歌',
+							icon:'none',
+						    duration: 3000
+						});
+						if(this.isPlay){
+							this.isPlay=!this.isPlay
+						}
+					}
+					// console.log(res)
+					
+				}
 		},
 		components: {
 			Progressbar,

@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<block v-for="(item,index) in list" :key="index">
-			<view class="container">
+			<view class="container" @click="get(item)">
 				<view class="list_index">{{index+1}}.</view>
 				<view class="list_content">
 					<view class="list-name">
@@ -24,9 +24,14 @@
 
 			}
 		},
-
+		created(){
+			// console.log(this.list)
+		},
 		methods: {
-
+			get(item){
+				console.log(item)
+				console.log(item.artists[0].img1v1Url)
+			}
 		}
 	}
 </script>

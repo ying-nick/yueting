@@ -4,18 +4,18 @@
 		<view class="contains">
 			<view class="play">
 				<view class="load">
-		
+
 				</view>
 				<view class="playCtrl">
 					<view class="ctrls">
-		
+
 					</view>
 				</view>
 			</view>
-		
+
 		</view>
 	</view>
-	
+
 
 </template>
 
@@ -26,18 +26,18 @@
 	export default {
 		data() {
 			return {
-src:''
+				src: ''
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
-			 this.src = JSON.parse(decodeURIComponent(options.src))
-			let id=options.id
-			 // console.log(src)
+			this.src = JSON.parse(decodeURIComponent(options.src))
+			let id = options.id
+			// console.log(src)
 			uni.setNavigationBarTitle({
-							title:options.name
-						})
-						
+				title: options.name
+			})
+
 		},
 		methods: {
 			load() {
@@ -55,27 +55,29 @@ src:''
 	}
 </style>
 <style lang="less">
-	.body{
+	.body {
 		height: 100%;
 	}
-	.contain{
-			position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				filter: blur(20upx);
-				opacity: 0.6;
-				z-index: -10;
-				height: 100%;
-				background-size: 100% 100%;
+
+	.contain {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		filter: blur(20upx);
+		opacity: 0.6;
+		z-index: -10;
+		height: 100%;
+		background-size: 100% 100%;
 	}
+
 	.contains {
 		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
+
 		.play {
 			width: 650upx;
 			height: 650upx;

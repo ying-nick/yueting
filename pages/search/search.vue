@@ -217,7 +217,7 @@
 		.bottom {
 			.hotlist {
 				padding-top: 20rpx;
-				padding-left: 30rpx;
+				padding-left: 20rpx;
 				width: 100%;
 				height: 400rpx;
 
@@ -231,22 +231,22 @@
 					// flex-wrap: wrap;
 
 					.hotBlock {
-						width: 45%;
+						width: 50%;
 						height: 60rpx;
 						display: inline-block;
-						font-size: 28rpx;
+						font-size: 25rpx;
 						padding-top: 20rpx;
 					}
 
 					.num {
-						font-size: 16px;
+						font-size: 13px;
 						font-family: PingFang SC;
 						font-weight: bold;
 						color: #cccccc;
 					}
 
 					.hottext {
-						padding-left: 10rpx;
+						padding-left: 5rpx;
 						color: #333333;
 						line-height: 60rpx;
 					}

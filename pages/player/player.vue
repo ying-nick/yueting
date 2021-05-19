@@ -40,7 +40,7 @@
 	<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
 </view>
 <view class="posion-1">
-	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"></icon>
+	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;" @click="goToComment"></icon>
 </view>
 				
 
@@ -62,14 +62,20 @@
 				name:'',
 				alname:'',
 				arname:'',
-				isPause:true
+				isPause:true,
+				musicId:'',
+				alId:'',
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
 			this.src = JSON.parse(decodeURIComponent(options.src))
 			
+			// console.log(options)
 			let id = options.id
+			// console.log(id)
+			this.musicId = id
+			this.alId = options.albumId
 			// console.log(src)
 			/* uni.setNavigationBarTitle({
 				title: options.name
@@ -85,6 +91,13 @@ this.arname=options.arname
 			},
 			ctrl() {
 				console.log('ctrl')
+			},
+			goToComment(){ 
+				let id = this.musicId
+				let alid = this.alId
+				uni.navigateTo({
+					url:`/pages/comment/comment?key=${id}&id=${alid}`
+				})
 			}
 		}
 	}

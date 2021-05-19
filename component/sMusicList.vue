@@ -18,19 +18,23 @@
 
 <script>
 	export default {
-		props:['list'],
+		props: ['list'],
 		data() {
 			return {
 
 			}
 		},
-		created(){
+		created() {
 			// console.log(this.list)
 		},
 		methods: {
-			get(item){
+			get(item) {
+				// console.log(item.al.id)
 				uni.navigateTo({
-				    url: `/pages/player/player?id=${item.id}&name=${item.name}&src=${encodeURIComponent(JSON.stringify(item.al.picUrl))}&alname=${item.al.name}&arname=${item.ar[0].name}`
+					url: `/pages/player/player?id=${item.id}&name=${item.name}
+					&src=${encodeURIComponent(JSON.stringify(item.al.picUrl))}
+					&alname=${item.al.name}&arname=${item.ar[0].name}
+					&albumId=${item.al.id}`
 				});
 			}
 		}
@@ -42,15 +46,18 @@
 		display: flex;
 		padding: 14rpx 20rpx;
 		align-items: center;
+
 		// border-bottom: solid 1px rgba(212, 212, 222, 0.4);
 		.list_index {
 			color: #888;
 			font-size: 30rpx;
 			width: 60rpx;
 		}
+
 		.list_content {
 			flex-grow: 1;
 			width: 0;
+
 			.list-name {
 				font-size: 34rpx;
 				color: #333;
@@ -59,6 +66,7 @@
 				white-space: nowrap;
 				margin-bottom: 10rpx;
 			}
+
 			.list-singer {
 				font-size: 22rpx;
 				color: #888

@@ -1,6 +1,15 @@
 <template>
 	<view class="body">
-		<view class="contain" :style="{background:'url('+src+') no-repeat'}"></view>
+		<view class="title">
+			<text class="musicName">{{name}}</text>
+			<view class="musicInfo">
+				<text class="info">专辑：{{alname}}</text>
+				<text class="info">歌手：{{arname}}</text>
+			</view>
+		</view>
+		<view class="contain"
+			:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
+		</view>
 		<view class="contains">
 			<view class="play">
 				<view class="load">
@@ -14,6 +23,29 @@
 			</view>
 
 		</view>
+		<view class="players">
+			<view class="progress">
+				<view class="prg-pst">
+					
+				</view>
+			</view>
+			<view class="players-position">
+<view class="posion-1">
+	
+</view>
+<view class="posion-2">
+	<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
+	<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
+		style="font-size:160upx;color: #d43c43;"></icon>
+	<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
+</view>
+<view class="posion-1">
+	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"></icon>
+</view>
+				
+
+			</view>
+		</view>
 	</view>
 
 
@@ -26,18 +58,26 @@
 	export default {
 		data() {
 			return {
-				src: ''
+				src: '',
+				name:'',
+				alname:'',
+				arname:'',
+				isPause:true
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
 			this.src = JSON.parse(decodeURIComponent(options.src))
+			
 			let id = options.id
 			// console.log(src)
-			uni.setNavigationBarTitle({
+			/* uni.setNavigationBarTitle({
 				title: options.name
 			})
-
+ */
+this.name=options.name
+this.alname=options.alname
+this.arname=options.arname
 		},
 		methods: {
 			load() {
@@ -54,9 +94,64 @@
 		height: 100%;
 	}
 </style>
-<style lang="less">
+<style lang="less" scoped>
 	.body {
 		height: 100%;
+.title{
+	height: 25%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-family: PingFang SC;
+	color: #F0F0F0;
+	padding: 10px 0;
+	.musicName{
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.musicInfo{
+	
+		width: 100%;
+		font-size: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.info{
+			padding: 10px 10px;
+		}
+	}
+}
+		.players {
+			width: 100%;
+			height: 30%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			.players-position {
+				width: 100%;
+				height: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				.posion-1{
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 100%;
+					flex: 1;
+				}
+				.posion-2{
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					flex: 3;
+				}
+
+			}
+		}
 	}
 
 	.contain {
@@ -65,15 +160,14 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		filter: blur(20upx);
-		opacity: 0.6;
+		filter: blur(10rpx) contrast(60%) brightness(60%);
 		z-index: -10;
 		height: 100%;
-		background-size: 100% 100%;
+
 	}
 
 	.contains {
-		height: 100%;
+		height: 50%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -109,6 +203,7 @@
 				box-sizing: border-box;
 				border-radius: 50%;
 				border-top: 10px solid #E74C3C;
+				
 				position: absolute;
 				animation: a1 2s linear infinite;
 

@@ -60,7 +60,7 @@
             "path" : "pages/player/player",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                 "navigationStyle":"custom",
                 "enablePullDownRefresh": false
             }
             

@@ -17,36 +17,14 @@
 
 		created() {
 			this.getPersonalized()
-
-		},
-		watch: {
-			// ['playlist.playCount'](count) { //对象下面的某个属性
-			// 	this._tranNumber(count, 2)
-			// 	_count: this._tranNumber(count, 2) //不能对监听的对象再赋值 生成的数字赋值给自己的声明的数字
-
-			// }
-			playList(count){
-				for(var i = 0;i<count.length;i++){
-					 
-					//console.log(count[i].playCount)
-					// this._tranNumber(count[i].playCount, 2)
-					// _count: this._tranNumber(count[i].playCount, 2) 
-					var cp =count[i].playCount
-				
-						//console.log(cp)
-				}
-
-			}
-
+    
 		},
 		data() {
 			return {
-				_count: 0, //声明一个自己的数字
-
+			
 				playList: [
 
 				]
-
 			}
 		},
 		methods: {
@@ -56,26 +34,13 @@
 					
 			      })
 			    },
-		
 			async getPersonalized() {
 				const res = await myRequestGet('/personalized')
 				this.playList = res.result
-				//console.log(this.playList)
+                
+		console.log(this.playList)
 			},
-			
-			_tranNumber(num, point) {
-				let numStr = num.toString().split('.')[0]
-				if (numStr.length < 6) {
-					return numStr
-				} else if (numStr.length >= 6 && numStr.length <= 8) {
-					let decimal = numStr.substring(numStr.length - 4, numStr.length - 4 + point)
-					return parseFloat(parseInt(num / 10000) + "." + decimal) + "万"
-				} else if (numStr.length > 8) {
-					let decimal = numStr.substring(numStr.length - 8, numStr.length - 8 + point)
-					return parseFloat(parseInt(num / 100000000) + "." + decimal) + "亿"
-				}
-			}
-		},
+		},			
 	}
 </script>
 
@@ -89,7 +54,6 @@
 	}
 
 	.iconfont {
-
 		font-family: "iconfont" !important;
 		font-size: 16px;
 		font-style: normal;
@@ -101,24 +65,18 @@
 		content: "\e77e";
 	}
 
-
-
 	.playlist-container {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
 		margin-top: 10rpx;
 		flex-direction: row;
-
 	}
-
 	.playlist-img {
 		width: 200rpx;
-
 		border-radius: 10rpx;
 		position: relative;
 	}
-
 	.playlist-playcount {
 		background-color: #808080;
 		border-radius: 56rpx;
@@ -129,7 +87,6 @@
 		top: 10rpx;
 		right: 10rpx
 	}
-
 	.playlist-name {
 		font-size: 26rpx;
 		line-height: 1.2;

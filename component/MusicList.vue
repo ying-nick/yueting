@@ -41,6 +41,17 @@
 	.musiclist-container{
 		position: relative;
 	}
+	.musiclist-container::after{
+	    position: absolute;
+	    right: 50rpx;
+	    bottom: 0;
+	    left: 50rpx;
+	    height: 2rpx;
+	    content: '';
+	    -webkit-transform: scaleY(.5);
+	    transform: scaleY(.5);
+	    background-color: #c8c7cc;
+	}
 .serialNum{
 	position: absolute;
 	margin: 40rpx;
@@ -54,6 +65,7 @@
 }
 .songTitle{
 		position: absolute;
+		font-size: 26rpx;
        margin-left: 30rpx;
 	   margin-top: 10rpx;
 }
@@ -62,7 +74,7 @@
 	color: #999999;
 	position: absolute;
 	margin-left: 30rpx;
-	margin-top: 70rpx;
+	margin-top: 74rpx;
 }
 
 </style>

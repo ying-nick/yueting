@@ -1,14 +1,11 @@
 <template>
-	<view >
+	<view  class="container">
 	<view class="musiclist-container" v-for="(item,index) in songs"  :key="item.id">
 			<text class="serialNum">{{index+1}}</text>
 			<image class="songsImg" :src="item.al.picUrl"></image>
 			<text class="songTitle">{{item.name}}</text>
 			<text  class="singer">{{item.ar[0].name}}</text>
-
-		
 	</view>
-
 	</view>
 </template>
 <script>
@@ -81,6 +78,17 @@
 	.musiclist-container {
 		position: relative;
 	}
+	.musiclist-container::after{
+	    position: absolute;
+	    right: 50rpx;
+	    bottom: 0;
+	    left: 50rpx;
+	    height: 2rpx;
+	    content: '';
+	    -webkit-transform: scaleY(.5);
+	    transform: scaleY(.5);
+	    background-color: #c8c7cc;
+	}
 
 	.serialNum {
 		position: absolute;
@@ -97,6 +105,7 @@
 
 	.songTitle {
 		position: absolute;
+			font-size: 26rpx;
 		margin-left: 30rpx;
 		margin-top: 10rpx;
 	}
@@ -106,6 +115,6 @@
 		color: #999999;
 		position: absolute;
 		margin-left: 30rpx;
-		margin-top: 70rpx;
+		margin-top: 74rpx;
 	}
 </style>

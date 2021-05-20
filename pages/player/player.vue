@@ -64,8 +64,10 @@
 					</icon>
 				</view>
 				<view class="posion-1">
-					<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;">
+					<icon class="iconfont icon-iconset0138"  style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
+						@click="goToComment">
 					</icon>
+					<text class="total">{{total|total(total)}}</text>
 				</view>
 			</view>
 		</view>
@@ -83,7 +85,7 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-let lyricHeight=0
+	let lyricHeight = 0
 	let nowIndex = 0
 	let list = []
 	let movableAreaWidth = 0
@@ -107,19 +109,25 @@ let lyricHeight=0
 				},
 				innerAudioContext: {},
 				movableDis: 0,
-				
+
 				go: 0,
 				lrcList: [],
 				nowLrc: 0, //当前歌词索引
 				scrollTop: 0, //滚动条滚动高度
-
+				isPause: true,
+				musicId: '',
+				alId: '',
+				total: '',
 			};
 		},
 		computed: {
 			...mapState(['user', 'cookie', 'lists']),
 		},
 		onLoad(options) {
-			// console.log(options)
+			// console.log(options.albumId)
+			this.alId = options.albumId
+			// console.log('------')
+			// console.log(this.alId)
 			uni.hideTabBar()
 			this.src = JSON.parse(decodeURIComponent(options.src))
 			this.getMovableDis()
@@ -129,6 +137,10 @@ let lyricHeight=0
 				title: options.name
 			})
  */
+			this.alId = options.albumId
+			this._gettotal(id)
+			this.musicId = id
+			// console.log(alId)
 			this.name = options.name
 			nowIndex = options.index
 			// console.log(nowIndex)
@@ -139,50 +151,66 @@ let lyricHeight=0
 			this.getMusic(id)
 		},
 		onReady() {
-		/* 
-				uni.createSelectorQuery().select('.ctrls').fields({
-								size: true,
-							}, (res) => {
-								lyricHeight = res.height/7;
-								// console.log(res.height)
-								// console.log(this.lyricHeight)
-							}).exec(); */
-							uni.getSystemInfo({
-										success(res) {
-											// console.log(res)
-											//求出给个rpx大小，并算出当前高度px
-											lyricHeight = (res.screenWidth / 750) * 64
-											// console.log(lyricHeight)
-										},
-									})	
+			/* 
+					uni.createSelectorQuery().select('.ctrls').fields({
+									size: true,
+								}, (res) => {
+									lyricHeight = res.height/7;
+									// console.log(res.height)
+									// console.log(this.lyricHeight)
+								}).exec(); */
+			uni.getSystemInfo({
+				success(res) {
+					// console.log(res)
+					//求出给个rpx大小，并算出当前高度px
+					lyricHeight = (res.screenWidth / 750) * 64
+					// console.log(lyricHeight)
+				},
+			})
 
 		},
-		
+
 		methods: {
-			timeUpdata(curTime){
-					// console.log(curTime)
-							let lrcList = this.lrcList
-							if (lrcList == 0) {
-								return
-							}
-							//歌曲时间超过歌词时间
-							if (curTime > lrcList[lrcList.length - 1].time) {
-								if (this.nowLrc != -1) {
-										this.nowLrc=-1
-										this.scrollTop=lrcList.length * lyricHeight
-								
-								}
-							}
-							for (let i = 0, len = lrcList.length; i < len; i++) {
-								if (curTime <= lrcList[i].time) {
-								
-									this.nowLrc=i - 1;
-									this.scrollTop=(i - 1) * lyricHeight;
-									
-									break
-								}
-							}
-							// console.log(this.data.scrollTop)
+			async _gettotal(num) {
+				console.log(num)
+				let result = await myRequestGet('/comment/music', {
+					id: num,
+				})
+				// console.log(result.total)
+				this.total = result.total
+				// console.log(this.total)
+			},
+			goToComment() {
+				let id = this.musicId
+				let alid = this.alId
+				uni.navigateTo({
+					url: `/pages/comment/comment?key=${id}&id=${alid}`
+				})
+			},
+			timeUpdata(curTime) {
+				// console.log(curTime)
+				let lrcList = this.lrcList
+				if (lrcList == 0) {
+					return
+				}
+				//歌曲时间超过歌词时间
+				if (curTime > lrcList[lrcList.length - 1].time) {
+					if (this.nowLrc != -1) {
+						this.nowLrc = -1
+						this.scrollTop = lrcList.length * lyricHeight
+
+					}
+				}
+				for (let i = 0, len = lrcList.length; i < len; i++) {
+					if (curTime <= lrcList[i].time) {
+
+						this.nowLrc = i - 1;
+						this.scrollTop = (i - 1) * lyricHeight;
+
+						break
+					}
+				}
+				// console.log(this.data.scrollTop)
 			},
 			//滑动结束
 			Tend() {
@@ -290,42 +318,42 @@ let lyricHeight=0
 				if (innerAudioContext.paused) {
 					//背景音乐重启
 					innerAudioContext.play()
-					this.isPlay=true
+					this.isPlay = true
 				} else {
 					//暂停背景音乐
 					innerAudioContext.pause()
-					this.isPlay =false
+					this.isPlay = false
 				}
 			},
 			//歌词格式变化
-				parseLrc(sLrc) {
-						let line = sLrc.split('\n')
-						let lrcList = []
-						// console.log(line)
-						line.forEach((item) => {
-							//match() 方法可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配
-							let time = item.match(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g)
-							// console.log(item)
-							if (time != null) {
-								// console.log(time)
-								// console.log(item.split(time))
-								let lrc = item.split(time)[1]
-								let timeReg = time[0].match(/(\d{2,}):(\d{2})(?:\.(\d{2,3}))?/)
-								// console.log(timeReg)
-								//把时间转成秒
-								let timeSec =
-									parseInt(timeReg[1]) * 60 +
-									parseInt(timeReg[2]) +
-									parseInt(timeReg[3]) / 1000
-								lrcList.push({
-									lrc,
-									time: timeSec,
-								})
-							}
+			parseLrc(sLrc) {
+				let line = sLrc.split('\n')
+				let lrcList = []
+				// console.log(line)
+				line.forEach((item) => {
+					//match() 方法可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配
+					let time = item.match(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g)
+					// console.log(item)
+					if (time != null) {
+						// console.log(time)
+						// console.log(item.split(time))
+						let lrc = item.split(time)[1]
+						let timeReg = time[0].match(/(\d{2,}):(\d{2})(?:\.(\d{2,3}))?/)
+						// console.log(timeReg)
+						//把时间转成秒
+						let timeSec =
+							parseInt(timeReg[1]) * 60 +
+							parseInt(timeReg[2]) +
+							parseInt(timeReg[3]) / 1000
+						lrcList.push({
+							lrc,
+							time: timeSec,
 						})
-						this.lrcList=lrcList
-						// console.log(this.lrcList)
-					},
+					}
+				})
+				this.lrcList = lrcList
+				// console.log(this.lrcList)
+			},
 			async getMusic(id) {
 				// console.log(innerAudioContext)
 				if (!this.isPlay) {
@@ -337,7 +365,7 @@ let lyricHeight=0
 				})
 				// console.log(res)
 				if (res.code == 200) {
-this.getlyric(id)
+					this.getlyric(id)
 					innerAudioContext.src = res.data[0].url;
 					innerAudioContext.play()
 					// console.log(innerAudioContext)
@@ -351,13 +379,11 @@ this.getlyric(id)
 			},
 			async goplay(id) {
 				// console.log(e)
-				this.lrcList=[
-					{
-						lrc:'',
-						time: 0
-					},
-				]
-				this.nowLrc=-1
+				this.lrcList = [{
+					lrc: '',
+					time: 0
+				}, ]
+				this.nowLrc = -1
 				const result = await myRequestGet('/check/music', {
 					id: id
 				})
@@ -370,13 +396,11 @@ this.getlyric(id)
 						icon: 'none',
 						duration: 1000
 					});
-					this.lrcList=[
-						{
-							lrc:'亲爱的,暂无版权,请换歌',
-							time: 0
-						},
-					]
-					this.nowLrc=-1
+					this.lrcList = [{
+						lrc: '亲爱的,暂无版权,请换歌',
+						time: 0
+					}, ]
+					this.nowLrc = -1
 					// setTimeout(()=>{
 					// 	this.goNext()
 					// },1100)
@@ -387,25 +411,23 @@ this.getlyric(id)
 				// console.log(res)
 
 			},
-			async getlyric(id){
-				const result=await myRequestGet('/lyric',{
-					id:id
+			async getlyric(id) {
+				const result = await myRequestGet('/lyric', {
+					id: id
 				})
-				let lyric=result.lrc.lyric
+				let lyric = result.lrc.lyric
 				// console.log(result)
 				// console.log(lyric)
-				if(lyric){
+				if (lyric) {
 					this.parseLrc(lyric)
-				}else{
-					this.lrcList=[
-						{
-							lrc:'暂无歌词',
-							time: 0
-						},
-					]
-					this.nowLrc=-1
+				} else {
+					this.lrcList = [{
+						lrc: '暂无歌词',
+						time: 0
+					}, ]
+					this.nowLrc = -1
 				}
-				
+
 			},
 			bindBgmEvent() {
 				innerAudioContext.onCanplay(() => {
@@ -438,7 +460,7 @@ this.getlyric(id)
 							this.showTime.currentTime = `${curTimeFmt.min}:${curTimeFmt.sec}`,
 
 							currentSec = curTime.toString().split('.')[0]
-							this.timeUpdata(curTime)
+						this.timeUpdata(curTime)
 
 					}
 				});
@@ -497,7 +519,15 @@ this.getlyric(id)
 
 				.info {
 					padding: 10px 10px;
+					width: 40%;
+					height: 5%;
+					overflow: hidden;
+					-webkit-line-clamp: 1;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
 				}
+
 			}
 		}
 
@@ -536,6 +566,15 @@ this.getlyric(id)
 					align-items: center;
 					height: 100%;
 					flex: 1;
+					position: relative;
+
+					.total {
+						position: absolute;
+						font-size: 28rpx;
+						color: white;
+						top: 25%;
+						right: 15%;
+					}
 				}
 
 				.posion-2 {
@@ -642,7 +681,7 @@ this.getlyric(id)
 
 							.lyric {
 								min-height: 64rpx;
-							
+
 							}
 
 							.highLight {

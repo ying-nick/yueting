@@ -44,6 +44,7 @@
 				if(result.success){
 					//保存歌曲列表
 					let list=[]
+					console.log(this.item.list)
 					this.item.list.forEach(it=>{
 						let song={
 							id:it.song.id,
@@ -53,7 +54,9 @@
 							arname:it.song.ar[0].name
 						}
 						list.push(song)
+						
 					})
+				
 					this.setList(list)
 					uni.navigateTo({
 					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`

@@ -20,8 +20,6 @@
 	export default {
 		mounted(){
 			
-			 // console.log(this.listSongs)
-		
 			},
 		
 		
@@ -46,6 +44,7 @@
 					});
 					//console.log(newList)
 					this.getListSongs(newList)
+		
 			}
 		},
 		methods: {
@@ -55,10 +54,10 @@
 					    const res = await myRequestGet('/song/detail', {ids:newList.join()});
 					
 					   this.songs = res.songs	
-						 console.log(this.songs)
+						 //console.log(this.songs)
 					},
 			async goToPlayer(e){
-					 console.log(e)
+					// console.log(e)
 					let res=e.currentTarget.dataset
 					console.log(res)
 					const result=await myRequestGet('/check/music',{
@@ -67,9 +66,9 @@
 					// console.log(result)
 					if(result.success){
 						//保存歌曲列表
-						const list=[]
-						console.log(this.item.list)
-						this.item.list.forEach(item=>{
+						let list=[]
+						console.log(this.songs)
+						this.songs.list.forEach(item=>{
 							let song={
 								id:item.id,
 								src:item.al.picUrl,
@@ -93,14 +92,8 @@
 							icon:'none',
 						    duration: 3000
 						});
-					}
-					// console.log(res)
-					
+					}					
 				},
-			
-			
-	
-			 
 		}
 	}
 </script>

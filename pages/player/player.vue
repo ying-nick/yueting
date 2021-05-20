@@ -13,7 +13,6 @@
 		<view class="contains">
 			<view class="play">
 				<view class="load">
-
 				</view>
 				<view class="playCtrl">
 					<view class="ctrls">
@@ -124,7 +123,7 @@
 			...mapState(['user', 'cookie', 'lists']),
 		},
 		onLoad(options) {
-			console.log(options)
+			// console.log(options)
 			this.alId = options.albumId
 			// console.log('------')
 			// console.log(this.alId)
@@ -172,7 +171,7 @@
 
 		methods: {
 			async _gettotal(num) {
-				console.log(num)
+				// console.log(num)
 				let result = await myRequestGet('/comment/music', {
 					id: num,
 				})

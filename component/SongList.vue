@@ -54,7 +54,7 @@
 			
 			async getListSongs(newList) {
 				
-			    const res = await myRequestGet('/song/detail', {ids:newList});
+			    const res = await myRequestGet('/song/detail', {ids:newList.join()});
 			
 			   this.songs = res.songs
 				 

@@ -1,6 +1,18 @@
 import Vue from 'vue'
 import App from './App'
+<<<<<<< .merge_file_a24488
 import store from './store.js'
+=======
+
+import PlayList from "@/component/PlayList.vue"
+import MusicList from "@/component/MusicList.vue"
+import SongList from "@/component/SongList.vue"
+
+Vue.component('PlayList',PlayList)
+Vue.component('MusicList',MusicList)
+Vue.component('SongList',SongList)
+
+>>>>>>> .merge_file_a10592
 Vue.config.productionTip = false
 
 App.mpType = 'app'

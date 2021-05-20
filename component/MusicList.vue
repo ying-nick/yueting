@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id">
+		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id" @click="goToPlayer">
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
 				<text class="songTitle">{{item.name}} </text>
@@ -27,6 +27,12 @@
 			}
 		},
 		methods: {
+			goToPlayer(e) {
+			  uni.navigateTo({
+			    // url: `=${e.currentTarget..id}`  //跳转去播放界面
+				
+			  })
+			},
 			async getNewSongs() {
 				const res = await myRequestGet('/top/song')
 				this.newSongs = res.data

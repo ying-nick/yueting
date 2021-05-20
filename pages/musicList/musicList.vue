@@ -16,12 +16,7 @@
 		 onLoad(options) {
 			// console.log(options)
 		 this.getListSongs(options.playListId)
-			// .then((res)=>{
-			// 	// console.log(this.listSongs)
-				
-			// 	// this.listSongs=res
-			// })
-			// // console.log(re)
+	
 		},
 		data() {
 			return {

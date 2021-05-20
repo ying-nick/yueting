@@ -1,6 +1,6 @@
 <template>
 	<view  class="container">
-	<view class="musiclist-container" v-for="(item,index) in songs"  :key="item.id">
+	<view class="musiclist-container" v-for="(item,index) in songs"  :key="item.id"  @click="goToPlayer">
 			<text class="serialNum">{{index+1}}</text>
 			<image class="songsImg" :src="item.al.picUrl"></image>
 			<text class="songTitle">{{item.name}}</text>
@@ -30,11 +30,7 @@
 
 			}
 		},
-		// created() {
-		// 	// console.log(this.listSongs)
-			
-		// 	this.getListSongs()
-		// },
+
 		watch:{
 			listSongs(r){
 				// console.log(r)
@@ -43,26 +39,23 @@
 				r.forEach((item)=>{
 						newList.push(item.id)
 					});
-					console.log(newList)
+					//console.log(newList)
 					this.getListSongs(newList)
 			}
 		},
 		methods: {
+			goToPlayer(e) {
+			  uni.navigateTo({
+			    // url: `=${e.currentTarget..id}`  //跳转去播放界面
+				
+			  })
+			},
 			
 			
 			async getListSongs(newList) {
-			// 	const newList = [];
-			// 	// console.log(this.listSongs)
-			// this.listSongs.forEach((item)=>{
-			// 		newList.push(item.id)
-			// 	});
-			// 	console.log(newList)
 				
 			    const res = await myRequestGet('/song/detail', {ids:newList});
-				console.log(res)
-				// for(var i = 0;i<this.listSongs.length;i++){
-				// 	const res = await myRequestGet('/song/detail', {ids: this.listSongs[i].id})
-				// 	console.log(res.songs)
+			
 			   this.songs = res.songs
 				 
 				// }

@@ -1,6 +1,7 @@
 <template>
 	<view  class="container">
-	<view class="musiclist-container" v-for="(item,index) in songs"  :key="item.id"  @click="goToPlayer">
+	<view class="musiclist-container" v-for="(item,index) in songs"  :key="item.id"  @click="goToPlayer"
+	:data-id='item.id' :data-src="item.al.picUrl" :data-name="item.name" :data-alname="item.al.name" :data-arname="item.ar[0].name" :data-idx="index">
 			<text class="serialNum">{{index+1}}</text>
 			<image class="songsImg" :src="item.al.picUrl"></image>
 			<text class="songTitle">{{item.name}}</text>
@@ -9,6 +10,10 @@
 	</view>
 </template>
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	import {
 		myRequestGet
 	} from '../utils/req.js'
@@ -44,24 +49,57 @@
 			}
 		},
 		methods: {
-			goToPlayer(e) {
-			  uni.navigateTo({
-			    // url: `=${e.currentTarget..id}`  //跳转去播放界面
-				
-			  })
-			},
+					...mapMutations(['setList']),
+					async getListSongs(newList) {
+						
+					    const res = await myRequestGet('/song/detail', {ids:newList.join()});
+					
+					   this.songs = res.songs	
+						 console.log(this.songs)
+					},
+			async goToPlayer(e){
+					 console.log(e)
+					let res=e.currentTarget.dataset
+					console.log(res)
+					const result=await myRequestGet('/check/music',{
+						id:res.id
+					})
+					// console.log(result)
+					if(result.success){
+						//保存歌曲列表
+						const list=[]
+						console.log(this.item.list)
+						this.item.list.forEach(item=>{
+							let song={
+								id:item.id,
+								src:item.al.picUrl,
+								name:item.name,
+								alname:item.al.name,
+								arname:item.ar[0].name
+							}
+							list.push(song)
+							
+						})
+					
+						this.setList(list)
+						uni.navigateTo({
+						    url: `/pages/player/player?id=${res.id}
+								&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
+								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
+						});
+					}else{
+						uni.showToast({
+						    title: '亲爱的,暂无版权,请换歌',
+							icon:'none',
+						    duration: 3000
+						});
+					}
+					// console.log(res)
+					
+				},
 			
 			
-			async getListSongs(newList) {
-				
-			    const res = await myRequestGet('/song/detail', {ids:newList.join()});
-			
-			   this.songs = res.songs
-				 
-				// }
-		
 	
-			},
 			 
 		}
 	}

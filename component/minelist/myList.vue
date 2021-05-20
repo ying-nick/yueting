@@ -2,7 +2,7 @@
 	<view class="mylistView">
 		<view class="mylists">
 			<block v-for="(it,index) in item.list" :key="index">
-				<view class="mylistSong">
+				<view class="mylistSong" :data-id='it.id' @click="goPlaylist">
 					<view>{{index+1}}</view>
 					<image :src='it.coverImgUrl' class="img"></image>
 					<view class="mylists">{{it.name}}</view>
@@ -19,11 +19,20 @@
 	export default {
 		props:['item'],
 		created() {
-			// console.log(this.item)
+			console.log(this.item)
 		},
 		data(){
 			return{
 				
+			}
+		},
+		methods:{
+			goPlaylist(e){
+				console.log(e)
+				uni.navigateTo({
+				  url: `/pages/musicList/musicList?playListId=${e.currentTarget.dataset.id}`
+									
+				})
 			}
 		},
 		filters:{

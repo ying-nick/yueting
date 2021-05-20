@@ -16,6 +16,9 @@
 	export default {
 
 		onLoad(options) {
+			uni.setNavigationBarTitle({
+							title:'歌单'
+						})
 			//console.log(options)
 			this.getListSongs(options.playListId)
 

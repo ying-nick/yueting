@@ -1,11 +1,25 @@
 <template>
 	<view class="body">
 		<view class="title">
-			<text class="musicName">{{name}}</text>
-			<view class="musicInfo">
-				<text class="info">专辑：{{alname}}</text>
-				<text class="info">歌手：{{arname}}</text>
+			<view class="title1">
+				<icon class="iconfont icon-xiajiantou"  style="color: #FFFFFF;font-size: 15px;"
+										@click="goback">
+									</icon>
+									<view class="ic">
+										
+									</view>
 			</view>
+			
+								<view class="musicnm">
+									<text class="musicName">{{name}}</text>
+									<view class="musicInfo">
+										<!-- <text class="info">专辑：{{alname}}</text> -->
+										<text class="info">{{arname}}</text>
+									</view>
+								</view>
+<view class="title1">
+	
+</view>
 		</view>
 		<view class="contain"
 			:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
@@ -52,9 +66,7 @@
 			</view>
 			<view class="players-position">
 				<view class="posion-1">
-<icon class="iconfont icon-houtui"  style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
-						@click="goback">
-					</icon>
+
 				</view>
 				<view class="posion-2">
 					<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"
@@ -422,21 +434,32 @@
 
 			},
 			async getlyric(id) {
+				console.log(id)
 				const result = await myRequestGet('/lyric', {
 					id: id
 				})
-				let lyric = result.lrc.lyric
-				// console.log(result)
-				// console.log(lyric)
-				if (lyric) {
-					this.parseLrc(lyric)
-				} else {
+				console.log(result)
+				if(result.nolyric){
 					this.lrcList = [{
 						lrc: '暂无歌词',
 						time: 0
 					}, ]
 					this.nowLrc = -1
+				}else{
+					let lyric = result.lrc.lyric
+					console.log(result)
+					console.log(lyric)
+					if (lyric) {
+						this.parseLrc(lyric)
+					} else {
+						this.lrcList = [{
+							lrc: '暂无歌词',
+							time: 0
+						}, ]
+						this.nowLrc = -1
+					}
 				}
+				
 
 			},
 			bindBgmEvent() {
@@ -506,39 +529,61 @@
 		.title {
 			height: 25%;
 			display: flex;
-			flex-direction: column;
+			// flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			text-align: center;
 			font-family: PingFang SC;
 			color: #F0F0F0;
 			padding: 10px 0;
-
-			.musicName {
-				font-size: 20px;
-				font-weight: 700;
-			}
-
-			.musicInfo {
-
-				width: 100%;
-				font-size: 10px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-
-				.info {
-					padding: 10px 10px;
-					width: 40%;
-					height: 8%;
-					overflow: hidden;
-					-webkit-line-clamp: 1;
-					text-overflow: ellipsis;
-					display: -webkit-box;
-					-webkit-box-orient: vertical;
-				}
-
-			}
+.title1{
+	height: 100%;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	.ic{
+		width: 100%;
+		height: 20%;
+	}
+}
+.musicnm{
+		height: 100%;
+	flex: 10;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	.musicName {
+		font-size: 22px;
+		font-weight: 700;
+	}
+	
+	.musicInfo {
+	
+		width: 100%;
+		font-size: 15px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	
+		.info {
+			padding: 10px 10px;
+			width: 40%;
+			height: 50%;
+			overflow: hidden;
+			-webkit-line-clamp: 1;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+		}
+	
+	}
+}
+			
 		}
 
 		.players {

@@ -17,7 +17,7 @@
 				<view class="playCtrl">
 					<view class="ctrls">
 						<scroll-view class="lrc-scroll" scroll-y="true" :scroll-top="scrollTop"
-							scroll-with-animation="true" >
+							scroll-with-animation="true">
 							<view class="lrc-panel">
 								<block v-for="(item,index) in lrcList" :key="item">
 									<view :class="['lyric',index==nowLrc?'highLight':'']">{{item.lrc}}</view>
@@ -51,7 +51,7 @@
 			</view>
 			<view class="players-position">
 				<view class="posion-1">
-<icon class="iconfont icon-houtui"  style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
+					<icon class="iconfont icon-houtui" style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
 						@click="goback">
 					</icon>
 				</view>
@@ -65,11 +65,11 @@
 					</icon>
 				</view>
 				<view class="posion-1">
-					<icon class="iconfont icon-iconset0138"  style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
-						@click="goToComment">
-					</icon>
-					<text class="total">{{total|total(total)}}</text>
+					<icon class="iconfont icon-iconset0138" style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
+						@click="goToComment"></icon>
+						<view class="total">{{total|total(total)}}</view>
 				</view>
+				
 			</view>
 		</view>
 	</view>
@@ -181,7 +181,7 @@
 				this.total = result.total
 				// console.log(this.total)
 			},
-			goback(){
+			goback() {
 				uni.navigateBack();
 				innerAudioContext.stop()
 				this.isPlay = false
@@ -576,14 +576,17 @@
 					height: 100%;
 					flex: 1;
 					position: relative;
-
-					.total {
-						position: absolute;
-						font-size: 28rpx;
-						color: white;
-						top: 23%;
-						right: 15%;
+						.total {
+							width: 100%;
+							height: 100%;
+							position: absolute;
+							font-size: 28rpx;
+							color: white;
+							top: 13%;
+							right: -35%;
+						
 					}
+
 				}
 
 				.posion-2 {

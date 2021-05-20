@@ -26,23 +26,27 @@
 		<view class="players">
 			<view class="progress">
 				<view class="prg-pst">
-					
+
 				</view>
 			</view>
 			<view class="players-position">
-<view class="posion-1">
-	
-</view>
-<view class="posion-2">
-	<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
-	<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
-		style="font-size:160upx;color: #d43c43;"></icon>
-	<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
-</view>
-<view class="posion-1">
-	<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;" @click="goToComment"></icon>
-</view>
-				
+				<view class="posion-1">
+
+				</view>
+				<view class="posion-2">
+					<icon class="iconfont icon-backward icQ"
+						style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
+					<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
+						style="font-size:160upx;color: #d43c43;"></icon>
+					<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;">
+					</icon>
+				</view>
+				<view class="posion-1">
+					<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"
+						@click="goToComment"></icon>
+						<text class="total">{{total | total(total)}}</text>
+				</view>
+
 
 			</view>
 		</view>
@@ -59,31 +63,29 @@
 		data() {
 			return {
 				src: '',
-				name:'',
-				alname:'',
-				arname:'',
-				isPause:true,
-				musicId:'',
-				alId:'',
+				name: '',
+				alname: '',
+				arname: '',
+				isPause: true,
+				musicId: '',
+				alId: '',
+				total:'',
 			};
 		},
 		onLoad(options) {
 			// console.log(options)
 			this.src = JSON.parse(decodeURIComponent(options.src))
-			
+
 			// console.log(options)
 			let id = options.id
+			this._gettotal(id)
 			// console.log(id)
 			this.musicId = id
 			this.alId = options.albumId
-			// console.log(src)
-			/* uni.setNavigationBarTitle({
-				title: options.name
-			})
- */
-this.name=options.name
-this.alname=options.alname
-this.arname=options.arname
+			
+			this.name = options.name
+			this.alname = options.alname
+			this.arname = options.arname
 		},
 		methods: {
 			load() {
@@ -92,11 +94,18 @@ this.arname=options.arname
 			ctrl() {
 				console.log('ctrl')
 			},
-			goToComment(){ 
+			async _gettotal(num) {
+				let result = await myRequestGet('/comment/music', {
+					id: num,
+				})
+				this.total = result.total
+				// console.log(this.total)
+			},
+			goToComment() {
 				let id = this.musicId
 				let alid = this.alId
 				uni.navigateTo({
-					url:`/pages/comment/comment?key=${id}&id=${alid}`
+					url: `/pages/comment/comment?key=${id}&id=${alid}`
 				})
 			}
 		}
@@ -110,32 +119,37 @@ this.arname=options.arname
 <style lang="less" scoped>
 	.body {
 		height: 100%;
-.title{
-	height: 25%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	font-family: PingFang SC;
-	color: #F0F0F0;
-	padding: 10px 0;
-	.musicName{
-		font-size: 20px;
-		font-weight: 700;
-	}
-	.musicInfo{
-	
-		width: 100%;
-		font-size: 10px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		.info{
-			padding: 10px 10px;
+
+		.title {
+			height: 25%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			font-family: PingFang SC;
+			color: #F0F0F0;
+			padding: 10px 0;
+
+			.musicName {
+				font-size: 20px;
+				font-weight: 700;
+			}
+
+			.musicInfo {
+
+				width: 100%;
+				font-size: 10px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.info {
+					padding: 10px 10px;
+				}
+			}
 		}
-	}
-}
+
 		.players {
 			width: 100%;
 			height: 30%;
@@ -149,14 +163,24 @@ this.arname=options.arname
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				.posion-1{
+
+				.posion-1 {
 					display: flex;
 					justify-content: center;
 					align-items: center;
 					height: 100%;
 					flex: 1;
+					position: relative;
+					.total{
+						position: absolute;
+						font-size: 28rpx;
+						color: white;
+						top: 25%;
+						right: 15%;
+					}
 				}
-				.posion-2{
+
+				.posion-2 {
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
@@ -216,7 +240,7 @@ this.arname=options.arname
 				box-sizing: border-box;
 				border-radius: 50%;
 				border-top: 10px solid #E74C3C;
-				
+
 				position: absolute;
 				animation: a1 2s linear infinite;
 

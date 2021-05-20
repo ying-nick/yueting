@@ -19,6 +19,10 @@
 							<view class="listTime">{{item.time | time(item.time)}}</view>
 							<view class="listcomm">{{item.content}}</view>
 						</view>
+						<view class="likedCount" @click="likedCount(item)">
+							<text>{{item.likedCount}}</text>
+							<view class="iconfont icon-dianzan ic"></view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -35,9 +39,8 @@
 			return {
 				countList: {},
 				commentList: [],
-				total:'',
-				time:'',
-				id:'',
+				time: '',
+				id: '',
 			}
 		},
 		onLoad(options) {
@@ -62,15 +65,15 @@
 			}
 		},
 		//触底刷新加载
-		onReachBottom(){
+		onReachBottom() {
 			uni.showLoading({
-				title:"加载中",
-				mask:true,
+				title: "加载中",
+				mask: true,
 			})
 			myRequestGet('/comment/music', {
 				id: this.id,
-				before:this.time
-			}).then((res)=>{
+				before: this.time
+			}).then((res) => {
 				// console.log(res)
 				// console.log(res.comments)
 				let list = res.hotComments ? res.hotComments : res.comments
@@ -99,12 +102,12 @@
 				let result = await myRequestGet('/comment/music', {
 					id: id,
 				})
-				let len = result.hotComments.length? result.hotComments.length-1 : result.comments.length-1
+				let len = result.hotComments.length ? result.hotComments.length - 1 : result.comments.length - 1
 				// console.log(len)
 				// console.log(result.comments)
+				console.log(result)
 				if (result.code == 200) {
 					this.commentList = result.hotComments.length ? result.hotComments : result.comments
-					this.total = result.total
 					this.time = this.commentList[len].time
 					// console.log(this.time)
 					// console.log(this.commentList)
@@ -167,6 +170,7 @@
 				}
 
 				.commentList {
+					// position: relative;
 					display: flex;
 					padding: 20rpx 28rpx;
 					// align-items: center;
@@ -202,6 +206,19 @@
 						.listcomm {
 							font-size: 36rpx;
 							word-break: break-all; //允许换行
+						}
+					}
+
+					.likedCount {
+						position: relative;
+						width: 80rpx;
+						height: 30rpx;
+
+						.ic {
+							position: absolute;
+							top: 30%;
+							left: -25%;
+
 						}
 					}
 				}

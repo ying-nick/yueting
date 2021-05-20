@@ -25,6 +25,18 @@ Vue.filter('time', function(data) {
 	// console.log(fmt)
 	return fmt
 })
+
+
+Vue.filter('total',function(num){
+	let re = num;
+	if(re>999 && re<10000){
+		return re  = '999+'
+	}else if(re>10000){
+		return re = '1w+'
+	}else{
+		return re
+	}
+})
 const app = new Vue({
 	...App,
 	store

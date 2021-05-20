@@ -128,5 +128,8 @@
 				}
 				
 			]
+		},
+		"app-plus": {
+		    "softinputMode": "adjustPan"
 		}
 }

@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<block v-for="(item,index) in list" :key="index">
-			<view class="container" @click="get(item)">
+			<view class="container" @click="get(item,index)">
 				<view class="list_index">{{index+1}}.</view>
 				<view class="list_content">
 					<view class="list-name">
@@ -28,13 +28,19 @@
 			// console.log(this.list)
 		},
 		methods: {
-			get(item) {
+			get(item,index) {
 				// console.log(item.al.id)
 				uni.navigateTo({
 					url: `/pages/player/player?id=${item.id}&name=${item.name}
 					&src=${encodeURIComponent(JSON.stringify(item.al.picUrl))}
 					&alname=${item.al.name}&arname=${item.ar[0].name}
-					&albumId=${item.al.id}`
+					&albumId=${item.al.id}&index=${index}`
+					
+					
+					
+					// url: `/pages/player/player?id=${res.id}&name=${res.name}
+					// &src=${encodeURIComponent(JSON.stringify(res.src))}
+					// &alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
 				});
 			}
 		}

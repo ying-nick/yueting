@@ -12,6 +12,10 @@
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -26,31 +30,46 @@
 		onLoad(options) {
 			// console.log(options.key)
 			uni.showLoading({
-				title:"加载中",
-				mask:true,
+				title: "加载中",
+				mask: true,
 			})
 			if (options.key != undefined) {
 				this._getSearch(options.key).then((res) => {
 					const value = uni.getStorageSync('songsList');
 					// console.log(value[0].ar[0].alias[0])
-					if (value) { 
+					if (value) {
 						this.searchList = value
 						uni.hideLoading()
 					}
-				}).catch((err)=>{
+				}).catch((err) => {
 					console.log(err)
 				})
 			}
 		},
 
 		methods: {
+				...mapMutations(['setList']),
 			//封装搜索请求
 			async _getSearch(data) {
 				let re = await myRequestGet('/cloudsearch', {
 					keywords: data
 				})
 				let songs = re.result.songs
-				console.log(re)
+				// console.log(songs)
+				if (re.code == 200) {
+					let list = []
+					songs.forEach(it => {
+						let song = {
+							id: it.id,
+							src: it.al.picUrl,
+							name: it.name,
+							alname: it.al.name,
+							arname: it.ar[0].name
+						}
+						list.push(song)
+					})
+					this.setList(list)
+				}
 				try {
 					uni.setStorageSync('songsList', songs);
 				} catch (e) {

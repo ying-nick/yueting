@@ -40,7 +40,7 @@
 </template>
 
 <script>
-	import '../../iconfont_xc.css'
+
 	import {
 		myRequestGet
 	} from '../../utils/req.js'

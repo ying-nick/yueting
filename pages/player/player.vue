@@ -124,7 +124,7 @@
 			...mapState(['user', 'cookie', 'lists']),
 		},
 		onLoad(options) {
-			// console.log(options.albumId)
+			console.log(options)
 			this.alId = options.albumId
 			// console.log('------')
 			// console.log(this.alId)
@@ -289,6 +289,7 @@
 				// console.log(list)
 				innerAudioContext.stop()
 				let item = list[nowIndex]
+				console.log(item)
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname
@@ -572,7 +573,7 @@
 						position: absolute;
 						font-size: 28rpx;
 						color: white;
-						top: 25%;
+						top: 23%;
 						right: 15%;
 					}
 				}

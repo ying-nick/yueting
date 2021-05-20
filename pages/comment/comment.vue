@@ -34,6 +34,10 @@
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -64,6 +68,9 @@
 				})
 			}
 		},
+		computed:{
+			...mapState['cookie']
+		},
 		//触底刷新加载
 		onReachBottom() {
 			uni.showLoading({
@@ -82,6 +89,16 @@
 			})
 		},
 		methods: {
+			async likedCount(item){
+				// console.log('111111')
+				let res = await myRequestGet('/comment/like', {
+					id: 29178366,
+					cid:12840183,
+					t:1,
+					type:0
+				})
+				console.log(res)
+			},
 			backMusic() {
 				uni.navigateBack()
 			},

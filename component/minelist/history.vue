@@ -48,7 +48,7 @@
 					this.item.list.forEach(it=>{
 						let song={
 							id:it.song.id,
-							src:it.song.al.picUrl,
+							src:it.song.l.picUrl,
 							name:it.song.name,
 							alname:it.song.al.name,
 							arname:it.song.ar[0].name
@@ -59,7 +59,9 @@
 				
 					this.setList(list)
 					uni.navigateTo({
-					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
+					    url: `/pages/player/player?id=${res.id}
+							&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
+							&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
 					});
 				}else{
 					uni.showToast({

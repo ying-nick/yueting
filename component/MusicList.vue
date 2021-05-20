@@ -1,6 +1,7 @@
 <template>
 	<view>
-		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id" @click="goToPlayer">
+		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id" @click="goToPlayer"
+		:data-id='item.id' :data-src="item.album.blurPicUrl" :data-name="item.name" :data-alname="item.album.name" :data-arname="item.artists[0].name" :data-idx="index">
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
 				<text class="songTitle">{{item.name}} </text>
@@ -10,6 +11,10 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	import {
 		myRequestGet
 	} from '../utils/req.js'
@@ -27,17 +32,50 @@
 			}
 		},
 		methods: {
-			goToPlayer(e) {
-			  uni.navigateTo({
-			    // url: `=${e.currentTarget..id}`  //跳转去播放界面
-				
-			  })
-			},
+			...mapMutations(['setList']),
 			async getNewSongs() {
 				const res = await myRequestGet('/top/song')
 				this.newSongs = res.data
 				//console.log(this.newSongs[0].album.blurPicUrl)
 			},
+			async goToPlayer(e){
+					// console.log(e)
+					let res=e.currentTarget.dataset
+					console.log(res)
+					const result=await myRequestGet('/check/music',{
+						id:res.id
+					})
+					// console.log(result)
+					if(result.success){
+						//保存歌曲列表
+						let list=[]
+						console.log(this.newSongs.list)
+						this.newSongs.list.forEach(item=>{
+							let song={
+								id:item.id,
+								src:item.album.picUrl,
+								name:item.name,
+								alname:item.album.name,
+								arname:item.artists[0].name
+							}
+							list.push(song)
+							
+						})
+					
+						this.setList(list)
+						uni.navigateTo({
+						    url: `/pages/player/player?id=${res.id}
+								&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
+								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
+						});
+					}else{
+						uni.showToast({
+						    title: '亲爱的,暂无版权,请换歌',
+							icon:'none',
+						    duration: 3000
+						});
+					}					
+				},
 
 		}
 	}

@@ -2,7 +2,7 @@
 	<view class="historyView">
 		<view class="historys">
 			<block v-for="(it,index) in item.list" :key="index">
-				<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name" :data-alname="it.song.al.name" :data-arname="it.song.ar[0].name">
+				<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name" :data-alname="it.song.al.name" :data-arname="it.song.ar[0].name" :data-idx="index">
 					<view>{{index+1}}</view>
 					<image :src='it.song.al.picUrl' class="img"></image>
 					<view class="historylists">{{it.song.name}}</view>
@@ -14,6 +14,10 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
@@ -28,6 +32,7 @@
 			}
 		},
 		methods:{
+			...mapMutations(['setList']),
 		async goplay(e){
 				// console.log(e)
 				let res=e.currentTarget.dataset
@@ -37,8 +42,21 @@
 				})
 				// console.log(result)
 				if(result.success){
+					//保存歌曲列表
+					let list=[]
+					this.item.list.forEach(it=>{
+						let song={
+							id:it.song.id,
+							src:it.song.al.picUrl,
+							name:it.song.name,
+							alname:it.song.al.name,
+							arname:it.song.ar[0].name
+						}
+						list.push(song)
+					})
+					this.setList(list)
 					uni.navigateTo({
-					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}`
+					    url: `/pages/player/player?id=${res.id}&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
 					});
 				}else{
 					uni.showToast({

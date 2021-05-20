@@ -38,14 +38,7 @@
 			}
 		
 		},
-		{
-			"path": "pages/receiver/receiver",
-			"style": {
-				"navigationBarTitleText": "电台",
-				"enablePullDownRefresh": false
-			}
 		
-		},
 		{
 			"path": "pages/search/search",
 			"style": {

@@ -91,11 +91,12 @@
 		methods: {
 			async likedCount(item){
 				// console.log('111111')
-				let res = await myRequestGet('/comment/like', {
-					id: 29178366,
-					cid:12840183,
+				let res = await myRequestGet('/comment', {
+					id: 5436712,
+					content:'test',
 					t:1,
-					type:0
+					type:0,
+					cookie:this.cookie
 				})
 				console.log(res)
 			},

@@ -122,12 +122,6 @@
 					"selectedIconPath": "static/icon/MVV.png"
 				},
 				{
-					"text": "电台",
-					"pagePath": "pages/receiver/receiver",
-					"iconPath": "static/icon/station.png",
-					"selectedIconPath": "static/icon/station-active.png"
-				},
-				{
 					"text": "搜索",
 					"pagePath": "pages/search/search",
 					"iconPath": "static/icon/search.png",

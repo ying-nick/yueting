@@ -2,7 +2,7 @@
 	<view class="historyView">
 		<view class="historys">
 			<block v-for="(it,index) in item.list" :key="index">
-				<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name" :data-alname="it.song.al.name" :data-arname="it.song.ar[0].name" :data-idx="index">
+<view class="historySong" @click="goplay" :data-id='it.song.id' :data-src="it.song.al.picUrl" :data-name="it.song.name" :data-alname="it.song.al.name" :data-arname="it.song.ar[0].name" :data-idx="index">
 					<view>{{index+1}}</view>
 					<image :src='it.song.al.picUrl' class="img"></image>
 					<view class="historylists">{{it.song.name}}</view>

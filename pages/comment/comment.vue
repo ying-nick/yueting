@@ -211,7 +211,7 @@
 
 					.likedCount {
 						position: relative;
-						width: 80rpx;
+						width: 100rpx;
 						height: 30rpx;
 
 						.ic {

@@ -6,7 +6,8 @@ const store = new Vuex.Store({
 	state: {
 		loginStatus: false,
 		user: {},
-		cookie:''
+		cookie:'',
+		list:[]
 	},
 	mutations: {
 		login(state, user) {
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
 			state.loginStatus = true
 			state.user = JSON.parse(uni.getStorageSync('user'))
 			state.cookie=encodeURIComponent(state.user.cookie)
+		},
+		setList(state,list){
+			state.list=list
 		}
 		
 	}

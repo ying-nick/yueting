@@ -26,7 +26,7 @@
 		<view class="players">
 			<view class="progress">
 				<view class="prg-pst">
-
+					<progressbar></progressbar>
 				</view>
 			</view>
 			<view class="players-position">
@@ -34,20 +34,18 @@
 
 				</view>
 				<view class="posion-2">
-					<icon class="iconfont icon-backward icQ"
-						style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"></icon>
-					<icon :class="['iconfont',isPause?'icon-yixianshi-':'icon-bofang','icZ']"
-						style="font-size:160upx;color: #d43c43;"></icon>
+					<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"
+						@click="goPev"></icon>
+					<icon :class="['iconfont',isPlay?'icon-yixianshi-':'icon-bofang','icZ']"
+						style="font-size:160upx;color: #d43c43;" @click="togglePlay"></icon>
 					<icon class="iconfont icon-forward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;">
 					</icon>
 				</view>
 				<view class="posion-1">
 					<icon class="iconfont icon-pinglun" style="color: #FFFFFF;font-size: 40upx;font-weight: 500px;"
 						@click="goToComment"></icon>
-						<text class="total">{{total | total(total)}}</text>
+					<text class="total">{{total|total(total)}}</text>
 				</view>
-
-
 			</view>
 		</view>
 	</view>
@@ -59,6 +57,11 @@
 	import {
 		myRequestGet
 	} from '../../utils/req.js'
+	import Progressbar from "../../component/ProgressBar.vue"
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -66,48 +69,113 @@
 				name: '',
 				alname: '',
 				arname: '',
+				isPlay: true,
+				innerAudioContext: {},
+				nowIndex: '',
 				isPause: true,
 				musicId: '',
 				alId: '',
-				total:'',
+				total: '',
 			};
+		},
+		computed: {
+			...mapState(['user', 'cookie', 'list']),
 		},
 		onLoad(options) {
 			// console.log(options)
+			uni.hideTabBar()
 			this.src = JSON.parse(decodeURIComponent(options.src))
 
-			// console.log(options)
 			let id = options.id
 			this._gettotal(id)
-			// console.log(id)
-			this.musicId = id
 			this.alId = options.albumId
-			
+			// console.log(src)
+			/* uni.setNavigationBarTitle({
+				title: options.name
+			})
+ */
+
+			this.musicId = id
 			this.name = options.name
+			this.nowIndex = options.index
+			// console.log(this.nowIndex)
 			this.alname = options.alname
 			this.arname = options.arname
+			this.getMusic(id)
 		},
 		methods: {
-			load() {
-				console.log('load')
-			},
-			ctrl() {
-				console.log('ctrl')
-			},
 			async _gettotal(num) {
+				console.log(num)
 				let result = await myRequestGet('/comment/music', {
 					id: num,
 				})
+				// console.log(result.total)
 				this.total = result.total
 				// console.log(this.total)
 			},
 			goToComment() {
 				let id = this.musicId
 				let alid = this.alId
+				console.log(id)
+				console.log(alid)
 				uni.navigateTo({
 					url: `/pages/comment/comment?key=${id}&id=${alid}`
 				})
+			},
+			//上一首
+			goPev() {
+				// console.log(this.list)
+				if (this.nowIndex == 0) {
+					this.nowIndex = this.list.length - 1
+				}
+				this.nowIndex = this.nowIndex - 1
+				this.innerAudioContext.stop()
+				this.innerAudioContext.destroy()
+				let item = this.list[this.nowIndex]
+				this.name = item.name
+				this.alname = item.alname
+				this.arname = item.arname
+				this.getMusic(item.id)
+			},
+			togglePlay() {
+				if (this.innerAudioContext.paused) {
+					//背景音乐重启
+					this.innerAudioContext.play()
+				} else {
+					//暂停背景音乐
+					this.innerAudioContext.pause()
+				}
+				this.isPlay = !this.isPlay
+			},
+			async getMusic(id) {
+				// console.log(this.innerAudioContext)
+				if (!this.isPlay) {
+					this.isPlay = !this.isPlay
+				}
+				const res = await myRequestGet('/song/url', {
+					id: id,
+					cookie: this.cookie,
+				})
+				// console.log(res)
+				if (res.code == 200) {
+					const innerAudioContext = this.innerAudioContext = uni.createInnerAudioContext();
+					innerAudioContext.autoplay = true;
+					innerAudioContext.src = res.data[0].url;
+					// console.log(innerAudioContext)
+					innerAudioContext.onPlay(() => {
+						console.log('开始播放');
+					});
+					innerAudioContext.onError((res) => {
+						console.log(res.errMsg);
+						console.log(res.errCode);
+					});
+
+					// console.log(this.url)
+				}
 			}
+		},
+		components: {
+			Progressbar,
 		}
 	}
 </script>
@@ -155,7 +223,22 @@
 			height: 30%;
 			display: flex;
 			justify-content: center;
+			flex-direction: column;
 			align-items: center;
+
+			.progress {
+				width: 100%;
+				height: 50%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.prg-pst {
+					width: 100%;
+					height: 68upx;
+				}
+
+			}
 
 			.players-position {
 				width: 100%;
@@ -171,7 +254,7 @@
 					height: 100%;
 					flex: 1;
 					position: relative;
-					.total{
+					.total {
 						position: absolute;
 						font-size: 28rpx;
 						color: white;
@@ -199,12 +282,12 @@
 		right: 0;
 		filter: blur(10rpx) contrast(60%) brightness(60%);
 		z-index: -10;
-		height: 100%;
+		height: 120%;
 
 	}
 
 	.contains {
-		height: 50%;
+		height: 650upx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -239,7 +322,7 @@
 				height: 650upx;
 				box-sizing: border-box;
 				border-radius: 50%;
-				border-top: 10px solid #E74C3C;
+				border-top: 10px solid #fda085;
 
 				position: absolute;
 				animation: a1 2s linear infinite;
@@ -259,12 +342,12 @@
 			}
 
 			.load::before {
-				border-top: 10px solid #E6B741;
+				border-top: 10px solid #a6c1ee;
 				transform: rotate(120deg);
 			}
 
 			.load::after {
-				border-top: 10px solid #3498DB;
+				border-top: 10px solid #F08080;
 				transform: rotate(240deg);
 			}
 

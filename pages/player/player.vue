@@ -497,6 +497,13 @@ this.getlyric(id)
 
 				.info {
 					padding: 10px 10px;
+					width: 40%;
+					height: 5%;
+					overflow: hidden;
+					-webkit-line-clamp: 1;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
 				}
 			}
 		}

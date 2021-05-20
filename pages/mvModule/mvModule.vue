@@ -12,11 +12,11 @@
 		<!-- 推荐区 -->
 		<scroll-view class="videoScroll" scroll-y refresher-enabled="true" @refresherrefresh="toRefresh"
 			:refresher-triggered="isTriggered" enable-flex="true" enable-back-to-top="true" v-if="seen"
-			@scrolltolower="toGetMore">
+			@scrolltolower="toGetMore('/mv/first',newMV)">
 			<view class="videoItem" v-for="item in newMV" :key="item.id">
-				<video class="mvvideo" :poster="item.cover" controls muted="true" direction=0 object-fit="fill"
-					:src="item.url" v-if="videoId === item.id" @ended="toEndPlay" @timeupdate="toUpdateTime"
-					@click="toPlay(item.id)" :data-id="item.id"></video>
+				<video class="mvvideo" :class="isBig" :poster="item.cover" controls muted="true" direction=0
+					object-fit="fill" :src="item.url" v-if="videoId === item.id" @ended="toEndPlay"
+					@timeupdate="toUpdateTime" @click="toPlay(item.id)" :data-id="item.id"></video>
 				<image :src="item.cover" class="mvvideo" @click="toPlay(item.id)" :data-id="item.id" :ref='item.id'
 					v-else></image>
 				<view class="title"><text>{{item.name}} - {{item.artistName}}</text></view>
@@ -28,11 +28,12 @@
 		</scroll-view>
 		<!-- 排行榜 -->
 		<scroll-view class="mvScroll" refresher-enabled="true" @refresherrefresh="toRefresh"
-			:refresher-triggered="isTriggered" scroll-y="true" enable-flex="true" enable-back-to-top="true" v-else>
+			@scrolltolower="toGetMore('/top/mv',rankingMV)" :refresher-triggered="isTriggered" scroll-y="true"
+			enable-flex="true" enable-back-to-top="true" v-else>
 			<view class="mvItem" v-for="(item,index) in rankingMV">
 				<view class="mv-center"><text class="mv-no">{{index+1}}.</text></view>
-				<video class="video2" :poster="item.cover" object-fit="fill" muted="true" :src="item.url"
-					@click="toPlay"></video>
+				<video class="video2" :class="isBig" :poster="item.cover" object-fit="fill" muted="true" :src="item.url"
+					@click="toPlay(item.id)" :data-id="item.id"></video>
 				<view class="mv-txt">
 					<text class="mv-name">{{item.name}}</text>
 					<text class="mv-artist">{{item.artistName}}</text>
@@ -65,7 +66,8 @@
 				seen: true,
 				videoId: "",
 				isTriggered: false,
-				videoUpdataTime: []
+				videoUpdataTime: [],
+				isBig: false
 			}
 		},
 		onLoad() {
@@ -90,45 +92,68 @@
 				})
 				// console.log(result)
 				if (result.code == 200) {
-					this.addMvUrl(result.data).then((res) => {
-						this.rankingMV = res
-					})
+					this.addMvUrl(result.data)
+						.then((res) => {
+							this.rankingMV = res
+						})
+						.catch((e) => {
+							console.log("8888888888888888888888")
+						})
 				}
 			},
 			// 封装一个获取mv地址的方法（用循环遍历的方法，将根据id获取来的视频地址和渲染到页面上的video标签的src一一对应上。
 			// 只能用普通for循环，在获取视频列表的函数中用forEach或者map会报错。）
+			// async addMvUrl(mvs) {
+			// 	for (var i = 0; i < mvs.length; i++) {
+			// 		let {
+			// 			data
+			// 		} = await myRequestGet('/mv/url', {
+			// 			id: mvs[i].id
+			// 		})
+			// 		mvs[i].url = data.url
+			// 	}
+			// 	return mvs
+			// },
 			async addMvUrl(mvs) {
-				for (var i = 0; i < mvs.length; i++) {
-					let {
-						data
-					} = await myRequestGet('/mv/url', {
+				for (let i = 0; i < mvs.length; i++) {
+					myRequestGet('/mv/url', {
 						id: mvs[i].id
+					}).then(({data}) => {
+						// console.log(i)
+						mvs[i].url = data.url
 					})
-					mvs[i].url = data.url
 				}
 				return mvs
 			},
 			// 获取推荐mv列表
 			async getNewMvList() {
-				let result = await myRequestGet('/mv/first', {
-					limit: 10
-				})
-				if (result.code == 200) {
-					this.addMvUrl(result.data).then((res) => {
-						this.newMV = res
+				try {
+					let result = await myRequestGet('/mv/first', {
+						limit: 10
 					})
+					if (result.code == 200) {
+						this.addMvUrl(result.data).then((res) => {
+							// console.log(res)
+							this.newMV = res
+						})
+					}
+				} catch (e) {
+					console.log(e, "55555555555555555555555")
 				}
+
 			},
 			// 点击播放，关闭其他视频
 			toPlay(e) {
 				// console.log(e)
 				// 关闭上一个播放的视频
 				// this.videoId !== e && this.videoContext && this.videoContext.stop();
+				this.isBig = true
 				this.videoId = e
 				this.videoContext = uni.createVideoContext(e.toString());
 				// console.log(this.videoUpdataTime)
 				let videoUpdataTime = this.videoUpdataTime
 				// console.log(videoUpdataTime)
+
 				let videoItem = videoUpdataTime.find(item => item.id === e)
 				// console.log(videoItem)
 				if (videoItem !== undefined) {
@@ -153,15 +178,22 @@
 				}, 2000)
 			},
 			// 自定义上拉加载
-			async toGetMore() {
+			async toGetMore(url, dataList) {
 				// console.log("getmore")
-				let newMV = this.newMV
-				let result = await myRequestGet('/mv/first')
+				// clearTimeout(timer)
+				let vItem = dataList
+				let result = await myRequestGet(url)
 				// console.log(result)
 				let videoList = result.data.slice(10, 20)
-				newMV.push(...videoList)
-				
-				// console.log(videoList)
+				let timer = setTimeout(() => {
+					vItem.push(...videoList)
+				}, 500)
+				// newMV.find(function(item){
+				// 	if(item.id === 14276994){
+				// 		clearTimeout(timer)
+				// 		// console.log(newMV)
+				// 	}
+				// })
 			},
 			// 监听事件播放进度
 			toUpdateTime(e) {
@@ -214,6 +246,12 @@
 
 	.mv-container {
 		padding: 20rpx;
+	}
+	/* 全屏视频 */
+	.isBig {
+		height: 100%;
+		width: 100%;
+		z-index: 9;
 	}
 
 	/* 导航区 */
@@ -318,6 +356,7 @@
 		color: #333333;
 		font-family: PingFang SC;
 		margin-bottom: 8rpx;
+		width: 500rpx;
 	}
 
 	.mv-artist {
@@ -332,4 +371,5 @@
 		border-radius: 10rpx;
 		margin: 0 20rpx;
 	}
+	
 </style>

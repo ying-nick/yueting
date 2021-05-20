@@ -14,20 +14,14 @@
 	} from '../utils/req.js'
 	export default {
 		mounted(){
-			
 			 // console.log(this.listSongs)
-		
 			},
-		
-		
    props:[
 	  'listSongs'
-   ],
-		
+   ],	
 		data() {
 			return {
                songs:[]
-
 			}
 		},
 
@@ -49,18 +43,13 @@
 			    // url: `=${e.currentTarget..id}`  //跳转去播放界面
 				
 			  })
-			},
-			
-			
+			},	
 			async getListSongs(newList) {
-				
-			    const res = await myRequestGet('/song/detail', {ids:newList});
+			
+			    const res = await myRequestGet('/song/detail', {ids:newList.join()});
 			
 			   this.songs = res.songs
-				 
-				// }
 		
-	
 			},
 			 
 		}

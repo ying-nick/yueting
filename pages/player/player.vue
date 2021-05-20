@@ -18,7 +18,7 @@
 				<view class="playCtrl">
 					<view class="ctrls">
 						<scroll-view class="lrc-scroll" scroll-y="true" :scroll-top="scrollTop"
-							scroll-with-animation="true">
+							scroll-with-animation="true" >
 							<view class="lrc-panel">
 								<block v-for="(item,index) in lrcList" :key="item">
 									<view :class="['lyric',index==nowLrc?'highLight':'']">{{item.lrc}}</view>
@@ -184,8 +184,12 @@
 			},
 			goback(){
 				uni.navigateBack();
+				innerAudioContext.stop()
+				this.isPlay = false
 			},
 			goToComment() {
+				innerAudioContext.pause()
+				this.isPlay = false
 				let id = this.musicId
 				let alid = this.alId
 				uni.navigateTo({
@@ -526,7 +530,7 @@
 				.info {
 					padding: 10px 10px;
 					width: 40%;
-					height: 5%;
+					height: 8%;
 					overflow: hidden;
 					-webkit-line-clamp: 1;
 					text-overflow: ellipsis;

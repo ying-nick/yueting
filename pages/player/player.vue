@@ -52,7 +52,9 @@
 			</view>
 			<view class="players-position">
 				<view class="posion-1">
-
+<icon class="iconfont icon-houtui"  style="color: #FFFFFF;font-size: 60rpx;font-weight: 500px;"
+						@click="goback">
+					</icon>
 				</view>
 				<view class="posion-2">
 					<icon class="iconfont icon-backward icQ" style="color: #FFFFFF;font-size: 90upx;font-weight: 500px;"
@@ -179,6 +181,9 @@
 				// console.log(result.total)
 				this.total = result.total
 				// console.log(this.total)
+			},
+			goback(){
+				uni.navigateBack();
 			},
 			goToComment() {
 				let id = this.musicId

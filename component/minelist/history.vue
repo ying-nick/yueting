@@ -48,7 +48,7 @@
 					this.item.list.forEach(it=>{
 						let song={
 							id:it.song.id,
-							src:it.song.l.picUrl,
+							src:it.song.al.picUrl,
 							name:it.song.name,
 							alname:it.song.al.name,
 							arname:it.song.ar[0].name

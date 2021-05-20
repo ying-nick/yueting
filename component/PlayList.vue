@@ -3,7 +3,7 @@
 		<view class="playlist-container" >
 			<view class="playlist-img" v-for="item in playList" :key="item.id" @click="goToMusiclist" :data-id='item.id'>
 				<image :src="item.picUrl" style="height: 210rpx; width: 100%;" >
-				<text class="playlist-playcount iconfont icon-bofang">{{item.playCount}}</text>
+				<text class="playlist-playcount iconfont icon-bofang">{{item.playCount | newNums(2)}}</text>
 				<view class="playlist-name">{{item.name}}</view>
 			</view>
 		</view>
@@ -17,28 +17,46 @@
 
 		created() {
 			this.getPersonalized()
-    
 		},
+		filters:{
+			newNums:function(num,point){
+				   let numStr = num.toString().split('.')[0]
+				      if (numStr.length < 6) {
+				        return numStr
+				      } else if (numStr.length >= 6 && numStr.length <= 8) {
+				        let decimal = numStr.substring(numStr.length - 4, numStr.length - 4 + point)
+				        return parseFloat(parseInt(num / 10000) + "." + decimal) + "万"
+				      } else if (numStr.length > 8) {
+				        let decimal = numStr.substring(numStr.length - 8, numStr.length - 8 + point)
+				        return parseFloat(parseInt(num / 100000000) + "." + decimal) + "亿"
+				      }
+			}
+		},
+	
+		
 		data() {
 			return {
 			
 				playList: [
 
-				]
+				],
+			
 			}
 		},
 		methods: {
 			    goToMusiclist(e) {
+					console.log(e)
 			      uni.navigateTo({
 			        url: `/pages/musicList/musicList?playListId=${e.currentTarget.dataset.id}`
 					
 			      })
+	
 			    },
 			async getPersonalized() {
 				const res = await myRequestGet('/personalized')
 				this.playList = res.result
-                
-		console.log(this.playList)
+		        console.log(this.playList)
+		
 			},
 		},			
 	}
@@ -78,7 +96,7 @@
 		position: relative;
 	}
 	.playlist-playcount {
-		background-color: #808080;
+	/* 	background-color: #808080; */
 		border-radius: 56rpx;
 		font-size: 24rpx;
 		color: #fff;

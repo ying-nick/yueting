@@ -11,7 +11,7 @@
 		<view>
 			<PlayList></PlayList>
 		</view>
-		<view class="recomSonglist">推荐歌曲</view> <!-- 样式与推荐歌单一样 -->
+		<view class="recomSonglist">推荐歌曲</view>
 	<MusicList></MusicList>
 	</view>
 </template>

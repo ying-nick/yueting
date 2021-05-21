@@ -4,13 +4,7 @@
 			<view class="userIMG">
 				<image :src="user.profile.avatarUrl" mode="" class="userImg"></image>
 			</view>
-			<view class="mask1"
-				:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
-
-			</view>
-			<view class="mask2">
-
-			</view>
+		
 			<view class="userPrf">
 				<text class="userNk">{{user.profile.nickname}}</text>
 				<text class="userUid">悦听号：{{user.profile.userId}}</text>
@@ -283,33 +277,13 @@
 
 		.userNam {
 			width: 100%;
-			height: 20%;
+			height: 250upx;
 			background-color: #FFFFFF;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			position: relative;
 
-			.mask1 {
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				filter: blur(30rpx) contrast(60%) brightness(60%);
-				opacity: 0.5;
-				z-index: -10;
-			}
-
-			.mask2 {
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				right: 0;
-				z-index: -11;
-				background-color: #222;
-			}
 
 			.userIMG {
 				width: 35%;

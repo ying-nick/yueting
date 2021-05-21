@@ -24,8 +24,9 @@
 					{{item.playCount}}
 				</view>
 			</view>
+			<uni-load-more :status="'loading'"></uni-load-more>
+			<!-- <uni-load-more v-if="flag" :status="more"></uni-load-more> -->
 		</scroll-view>
-
 		<!-- 排行榜 -->
 		<scroll-view class="mvScroll" refresher-enabled="true" @refresherrefresh="toRefresh"
 			@scrolltolower="toGetMore('/top/mv',rankingMV)" :refresher-triggered="isTriggered" scroll-y
@@ -39,6 +40,7 @@
 					<text class="mv-artist">{{item.artistName}}</text>
 				</view>
 			</view>
+			<uni-load-more :status="'loading'"></uni-load-more>
 		</scroll-view>
 	</view>
 </template>
@@ -115,7 +117,7 @@
 								this.rankingMV = res
 							})
 					}
-				} catch (e)  {
+				} catch (e) {
 					console.log("8888888888888888888888")
 				}
 

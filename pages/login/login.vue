@@ -57,6 +57,8 @@
 			// console.log(this.loginStatus)
 			// console.log(uni.getStorageSync('user').length)
 			// console.log(this.loginStatus)
+			
+			//判断是否有本地缓存
 			if(uni.getStorageSync('user').length>0){
 				// console.log(this.user)
 				this.setUser(JSON.parse(uni.getStorageSync('user')))
@@ -71,10 +73,12 @@
 		},
 		methods: {
 			...mapMutations(['login', 'setUser']),
+			//提交功能
 			smit() {
 
 				if (this.userName == '') {
-					this.nameFlg = false
+					//更新class状态
+					this.nameFlg = false  
 					this.namePh = '账号不能为空'
 					return
 				} else if (this.userPwd == '') {
@@ -84,6 +88,7 @@
 				} else {
 					this.nameFlg = true
 					this.pwdFlg = true
+					//调用request提交
 					this.checkSubm()
 					// console.log(this.loginStatus)
 				}
@@ -92,6 +97,7 @@
 			checkSubm() {
 				const regE = /^[A-Za-z1]\w{5,17}@(vip\.(126|163|188)\.com|163\.com|126\.com|yeach\.net)/
 				const regP = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+				//邮箱提交
 				if (regE.test(this.userName)) {
 					// this.loginMusic('')
 					// console.log('email')
@@ -100,6 +106,7 @@
 						password: this.userPwd
 					})
 				} else if (regP.test(this.userName)) {
+					//手机号提交
 					// console.log('phone')
 					this.loginMusic('/login/cellphone', {
 						phone: this.userName,
@@ -114,8 +121,10 @@
 
 			},
 			async loginMusic(url, data) {
+				//登录
 				const res = await myRequestGet(url, data)
 				// console.log(res)
+				//根据登录请求状态判断
 				if (res.code == 501) {
 					this.nameFlg = false
 					this.userName = ''

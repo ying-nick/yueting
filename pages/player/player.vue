@@ -155,14 +155,19 @@
 			})
  */
 // console.log(options)
+//专辑id
 			this.alId = options.albumId
 			this._gettotal(id)
 			this.musicId = id
 			// console.log(this.alId)
+			//歌曲名字
 			this.name = options.name
+             //存储当前下标
 			nowIndex = options.index
 			// console.log(nowIndex)
+			//专辑名字
 			this.alname = options.alname
+			//歌手名字
 			this.arname = options.arname
 			list = this.lists
 			// console.log(list)

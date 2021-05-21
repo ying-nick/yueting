@@ -67,9 +67,11 @@
 		},
 		methods: {
 			...mapMutations(['login', 'setUser']),
+			//检查手机号格式
 			async phoneChk() {
 				const regP = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
 				if (regP.test(this.userName)) {
+					//判断手机号是否已注册过
 					const res = await myRequestGet('/cellphone/existence/check', {
 						phone: this.userName
 					})
@@ -89,6 +91,7 @@
 
 			},
 			pwdChk() {
+				//检查密码格式
 				const regW = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/
 				if (!regW.test(this.userPwd)) {
 					this.pwdPh = '至少8位,字母+数字'
@@ -98,6 +101,7 @@
 				}
 			},
 			async captchaChk() {
+				//检查验证码正确性
 				if (this.captcha != '') {
 					const res=await myRequestGet('/captcha/verify',{
 						phone:this.userName,
@@ -118,6 +122,7 @@
 				}
 			},
 async getcaps(){
+	//获取验证码
 	if(this.userName!=''&&this.nameFlg){
 		const res=await myRequestGet('/captcha/sent',{
 			phone:this.userName

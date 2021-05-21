@@ -173,10 +173,6 @@
 
 				})
 			},
-			// 小程序的触底事件
-			onReachBottom: function() {
-
-			},
 			// 自定义上拉加载
 			async toGetMore(url, dataList) {
 				// clearTimeout(timer)

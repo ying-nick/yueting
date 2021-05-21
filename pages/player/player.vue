@@ -308,7 +308,7 @@
 				// console.log(list)
 				innerAudioContext.stop()
 				let item = list[nowIndex]
-				console.log(item)
+				// console.log(item)
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname
@@ -383,17 +383,34 @@
 					id: id,
 					cookie: this.cookie,
 				})
-				// console.log(res)
+				console.log(res)
 				if (res.code == 200) {
-					this.getlyric(id)
-					innerAudioContext.src = res.data[0].url;
-					innerAudioContext.play()
-					// console.log(innerAudioContext)
-
-					this.bindBgmEvent()
-
-
-					// console.log(this.url)
+					if(res.data[0].url){
+						this.getlyric(id)
+						innerAudioContext.src = res.data[0].url;
+						innerAudioContext.play()
+						// console.log(innerAudioContext)
+						
+						this.bindBgmEvent()
+						
+						
+						// console.log(this.url)
+					}else{
+						uni.showToast({
+							title: '亲爱的,暂无版权,请换歌',
+							icon: 'none',
+							duration: 1000
+						});
+						this.lrcList = [{
+							lrc: '亲爱的,暂无版权,请换歌',
+							time: 0
+						}, ]
+						this.nowLrc = -1
+						if (this.isPlay) {
+							this.isPlay = !this.isPlay
+						}
+					}
+					
 				}
 
 			},
@@ -404,9 +421,12 @@
 					time: 0
 				}, ]
 				this.nowLrc = -1
-				const result = await myRequestGet('/check/music', {
-					id: id
-				})
+				// const result = await myRequestGet('/check/music', {
+				// 	id: id
+				// })
+				let result={
+					success:true
+				}
 				// console.log(result)
 				if (result.success) {
 					this.getMusic(id)
@@ -432,11 +452,11 @@
 
 			},
 			async getlyric(id) {
-				console.log(id)
+				// console.log(id)
 				const result = await myRequestGet('/lyric', {
 					id: id
 				})
-				console.log(result)
+				// console.log(result)
 				if (result.nolyric) {
 					this.lrcList = [{
 						lrc: '暂无歌词',
@@ -445,8 +465,8 @@
 					this.nowLrc = -1
 				} else {
 					let lyric = result.lrc.lyric
-					console.log(result)
-					console.log(lyric)
+					// console.log(result)
+					// console.log(lyric)
 					if (lyric) {
 						this.parseLrc(lyric)
 					} else {
@@ -498,7 +518,7 @@
 
 				innerAudioContext.onPlay(() => {
 
-					console.log('开始播放');
+					// console.log('开始播放');
 					// setInterval(()=>{
 					// 	let {duration} = innerAudioContext
 					// 	console.log(duration)

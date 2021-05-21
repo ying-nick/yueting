@@ -26,8 +26,8 @@
 						</view>
 
 						<view class="likedCount" @click="likedCount(item)">
-							<text>{{item.likedCount}}</text>
-							<view class="iconfont icon-dianzan ic"></view>
+							<text :class="item.liked?'red':''">{{item.likedCount}}</text>
+							<view class="iconfont icon-dianzan ic" :style="item.liked?'color:red;':''"></view>
 						</view>
 					</view>
 					<view class="moreComment" @click="moreComment">
@@ -72,6 +72,7 @@
 				id: '',
 				newComment: [],
 				commentValue: '',
+				flag:true,
 			}
 		},
 		onLoad(options) {
@@ -109,13 +110,18 @@
 			...mapState['cookie']
 		},
 		methods: {
-
+			likedCount(item){
+			// console.log(this.commentList)
+			// console.log(this.id)
+			// console.log(item.commentId)
+			this._likeComment(this.id,item.commentId)
+			},
 			pushCommentt() {
 				console.log(this.commentValue)
 				this.pushComment().then(() => {
 					uni.showLoading({
-						title:'发布中',
-						mask:true
+						title: '发布中',
+						mask: true
 					})
 					let date = new Date()
 					let time = date.valueOf()
@@ -148,7 +154,7 @@
 					type: 0,
 					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
 				})
-				if(res.code != 200){
+				if (res.code != 200) {
 					uni.showModal({
 						title: '提示',
 						content: '无法评论',
@@ -174,6 +180,7 @@
 			async _getcomment(id) {
 				let result = await myRequestGet('/comment/music', {
 					id: id,
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
 				})
 				let len = result.hotComments.length ? result.hotComments.length - 1 : result.comments.length - 1
 				if (result.code == 200) {
@@ -183,7 +190,7 @@
 				}
 			},
 			async _getNewComment(id, date) {
-				this.newComment =''
+				this.newComment = ''
 				let result = await myRequestGet('/comment/music', {
 					id: id,
 					before: date
@@ -192,7 +199,22 @@
 				this.newComment = result.comments
 				// console.log(this.newComment)
 				uni.hideLoading()
-			}
+			},
+			async _likeComment(id,cid) {
+				let result = await myRequestGet('/comment/like', {
+					id,
+					cid,
+					t:1,
+					type:0,
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
+				})
+				console.log(result)
+				if(result.code == 200 ){
+					uni.showToast({
+						title:'点赞成功'
+					})
+				}
+			},
 		}
 	}
 </script>
@@ -357,7 +379,9 @@
 						position: relative;
 						width: 80rpx;
 						height: 30rpx;
-
+						.red{
+							color:red;
+						}
 						.ic {
 							position: absolute;
 							top: 30%;

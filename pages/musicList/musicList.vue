@@ -19,9 +19,14 @@
 			uni.setNavigationBarTitle({
 							title:'歌单'
 						})
-			//console.log(options)
+		
 			this.getListSongs(options.playListId)
 
+		},
+		onPullDownRefresh() {
+			 setTimeout(function () {
+			            uni.stopPullDownRefresh();
+			        }, 1000);
 		},
 		data() {
 			return {

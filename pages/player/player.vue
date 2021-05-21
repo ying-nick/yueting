@@ -525,7 +525,7 @@
 					// console.log(curTime)
 					//获取总时长
 					const duration = innerAudioContext.duration
-					//优化setdata刷新频率
+					//优化刷新频率
 					if (curTime.toString().split('.')[0] != currentSec) {
 						const curTimeFmt = this.timeFormat(curTime)
 

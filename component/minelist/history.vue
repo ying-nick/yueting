@@ -36,7 +36,7 @@
 		async goplay(e){
 				// console.log(e)
 				let res=e.currentTarget.dataset
-				console.log(res)
+				// console.log(res)
 				// const result=await myRequestGet('/check/music',{
 				// 	id:res.id
 				// })

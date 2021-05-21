@@ -153,11 +153,11 @@
 				title: options.name
 			})
  */
-console.log(options)
+// console.log(options)
 			this.alId = options.albumId
 			this._gettotal(id)
 			this.musicId = id
-			console.log(this.alId)
+			// console.log(this.alId)
 			this.name = options.name
 			nowIndex = options.index
 			// console.log(nowIndex)
@@ -315,6 +315,9 @@ console.log(options)
 				innerAudioContext.stop()
 				let item = list[nowIndex]
 				// console.log(item)
+				this.alId = item.albumId
+				this._gettotal(item.id)
+				this.musicId = item.id
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname
@@ -334,6 +337,9 @@ console.log(options)
 
 				// console.log(innerAudioContext)
 				let item = list[nowIndex]
+				this.alId = item.albumId
+				this._gettotal(item.id)
+				this.musicId = item.id
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname

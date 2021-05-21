@@ -619,7 +619,7 @@
 					.info {
 						padding: 10px 10px;
 						width: 40%;
-						height: 50%;
+						// height: 50%;
 						overflow: hidden;
 						-webkit-line-clamp: 1;
 						text-overflow: ellipsis;

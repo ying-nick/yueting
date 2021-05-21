@@ -66,13 +66,13 @@
 							&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
 							&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
 					});
-				}else{
+				}/* else{
 					uni.showToast({
 					    title: '亲爱的,暂无版权,请换歌',
 						icon:'none',
 					    duration: 3000
 					});
-				}
+				} */
 				// console.log(res)
 				
 			}

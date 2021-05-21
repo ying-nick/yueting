@@ -23,6 +23,7 @@
 		<view class="contain"
 			:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
 		</view>
+		
 		<view class="contains">
 			<view class="play">
 				<view class="load">
@@ -383,7 +384,7 @@
 					id: id,
 					cookie: this.cookie,
 				})
-				console.log(res)
+				// console.log(res)
 				if (res.code == 200) {
 					if(res.data[0].url){
 						this.getlyric(id)
@@ -430,7 +431,7 @@
 				// console.log(result)
 				if (result.success) {
 					this.getMusic(id)
-				} else {
+				} /* else {
 					uni.showToast({
 						title: '亲爱的,暂无版权,请换歌',
 						icon: 'none',
@@ -447,7 +448,7 @@
 					if (this.isPlay) {
 						this.isPlay = !this.isPlay
 					}
-				}
+				} */
 				// console.log(res)
 
 			},

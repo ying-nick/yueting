@@ -21,10 +21,15 @@
 		myRequestGet
 	} from '../../utils/req.js'
 	export default {
+		 onPullDownRefresh() {
+		 	 setTimeout(function () {
+		 	            uni.stopPullDownRefresh();
+		 	        }, 1000);
+		 },
+	
 
 		created() {
 			this.getBanner()
-
 		},
 		data() {
 			return {

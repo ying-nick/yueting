@@ -19,9 +19,14 @@
 			uni.setNavigationBarTitle({
 							title:'歌单'
 						})
-			//console.log(options)
+		
 			this.getListSongs(options.playListId)
 
+		},
+		onPullDownRefresh() {
+			 setTimeout(function () {
+			            uni.stopPullDownRefresh();
+			        }, 1000);
 		},
 		data() {
 			return {
@@ -39,7 +44,7 @@
 				// console.log(res.privileges)
 				this.listSongs = res.privileges
 
-				console.log(res.playlist.description)
+				//console.log(res.playlist.description)
 				const picU2 = res.playlist.coverImgUrl
 				this.picU = picU2
 

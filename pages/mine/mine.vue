@@ -133,6 +133,7 @@
 				// this.tabIndex = index;
 
 			},
+			//滑动轮播卡片
 			tabChange(e) {
 				if (e.detail.source == 'touch') {
 					this.preIndex = e.detail.current;
@@ -146,7 +147,7 @@
 			//获取列表
 			async list() {
 				let list = []
-				//播放历史
+				//获取播放历史
 				const historys = await this.getInf('/user/record', {
 					cookie: this.cookie,
 					uid: this.user.profile.userId,
@@ -165,7 +166,7 @@
 						list: []
 					})
 				}
-				//我的歌单
+				//获取我的歌单
 				const myLists = await this.getInf('/user/playlist', {
 					uid: this.user.profile.userId,
 					cookie: this.cookie,
@@ -183,7 +184,7 @@
 						})
 					}
 				}
-				//个人信息
+				//获取个人信息
 				const levl = await this.getInf('/user/level', {
 					uid: this.user.profile.userId,
 					cookie: this.cookie,
@@ -219,7 +220,7 @@
 			lgnOut() {
 				// console.log(this.cookie)
 				// console.log(this.user)
-				console.log(this.newslist)
+				// console.log(this.newslist)
 				uni.showModal({
 					title: '确定要退出？',
 					success: (res) => {
@@ -244,9 +245,9 @@
 					}
 				});
 			},
+			//登出清空缓存
 			async outReq() {
 				// console.log(this.user)
-
 				// console.log(cookie)
 				const res = await myRequestGet('/logout', {
 					cookie: this.cookie

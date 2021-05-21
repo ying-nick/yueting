@@ -16,6 +16,11 @@
 	export default {
 
 		onLoad(options) {
+		   uni.showLoading({
+		   	title:"加载中",
+		   })
+		
+
 			uni.setNavigationBarTitle({
 							title:'歌单'
 						})
@@ -42,6 +47,9 @@
 					id: id
 				})
 				// console.log(res.privileges)
+				if(res.code==200){
+					   uni.hideLoading()
+				}
 				this.listSongs = res.privileges
 
 				//console.log(res.playlist.description)

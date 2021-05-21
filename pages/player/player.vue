@@ -155,17 +155,23 @@
 			})
  */
 // console.log(options)
+//专辑id
 			this.alId = options.albumId
 			this._gettotal(id)
 			this.musicId = id
 			// console.log(this.alId)
+			//歌曲名字
 			this.name = options.name
+             //存储当前下标
 			nowIndex = options.index
 			// console.log(nowIndex)
+			//专辑名字
 			this.alname = options.alname
+			//歌手名字
 			this.arname = options.arname
 			list = this.lists
 			// console.log(list)
+			//获取歌曲
 			this.getMusic(id)
 		},
 		onReady() {
@@ -199,11 +205,13 @@
 				this.total = result.total
 				// console.log(this.total)
 			},
+			//返回
 			goback() {
 				uni.navigateBack();
 				innerAudioContext.stop()
 				this.isPlay = false
 			},
+			//跳转评论
 			goToComment() {
 				innerAudioContext.pause()
 				this.isPlay = false
@@ -213,6 +221,7 @@
 					url: `/pages/comment/comment?key=${id}&id=${alid}`
 				})
 			},
+			//歌词联动
 			timeUpdata(curTime) {
 				// console.log(curTime)
 				let lrcList = this.lrcList
@@ -347,6 +356,7 @@
 				this.arname = item.arname
 				this.goplay(item.id)
 			},
+			//暂停播放
 			togglePlay() {
 				if (innerAudioContext.paused) {
 					//背景音乐重启
@@ -494,6 +504,7 @@
 
 
 			},
+			//背景音乐事件
 			bindBgmEvent() {
 				innerAudioContext.onCanplay(() => {
 					let duration = 0
@@ -614,7 +625,7 @@
 					.info {
 						padding: 10px 10px;
 						width: 40%;
-						height: 50%;
+						// height: 50%;
 						overflow: hidden;
 						-webkit-line-clamp: 1;
 						text-overflow: ellipsis;

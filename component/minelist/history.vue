@@ -47,7 +47,7 @@
 				if(result.success){
 					//保存歌曲列表
 					let list=[]
-					console.log(this.item.list)
+					// console.log(this.item.list)
 					this.item.list.forEach(it=>{
 						let song={
 							id:it.song.id,

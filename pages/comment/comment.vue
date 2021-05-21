@@ -24,7 +24,6 @@
 							<view class="listTime">{{item.time | time(item.time)}}</view>
 							<view class="listcomm">{{item.content}}</view>
 						</view>
-
 						<view class="likedCount" @click="likedCount(item)">
 							<text :class="item.liked?'red':''">{{item.likedCount}}</text>
 							<view class="iconfont icon-dianzan ic" :style="item.liked?'color:red;':''"></view>
@@ -83,7 +82,7 @@
 				mask: true,
 				title: '加载中'
 			})
-			console.log(options)
+			// console.log(options)
 
 			if (options) {
 
@@ -114,7 +113,7 @@
 				this._likeComment(this.id, item.commentId)
 			},
 			pushCommentt() {
-				console.log(this.commentValue)
+				// console.log(this.commentValue)
 				this.pushComment().then(() => {
 					uni.showLoading({
 						title: '发布中',
@@ -339,7 +338,7 @@
 
 					.icon {
 						position: absolute;
-						left: 55%;
+						left: 57%;
 					}
 				}
 
@@ -378,7 +377,7 @@
 						}
 
 						.listcomm {
-							font-size: 36rpx;
+							font-size: 30rpx;
 							word-break: break-all; //允许换行
 						}
 					}

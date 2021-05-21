@@ -220,6 +220,11 @@
 					})
 					this._getcomment(this.id)
 					this._getNewComment(this.id, time)
+				}else{
+					uni.showToast({
+						title: '无法点赞',
+						icon:'none',
+					})
 				}
 			},
 		}

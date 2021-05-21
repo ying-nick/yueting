@@ -39,7 +39,7 @@
 				// console.log(res.privileges)
 				this.listSongs = res.privileges
 
-				console.log(res.playlist.description)
+				//console.log(res.playlist.description)
 				const picU2 = res.playlist.coverImgUrl
 				this.picU = picU2
 

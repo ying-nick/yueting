@@ -139,6 +139,7 @@
 			...mapState(['user', 'cookie', 'lists']),
 		},
 		onLoad(options) {
+		
 			// console.log(options)
 			this.alId = options.albumId
 			// console.log('------')
@@ -152,10 +153,11 @@
 				title: options.name
 			})
  */
+// console.log(options)
 			this.alId = options.albumId
 			this._gettotal(id)
 			this.musicId = id
-			// console.log(alId)
+			// console.log(this.alId)
 			this.name = options.name
 			nowIndex = options.index
 			// console.log(nowIndex)
@@ -186,6 +188,7 @@
 		},
 
 		methods: {
+		
 			async _gettotal(num) {
 				// console.log(num)
 				let result = await myRequestGet('/comment/music', {
@@ -312,6 +315,9 @@
 				innerAudioContext.stop()
 				let item = list[nowIndex]
 				// console.log(item)
+				this.alId = item.albumId
+				this._gettotal(item.id)
+				this.musicId = item.id
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname
@@ -331,6 +337,9 @@
 
 				// console.log(innerAudioContext)
 				let item = list[nowIndex]
+				this.alId = item.albumId
+				this._gettotal(item.id)
+				this.musicId = item.id
 				this.src = item.src
 				this.name = item.name
 				this.alname = item.alname

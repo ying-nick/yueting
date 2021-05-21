@@ -59,7 +59,7 @@
 						list.push(song)
 						
 					})
-				
+				// console.log(res)
 					this.setList(list)
 					uni.navigateTo({
 					    url: `/pages/player/player?id=${res.id}
@@ -69,7 +69,7 @@
 				}/* else{
 					uni.showToast({
 					    title: '亲爱的,暂无版权,请换歌',
-						icon:'none',
+						icon:'none',&albumId=${res.al.id}
 					    duration: 3000
 					});
 				} */

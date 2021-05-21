@@ -9,7 +9,7 @@
 			<view class="commentHead" @click="backMusic">
 				<image :src="countList.picUrl" class="headImg"></image>
 				<view class="textC">
-					<view class="nameT">{{countList.name}}-专辑</view>
+					<view class="nameT" v-text="countList.name"></view>
 					<view class="IdT">{{countList.alname}}</view>
 					<text class="iconfont icon-iconfonti ic"></text>
 				</view>
@@ -148,8 +148,12 @@
 					type: 0,
 					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
 				})
-				return res
-
+				if(res.code != 200){
+					uni.showModal({
+						title: '提示',
+						content: '无法评论',
+					});
+				}
 			},
 			backMusic() {
 				uni.navigateBack()
@@ -184,6 +188,7 @@
 					id: id,
 					before: date
 				})
+				console.log(result)
 				this.newComment = result.comments
 				// console.log(this.newComment)
 				uni.hideLoading()

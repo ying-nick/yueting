@@ -155,6 +155,7 @@
 			this.alId = options.albumId
 			this._gettotal(id)
 			this.musicId = id
+			
 			// console.log(alId)
 			this.name = options.name
 			nowIndex = options.index

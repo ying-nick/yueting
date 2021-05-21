@@ -4,8 +4,8 @@
 		:data-id='item.id' :data-src="item.album.blurPicUrl" :data-name="item.name" :data-alname="item.album.name" :data-arname="item.artists[0].name" :data-idx="index">
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
-				<text class="songTitle">{{item.name}} </text>
-				<text  class="singer">{{item.artists[0].name}}</text>
+				<text class="songTitle">{{item.name}}</text>
+				<text  class="singer">{{item.artists[0].name}} - {{item.album.name}}</text>
 		</view>
 	</view>
 </template>
@@ -36,12 +36,12 @@
 			async getNewSongs() {
 				const res = await myRequestGet('/top/song')
 				this.newSongs = res.data
-				console.log(this.newSongs)
+				//console.log(this.newSongs)
 			},
 			async goToPlayer(e){
 					// console.log(e)
 					let res=e.currentTarget.dataset
-					console.log(res)
+					//console.log(res)
 					// const result=await myRequestGet('/check/music',{
 					// 	id:res.id
 					// })
@@ -113,15 +113,27 @@
 .songTitle{
 		position: absolute;
 		font-size: 26rpx;
-       margin-left: 30rpx;
-	   margin-top: 10rpx;
+      left: 230rpx;
+top:8rpx;
+	   
+	   overflow: hidden;
+	   -webkit-line-clamp: 2;
+	   text-overflow: ellipsis;
+	   display: -webkit-box;
+	   -webkit-box-orient: vertical;
 }
 .singer{
 	font-size: 20rpx;
 	color: #999999;
 	position: absolute;
-	margin-left: 30rpx;
-	margin-top: 74rpx;
+left: 230rpx;
+	top: 72rpx;
+	
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
 }
 
 </style>

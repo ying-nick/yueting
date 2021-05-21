@@ -20,14 +20,14 @@
 		"path": "pages/musicModule/musicModule",
 		"style": {
 			"navigationBarTitleText": "音乐",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": true
 		}
 		},
 		{
 			"path": "pages/musicList/musicList",
 			"style": {
 				"navigationBarTitleText": "音乐",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 			},
 		{

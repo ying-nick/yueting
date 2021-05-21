@@ -28,7 +28,7 @@
 		},
 		methods:{
 			goPlaylist(e){
-				console.log(e)
+				// console.log(e)
 				uni.navigateTo({
 				  url: `/pages/musicList/musicList?playListId=${e.currentTarget.dataset.id}`
 									

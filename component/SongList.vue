@@ -42,7 +42,7 @@
 				r.forEach((item)=>{
 						newList.push(item.id)
 					});
-					//console.log(newList)
+	
 					this.getListSongs(newList)
 		
 			}
@@ -60,15 +60,18 @@
 					// console.log(e)
 					let res=e.currentTarget.dataset
 					console.log(res)
-					const result=await myRequestGet('/check/music',{
-						id:res.id
-					})
+					// const result=await myRequestGet('/check/music',{
+					// 	id:res.id
+					// })
+					let result={
+						success:true
+					}
 					// console.log(result)
 					if(result.success){
 						//保存歌曲列表
 						let list=[]
-						console.log(this.songs)
-						this.songs.list.forEach(item=>{
+						 // console.log(this.listSongs)
+						this.songs.forEach(item=>{
 							let song={
 								id:item.id,
 								src:item.al.picUrl,

@@ -36,21 +36,24 @@
 			async getNewSongs() {
 				const res = await myRequestGet('/top/song')
 				this.newSongs = res.data
-				//console.log(this.newSongs[0].album.blurPicUrl)
+				console.log(this.newSongs)
 			},
 			async goToPlayer(e){
 					// console.log(e)
 					let res=e.currentTarget.dataset
 					console.log(res)
-					const result=await myRequestGet('/check/music',{
-						id:res.id
-					})
+					// const result=await myRequestGet('/check/music',{
+					// 	id:res.id
+					// })
+					let result={
+						success:true
+					}
 					// console.log(result)
 					if(result.success){
 						//保存歌曲列表
 						let list=[]
-						console.log(this.newSongs.list)
-						this.newSongs.list.forEach(item=>{
+						
+						this.newSongs.forEach(item=>{
 							let song={
 								id:item.id,
 								src:item.album.picUrl,

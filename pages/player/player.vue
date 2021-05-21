@@ -392,9 +392,10 @@
 				if (!this.isPlay) {
 					this.isPlay = !this.isPlay
 				}
+				// console.log(encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie))
 				const res = await myRequestGet('/song/url', {
 					id: id,
-					cookie: this.cookie,
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie),
 				})
 				// console.log(res)
 				if (res.code == 200) {

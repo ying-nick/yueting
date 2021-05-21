@@ -6,7 +6,7 @@
 			<text class="serialNum">{{index+1}}</text>
 			<image class="songsImg" :src="item.al.picUrl"></image>
 			<text class="songTitle">{{item.name}}</text>
-			<text class="singer">{{item.ar[0].name}}--{{item.al.name}}</text>
+			<text class="singer">{{item.ar[0].name}} - {{item.al.name}}</text>
 		</view>
 	</view>
 </template>
@@ -137,8 +137,9 @@
 	.songTitle {
 		position: absolute;
 		font-size: 26rpx;
+	  top: -3rpx;
 		left: 236rpx;
-		margin-top: 10rpx;
+		
 		overflow: hidden;
 		-webkit-line-clamp: 2;
 		text-overflow: ellipsis;
@@ -152,7 +153,7 @@
 		color: #999999;
 		position: absolute;
 		left: 236rpx;
-		margin-top: 74rpx;
+	   top: 66rpx;
 		overflow: hidden;
 		-webkit-line-clamp: 2;
 		text-overflow: ellipsis;

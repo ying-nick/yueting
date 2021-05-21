@@ -5,7 +5,7 @@
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
 				<text class="songTitle">{{item.name}}</text>
-				<text  class="singer">{{item.artists[0].name}}--{{item.album.name}}</text>
+				<text  class="singer">{{item.artists[0].name}} - {{item.album.name}}</text>
 		</view>
 	</view>
 </template>

@@ -45,7 +45,7 @@
 		},
 		methods: {
 			    goToMusiclist(e) {
-					console.log(e)
+					// console.log(e)
 			      uni.navigateTo({
 			        url: `/pages/musicList/musicList?playListId=${e.currentTarget.dataset.id}`
 					
@@ -55,7 +55,7 @@
 			async getPersonalized() {
 				const res = await myRequestGet('/personalized')
 				this.playList = res.result
-		        console.log(this.playList)
+		        // console.log(this.playList)
 		
 			},
 		},			

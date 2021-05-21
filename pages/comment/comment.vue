@@ -72,7 +72,7 @@
 				id: '',
 				newComment: [],
 				commentValue: '',
-				flag:true,
+				flag: true,
 			}
 		},
 		onLoad(options) {
@@ -110,11 +110,8 @@
 			...mapState['cookie']
 		},
 		methods: {
-			likedCount(item){
-			// console.log(this.commentList)
-			// console.log(this.id)
-			// console.log(item.commentId)
-			this._likeComment(this.id,item.commentId)
+			likedCount(item) {
+				this._likeComment(this.id, item.commentId)
 			},
 			pushCommentt() {
 				console.log(this.commentValue)
@@ -147,12 +144,15 @@
 				})
 			},
 			async pushComment() {
+				let date = new Date()
+				let time = date.valueOf()
 				let res = await myRequestGet('/comment', {
 					id: this.id,
 					content: this.commentValue,
 					t: 1,
 					type: 0,
-					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie),
+					timestamp: time
 				})
 				if (res.code != 200) {
 					uni.showModal({
@@ -178,9 +178,12 @@
 				}
 			},
 			async _getcomment(id) {
+				let date = new Date()
+				let time = date.valueOf()
 				let result = await myRequestGet('/comment/music', {
 					id: id,
-					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie),
+					timestamp: time
 				})
 				let len = result.hotComments.length ? result.hotComments.length - 1 : result.comments.length - 1
 				if (result.code == 200) {
@@ -200,19 +203,24 @@
 				// console.log(this.newComment)
 				uni.hideLoading()
 			},
-			async _likeComment(id,cid) {
+			async _likeComment(id, cid) {
+				let date = new Date()
+				let time = date.valueOf()
 				let result = await myRequestGet('/comment/like', {
 					id,
 					cid,
-					t:1,
-					type:0,
-					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie)
+					t: 1,
+					type: 0,
+					cookie: encodeURIComponent(JSON.parse(uni.getStorageSync('user')).cookie),
+					timestamp: time
 				})
 				console.log(result)
-				if(result.code == 200 ){
+				if (result.code == 200) {
 					uni.showToast({
-						title:'点赞成功'
+						title: '点赞成功'
 					})
+					this._getcomment(this.id)
+					this._getNewComment(this.id, time)
 				}
 			},
 		}
@@ -379,9 +387,11 @@
 						position: relative;
 						width: 80rpx;
 						height: 30rpx;
-						.red{
-							color:red;
+
+						.red {
+							color: red;
 						}
+
 						.ic {
 							position: absolute;
 							top: 30%;

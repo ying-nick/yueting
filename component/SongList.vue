@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="musiclist-container" v-for="(item,index) in songs" :key="item.id" @click="goToPlayer"
 			:data-id='item.id' :data-src="item.al.picUrl" :data-name="item.name" :data-alname="item.al.name"
-			:data-arname="item.ar[0].name" :data-idx="index">
+			:data-arname="item.ar[0].name" :data-idx="index" :data-albumid="item.al.id">
 			<text class="serialNum">{{index+1}}</text>
 			<image class="songsImg" :src="item.al.picUrl"></image>
 			<text class="songTitle">{{item.name}}</text>
@@ -62,7 +62,7 @@
 			async goToPlayer(e) {
 				// console.log(e)
 				let res = e.currentTarget.dataset
-				console.log(res)
+				//console.log(res)
 				// const result=await myRequestGet('/check/music',{
 				// 	id:res.id
 				// })
@@ -80,7 +80,8 @@
 							src: item.al.picUrl,
 							name: item.name,
 							alname: item.al.name,
-							arname: item.ar[0].name
+							arname: item.ar[0].name,
+							albumId:item.al.id
 						}
 						list.push(song)
 
@@ -90,7 +91,7 @@
 					uni.navigateTo({
 						url: `/pages/player/player?id=${res.id}
 								&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
-								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
+								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}&albumId=${res.albumid}`
 					});
 				} else {
 					uni.showToast({

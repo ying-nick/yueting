@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="musiclist-container" v-for="(item,index) in newSongs"  :key="item.id" @click="goToPlayer"
-		:data-id='item.id' :data-src="item.album.blurPicUrl" :data-name="item.name" :data-alname="item.album.name" :data-arname="item.artists[0].name" :data-idx="index">
+		:data-id='item.id' :data-src="item.album.blurPicUrl" :data-name="item.name" :data-alname="item.album.name" :data-arname="item.artists[0].name" :data-idx="index" :data-albumId="item.album.id">
 				<text class="serialNum">{{index+1}}</text>
 				<image class="songsImg" :src="item.album.blurPicUrl"></image>
 				<text class="songTitle">{{item.name}}</text>
@@ -59,7 +59,8 @@
 								src:item.album.picUrl,
 								name:item.name,
 								alname:item.album.name,
-								arname:item.artists[0].name
+								arname:item.artists[0].name,
+								albumId:item.album.id
 							}
 							list.push(song)
 							
@@ -69,7 +70,7 @@
 						uni.navigateTo({
 						    url: `/pages/player/player?id=${res.id}
 								&name=${res.name}&src=${encodeURIComponent(JSON.stringify(res.src))}
-								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}`
+								&alname=${res.alname}&arname=${res.arname}&index=${res.idx}&albumId=${res.albumid}`
 						});
 					}else{
 						uni.showToast({

@@ -4,12 +4,13 @@
 			<view class="userIMG">
 				<image :src="user.profile.avatarUrl" mode="" class="userImg"></image>
 			</view>
-<view class="mask1" :style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
-	
-</view>
-<view class="mask2">
-	
-</view>
+			<view class="mask1"
+				:style="{background:'url('+src+') no-repeat','background-size':'100% 100%','background-position':'center center'}">
+
+			</view>
+			<view class="mask2">
+
+			</view>
 			<view class="userPrf">
 				<text class="userNk">{{user.profile.nickname}}</text>
 				<text class="userUid">悦听号：{{user.profile.userId}}</text>
@@ -20,14 +21,15 @@
 				<Mine :tabBars="tabBars" :tabIndex="tabIndex" @tabtap.stop="tabtap"></Mine>
 				<view class="uni-tab-bar">
 					<!-- 设置不自动播放 阻止事件冒泡-->
-					<swiper class="swiper-box"  :style="{height:swiperheight+'px'}" :current="tabIndex" @change="tabChange">
+					<swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex"
+						@change="tabChange">
 						<swiper-item v-for="(items,index) in newslist" :key="index">
-							<Minelist :items='items' ></Minelist>
+							<Minelist :items='items'></Minelist>
 						</swiper-item>
 					</swiper>
 				</view>
 			</view>
-			
+
 		</view>
 		<view class="unlgn">
 			<button class="unlogin" @click="lgnOut">退出登录</button>
@@ -50,9 +52,8 @@
 		data() {
 			return {
 				tabIndex: 0, // 选中的
-				preIndex:0,
-				tabBars: [
-					{
+				preIndex: 0,
+				tabBars: [{
 						name: "播放历史",
 						id: "history"
 					},
@@ -65,10 +66,10 @@
 						id: "myInfo"
 					},
 				],
-				swiperheight:500,//高度
-				newslist:[],
-			
-				
+				swiperheight: 500, //高度
+				newslist: [],
+
+
 			}
 		},
 		onLoad() {
@@ -76,48 +77,48 @@
 			uni.getSystemInfo({
 				success: (res) => {
 					let height = res.windowHeight - uni.upx2px(100)
-					this.swiperheight = height-150;
+					this.swiperheight = height - 150;
 				}
 			})
 			uni.showLoading({
-			    title: '努力加载中',
-				mask:true
+				title: '努力加载中',
+				mask: true
 			});
 			//进入页面判断是否有数据缓存
-			if(uni.getStorageSync('list').length>0){
+			if (uni.getStorageSync('list').length > 0) {
 				//获取本地user缓存
 				this.getUserInfo()
-				this.newslist=JSON.parse(uni.getStorageSync('list'))
-				 uni.hideLoading(this.newslist)
-			}else{
+				this.newslist = JSON.parse(uni.getStorageSync('list'))
+				uni.hideLoading(this.newslist)
+			} else {
 				// console.log(111)
-				this.list().then(res=>{
+				this.list().then(res => {
 					// console.log(res)
-						uni.setStorageSync('list', JSON.stringify(res));
-					this.newslist=res
-					 uni.hideLoading()
-					 
-					
-				}).catch(err=>{
+					uni.setStorageSync('list', JSON.stringify(res));
+					this.newslist = res
+					uni.hideLoading()
+
+
+				}).catch(err => {
 					console.log(err)
 				})
 			}
-			
-			
-			
-			
+
+
+
+
 		},
 		//下拉刷新，更新数据
-		 onPullDownRefresh() {
-		     this.list().then(res=>{
-		      	// console.log(res)
-		      	uni.setStorageSync('list', JSON.stringify(res));
-		      	this.newslist=res
+		onPullDownRefresh() {
+			this.list().then(res => {
+				// console.log(res)
+				uni.setStorageSync('list', JSON.stringify(res));
+				this.newslist = res
 				// console.log(this.newslist)
 				// console.log(this.news)
-		      	 uni.stopPullDownRefresh();
-		      })
-		    },
+				uni.stopPullDownRefresh();
+			})
+		},
 		computed: {
 			...mapState(['user', 'cookie']),
 		},
@@ -126,83 +127,89 @@
 			Minelist
 		},
 		methods: {
-			...mapMutations(['login', 'setUser','getUserInfo']),
+			...mapMutations(['login', 'setUser', 'getUserInfo']),
 			//点击导航
 			tabtap(index) {
 				// this.tabIndex = index;
-				
+
 			},
 			tabChange(e) {
-				if(e.detail.source=='touch'){
-						this.preIndex=e.detail.current;
+				if (e.detail.source == 'touch') {
+					this.preIndex = e.detail.current;
 				}
-					this.tabIndex=this.preIndex
-				
+				this.tabIndex = this.preIndex
+
 				// console.log(e.detail)
 				// console.log(e.detail.current)
-				
+
 			},
 			//获取列表
-			async list(){
-				let list=[]
+			async list() {
+				let list = []
 				//播放历史
-				const historys=await this.getInf('/user/record',{
-					cookie:this.cookie,
-					uid:this.user.profile.userId,
-					type:1,
-					
+				const historys = await this.getInf('/user/record', {
+					cookie: this.cookie,
+					uid: this.user.profile.userId,
+					type: 1,
+
 				})
-				if(historys.code==200){
-					let history={id:'history',list:historys.weekData}
-				list.push(history)
-				}else{
+				if (historys.code == 200) {
+					let history = {
+						id: 'history',
+						list: historys.weekData
+					}
+					list.push(history)
+				} else {
 					list.push({
-						id:'history',
-						list:[]
+						id: 'history',
+						list: []
 					})
 				}
 				//我的歌单
-				const myLists=await this.getInf('/user/playlist',{
-				uid:this.user.profile.userId,
-					cookie:this.cookie,
+				const myLists = await this.getInf('/user/playlist', {
+					uid: this.user.profile.userId,
+					cookie: this.cookie,
 				})
-				if(myLists.code=200){
-					if(myLists.playlist.length==0){
+				if (myLists.code = 200) {
+					if (myLists.playlist.length == 0) {
 						list.push({
-							id:'myList',
-							list:[]
+							id: 'myList',
+							list: []
 						})
-					}else{
+					} else {
 						list.push({
-							id:'myList',
-							list:myLists.playlist
+							id: 'myList',
+							list: myLists.playlist
 						})
 					}
 				}
 				//个人信息
-				const levl=await this.getInf('/user/level',{
-				uid:this.user.profile.userId,
-					cookie:this.cookie,
+				const levl = await this.getInf('/user/level', {
+					uid: this.user.profile.userId,
+					cookie: this.cookie,
 				})
-				if(levl.code==200){
-					const count=await this.getInf('/user/subcount',{
-					uid:this.user.profile.userId,
-						cookie:this.cookie,
+				if (levl.code == 200) {
+					const count = await this.getInf('/user/subcount', {
+						uid: this.user.profile.userId,
+						cookie: this.cookie,
 					})
-					if(count.code==200){
-						let info={...count,...levl.data}
-						let usinfo=[]
+					if (count.code == 200) {
+						let info = {
+							...count,
+							...levl.data
+						}
+						let usinfo = []
 						usinfo.push(info)
 						list.push({
-							id:'myInfo',
-							list:usinfo
+							id: 'myInfo',
+							list: usinfo
 						})
 					}
-					
-				}else{
+
+				} else {
 					list.push({
-						id:'myInfo',
-						list:[]
+						id: 'myInfo',
+						list: []
 					})
 				}
 				// console.log(list)
@@ -281,25 +288,28 @@
 			justify-content: center;
 			align-items: center;
 			position: relative;
-.mask1{
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	filter: blur(30rpx) contrast(60%) brightness(60%);
-	opacity: 0.5;
-	z-index: -10;
-}
-.mask2{
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: -11;
-	background-color: #222;
-}
+
+			.mask1 {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				filter: blur(30rpx) contrast(60%) brightness(60%);
+				opacity: 0.5;
+				z-index: -10;
+			}
+
+			.mask2 {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				z-index: -11;
+				background-color: #222;
+			}
+
 			.userIMG {
 				width: 35%;
 				height: 100%;
@@ -323,7 +333,7 @@
 					font-size: 35upx;
 					font-family: PingFang SC;
 					font-weight: bold;
-				
+
 					color: #333333;
 				}
 
@@ -332,7 +342,7 @@
 					font-size: 30upx;
 					font-family: PingFang SC;
 					font-weight: 500;
-					
+
 					color: #666666;
 				}
 			}
@@ -344,7 +354,8 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			.inf{
+
+			.inf {
 				height: 92%;
 				padding: 10px 0;
 				width: 100%;
@@ -358,6 +369,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+
 			.unlogin {
 				width: 70%;
 				height: 70%;
